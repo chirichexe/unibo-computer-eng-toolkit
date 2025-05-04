@@ -1,0 +1,97 @@
+==== CLASSE PER STRUTTURA ====
+
+
+import java.io.*;
+
+public class Esame implements Serializable {
+    public String tabella[][] = new String[50][4];
+
+    public Esame() {
+        for (int i = 0; i < 50; i++)
+            for (int e = 0; e < 4; e++)
+                tabella[i][e] = "-";
+    }
+
+    public synchronized int iscrivi_studente_appello(String matricola, String nome, String cognome) {
+        System.out.println("Programma: iscrizione di " + nome);
+
+        for (int k = 0; k < 50; k++) {
+            if (tabella[k][0] == "-") {
+                tabella[k][0] = matricola;
+                tabella[k][1] = nome;
+                tabella[k][2] = cognome;
+
+                return 0;
+            }
+        }
+        return -1;
+    }
+
+    public synchronized String[] carica_voti(String input) {
+        System.out.println("Programma: caricamento voti: " + input);
+
+        String[] senzaSuccesso = new String[50];
+        int numSenzaSuc = 0;
+
+        String[] subStrings = input.split(":");
+        for (int i = 0; i < subStrings.length; i++){
+            String[] tupla = subStrings[i].split(",");
+            boolean trovato = false;
+            for (int k = 0; k < 50; k++) {
+                if (tabella[k][0].equals(tupla[0])){
+                    tabella[k][3] = tupla[1];
+                    trovato = true;
+                    break;
+                }
+                
+            }
+
+            if (!trovato){
+                senzaSuccesso[numSenzaSuc] = tupla[0];
+                numSenzaSuc++;
+            }
+
+            
+        }
+        
+        return senzaSuccesso;
+    }
+
+    public void stampa() {
+
+        System.out.println("\tMATRICOLA\tNOME\tCOGNOME\tVOTO\n");
+        for (int k = 0; k < 50; k++) {
+            String line = new String((k + 1) + "|");
+            for (int j = 0; j < 4; j++) {
+                line += "\t" + tabella[k][j];
+            }
+            line += "\n";
+            System.out.println(line);
+        }
+    }
+}
+
+==== INIZIALIZZAZIONE STRUTTURA ====
+
+// nella classe server
+public static Esame esame;
+
+// nel main
+esame = new Esame();
+
+==== RIEMPIMENTO DATI ====
+
+public String tabella[][] = new String[9][4];
+
+public RentACar() {
+    // Inizializzazione dei dati
+    tabella[0] = new String[]{"AN745NL", "00003", "auto", "AN745NL_img/"};
+    tabella[1] = new String[]{"FE457GF", "50006", "camper", "FE457GF_img/"};
+    tabella[2] = new String[]{"L", "0", "L", "L"};
+    tabella[3] = new String[]{"NU547PL", "40063", "auto", "NU547PL_img/"};
+    tabella[4] = new String[]{"LR897AH", "56832", "camper", "LR897AH_img/"};
+    tabella[5] = new String[]{"MD506DW", "00100", "camper", "MD506DW_img/"};
+    tabella[6] = new String[]{"L", "0", "L", "L"};
+    tabella[7] = new String[]{"L", "0", "L", "L"};
+    tabella[8] = new String[]{"L", "0", "L", "L"};
+}

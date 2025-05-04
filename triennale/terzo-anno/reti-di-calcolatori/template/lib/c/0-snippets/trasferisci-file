@@ -1,0 +1,88 @@
+// RICEZIONE FILE ===================================== SNIPPET
+// Variabili --------------------------------------------------
+
+char buffer[DIM_BUFF], file_name[MAX_NAME_SIZE];
+int bytes_read, fd;
+int bytes_left;
+
+// Algoritmo --------------------------------------------------
+memset(file_name, 0, DIM_BUFF);
+// Ricevo nome file
+if (read(sd, file_name, DIM_BUFF) <= 0) {
+    perror("read");
+    //ERRORE
+}
+// Ricevo dimensione file
+if (read(sd, &file_size, sizeof(int)) <= 0) {
+    perror("read");
+    //ERRORE
+}
+
+printf("Ricevuto nome file: %s di lunghezza %d\n", file_name, file_size);
+
+// Creo il file
+fd = open(file_name, O_CREAT | O_WRONLY, 0777);
+if (fd < 0) {
+    perror("open");
+    //ERRORE
+}
+// Ricevo contenuto
+bytes_left = file_size;
+
+while (bytes_left > 0) {
+    bytes_read = read(sd, buffer, (bytes_left < DIM_BUFF) ? bytes_left : DIM_BUFF);
+    if (bytes_read <= 0) {
+        perror("lettura byte file");
+        close(fd);
+        exit(1);
+    }
+    write(fd, buffer, bytes_read);
+    bytes_left -= bytes_read;
+}
+
+// File ricevuto. Lo chiudo
+close(fd);
+
+// FINE RICEZIONE FILE ================================= SNIPPET
+
+// INVIO FILE ========================================= SNIPPET
+// Variabili --------------------------------------------------
+char buffer[DIM_BUFF], nome_file[MAX_NAME_SIZE];
+int bytes_read, fd, file_size;
+
+// Algoritmo --------------------------------------------------
+// Scrivo nome file
+fd = open(nome_file, O_RDONLY);
+if (fd < 0) {
+    perror("open");
+    //ERRORE;
+}
+
+// Scrivo nome file
+if (write(connfd, nome_file, MAX_NAME_SIZE) < 0) {
+    perror("write");
+    //ERRORE
+}
+
+// Scrivo dimensione
+file_size = lseek(fd, 0, SEEK_END);
+lseek(fd, 0, SEEK_SET);
+
+if (write(connfd, &file_size, sizeof(int)) < 0) {
+    perror("write");
+    close(fd);
+    //ERRORE
+}
+
+// Scrivo contenuto
+while ((bytes_read = read(fd, buffer, DIM_BUFF)) > 0) {
+    if (write(connfd, buffer, bytes_read) < 0) {
+        perror("write");
+        close(fd);
+        //ERRORE
+    }
+}
+
+// Chiudo il file
+close(fd);
+// INVIO FILE ========================================= SNIPPET

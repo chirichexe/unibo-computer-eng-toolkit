@@ -1,0 +1,6 @@
+1. Esporta tomcat da file zip sul Desktop
+2. Su eclipse: Window -> Show View -> Other -> Server
+3. Sul pannello di sotto, seleziona Tomcat 9.0
+4. Doppio click sul server, imposta "use Tomcat installation"
+5. Aggiorna le dipendenze per GSON e WEBSOCKET cliccando su WEB-INF -> lib -> add to build path
+6. Aggiorna le variabili d'ambiente (basta solo la directory di tomcat)

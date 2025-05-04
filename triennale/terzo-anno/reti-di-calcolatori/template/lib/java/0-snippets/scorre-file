@@ -1,0 +1,73 @@
+/* SCORRE FILE ================================== SNIPPET */
+// CARATTERE NON ASCII: c > 127
+
+try (FileInputStream fis = new FileInputStream(file);
+InputStreamReader isr = new InputStreamReader(fis);
+BufferedReader br = new BufferedReader(isr)) {
+
+    // opz1: leggo riga per riga
+    String line;
+    while ((line = br.readLine()) != null) { 
+        System.out.println("Riga letta: " + line);
+    }
+
+    // opz2: leggo riga carattere per carattere
+    StringBuilder currentLine = new StringBuilder();
+    int character;
+    
+    // --- logica di business sulle righe ----
+    while ((character = br.read()) >= 0) { 
+        System.out.println((char) character);
+        if (character == '\n') {
+            currentLine.setLength(0);
+            System.out.println(currentLine);
+        } else {
+            currentLine.append( (char) character);
+        }
+    }
+    
+    if (currentLine.length() > 0) {
+        System.out.println(currentLine.toString());
+    }
+    // --- fine logica di business sulle righe ---- 
+    
+} catch (IOException e) {
+    System.err.println("Errore durante la lettura del file: " + e.getMessage());
+}
+
+/* FINE SCORRE FILE ============================= SNIPPET */
+
+
+
+// SCORRE FILE ================================== SNIPPET 
+// Variabili (da spostare) ------------------
+int j;
+String line = null;
+
+
+try (FileInputStream fis = new FileInputStream(file);
+InputStreamReader isr = new InputStreamReader(fis);
+BufferedReader br = new BufferedReader(isr)) {
+
+    while ((line = br.readLine()) != null) { 
+        System.out.println("Riga letta: " + line);
+        trovati = 0;
+
+        // condizione sui caratteri singoli
+        for ( j = 0; j < line.length() ; j++ ){
+            if ( line.charAt(j) == carattere ){
+                trovati ++;
+            }
+        }
+
+        // condizioni sulla riga
+        if ( Character.isUpperCase(line.charAt(0)) && trovati >= numOccorrenze ) {
+            risultato ++;
+        }
+    }
+    
+} catch (IOException e) {
+    System.err.println("Errore durante la lettura del file: " + e.getMessage());
+}   
+
+// FINE SCORRE FILE ============================= SNIPPET 

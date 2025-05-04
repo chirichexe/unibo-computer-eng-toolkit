@@ -1,0 +1,162 @@
+Indice:
+
+Determinante (determinant)
+Minore (minor)
+Simmetria (isSymmetric)
+Trasposta (transpose)
+Somma (add)
+Sottrazione (subtract)
+Moltiplicazione (multiply)
+Scala matrice (scale)
+Verifica quadrata (isSquare)
+Inversa (inverse)
+Stampa matrice (printMatrix)
+
+-----------------------------------------------------------
+===========================================================
+-----------------------------------------------------------
+
+import java.util.Arrays;
+
+public class MatrixUtils {
+
+    // Funzione per calcolare il determinante di una matrice
+    public static double determinant(double[][] matrix) {
+        int n = matrix.length;
+        if (n == 1) {
+            return matrix[0][0];
+        }
+        if (n == 2) {
+            return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+        }
+        double det = 0;
+        for (int i = 0; i < n; i++) {
+            det += Math.pow(-1, i) * matrix[0][i] * determinant(minor(matrix, 0, i));
+        }
+        return det;
+    }
+
+    // Funzione per calcolare il minore di una matrice
+    public static double[][] minor(double[][] matrix, int row, int col) {
+        int n = matrix.length;
+        double[][] minor = new double[n - 1][n - 1];
+        for (int i = 0, mi = 0; i < n; i++) {
+            if (i == row) continue;
+            for (int j = 0, mj = 0; j < n; j++) {
+                if (j == col) continue;
+                minor[mi][mj++] = matrix[i][j];
+            }
+            mi++;
+        }
+        return minor;
+    }
+
+    // Funzione per verificare se una matrice è simmetrica
+    public static boolean isSymmetric(double[][] matrix) {
+        int n = matrix.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] != matrix[j][i]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // Funzione per trasporre una matrice
+    public static double[][] transpose(double[][] matrix) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        double[][] transposed = new double[cols][rows];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                transposed[j][i] = matrix[i][j];
+            }
+        }
+        return transposed;
+    }
+
+    // Funzione per sommare due matrici
+    public static double[][] add(double[][] matrixA, double[][] matrixB) {
+        int rows = matrixA.length;
+        int cols = matrixA[0].length;
+        double[][] result = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = matrixA[i][j] + matrixB[i][j];
+            }
+        }
+        return result;
+    }
+
+    // Funzione per sottrarre due matrici
+    public static double[][] subtract(double[][] matrixA, double[][] matrixB) {
+        int rows = matrixA.length;
+        int cols = matrixA[0].length;
+        double[][] result = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = matrixA[i][j] - matrixB[i][j];
+            }
+        }
+        return result;
+    }
+
+    // Funzione per moltiplicare due matrici
+    public static double[][] multiply(double[][] matrixA, double[][] matrixB) {
+        int rowsA = matrixA.length;
+        int colsA = matrixA[0].length;
+        int colsB = matrixB[0].length;
+        double[][] result = new double[rowsA][colsB];
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsB; j++) {
+                for (int k = 0; k < colsA; k++) {
+                    result[i][j] += matrixA[i][k] * matrixB[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    // Funzione per scalare una matrice
+    public static double[][] scale(double[][] matrix, double scalar) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        double[][] result = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = matrix[i][j] * scalar;
+            }
+        }
+        return result;
+    }
+
+    // Funzione per verificare se una matrice è quadrata
+    public static boolean isSquare(double[][] matrix) {
+        return matrix.length == matrix[0].length;
+    }
+
+    // Funzione per calcolare la matrice inversa
+    public static double[][] inverse(double[][] matrix) {
+        int n = matrix.length;
+        double det = determinant(matrix);
+        if (det == 0) {
+            throw new IllegalArgumentException("La matrice non è invertibile.");
+        }
+        double[][] adjoint = new double[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                adjoint[j][i] = Math.pow(-1, i + j) * determinant(minor(matrix, i, j));
+            }
+        }
+        return scale(adjoint, 1 / det);
+    }
+
+    // Funzione per stampare una matrice
+    public static void printMatrix(double[][] matrix) {
+        for (double[] row : matrix) {
+            System.out.println(Arrays.toString(row));
+        }
+    }
+}

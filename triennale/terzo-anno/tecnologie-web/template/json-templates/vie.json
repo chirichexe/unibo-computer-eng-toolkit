@@ -1,0 +1,32 @@
+[
+  {
+    "nome": "Mario",
+    "cognome": "Di Modica",
+    "indirizzo": "Via Ugo Bassi"
+  },
+  {
+    "nome": "Luca",
+    "cognome": "Di Modica",
+"indirizzo": "Via Carlo Bassi"
+  },
+  {
+    "nome": "Giulia",
+    "cognome": "Di Modica",
+"indirizzo": "Via Ago Bassi"
+  },
+  {
+    "nome": "Sara",
+    "cognome": "Di Modica",
+    "indirizzo": "Via Ugi Bassi"
+  },
+  {
+    "nome": "Andrea",
+    "cognome": "Rossi",
+    "indirizzo": "Via Ugo Bassi"
+  },
+  {
+    "nome": "Francesca",
+    "cognome": "Bianchi",
+    "indirizzo": "Via Ugo Banzi"
+  }
+]

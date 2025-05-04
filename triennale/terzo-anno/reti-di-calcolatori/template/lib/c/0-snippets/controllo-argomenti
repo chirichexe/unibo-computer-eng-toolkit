@@ -1,0 +1,86 @@
+// 1) Prende un carattere (VECCHIO)
+printf("Inserisci Carattere: \n");
+DATOCARATTERE = getchar();
+while (getchar() != '\n');
+
+// Validazione carattere
+if ( DATOCARATTERE == '\n' || DATOCARATTERE == '\0') {
+    printf("Errore, inserire un carattere valido\n");
+    continue;
+}
+
+// 1) Prende un carattere (NUOVO)
+printf("Inserisci Carattere: \n");
+DATOCARATTERE = getchar();
+
+if (getchar() != '\n') {
+    printf("Errore, inserire un solo carattere valido\n");
+    while (getchar() != '\n');
+    continue;
+}
+
+//------------------------------------------------------------------
+
+// 2) Prende un intero
+// VARIABILI
+char numString[MAX_NAME_SIZE];
+int valido;
+
+// INSERIMENTO INTERO
+printf("Inserisci intero: \n");
+gets(numString);
+
+// Validazione intero
+valido = 1;
+if (numString[0] == '\0') {
+    printf("Stringa vuota!\n");
+    valido = 0;
+} else {
+    for (int i = 0; numString[i] != '\0'; i++) {
+        if (numString[i] < '0' && numString[i] > '9' ) {
+            valido = 0;
+            break;
+        }
+    }
+}
+
+if (!valido) {
+    printf("Errore, inserire un intero valido\n");
+    continue;
+}
+
+// Conversione a intero
+DATONUMERICO = atoi(numString);
+
+//-------------------------------------------------------------------
+char buffer[10];
+int day, month, year;
+
+while (1) {
+    // Inserimento giorno
+    printf("Inserisci giorno (GG): ");
+    gets(buffer);
+    day = atoi(buffer);
+
+    // Inserimento mese
+    printf("Inserisci mese (MM): ");
+    gets(buffer);
+    month = atoi(buffer);
+
+    // Inserimento anno
+    printf("Inserisci anno (AAAA): ");
+    gets(buffer);
+    year = atoi(buffer);
+
+    // Controllo validità della data
+    if (day >= 1 && day <= 31 && month >= 1 && month <= 12 && year >= 1) {
+        // Costruzione della stringa GG/MM/AAAA
+        char date[11];
+        snprintf(date, sizeof(date), "%02d/%02d/%04d", day, month, year);
+        printf("Data valida: %s\n", date);
+        break;
+    } else {
+        printf("Data non valida. Riprova.\n");
+        continue;
+    }
+}

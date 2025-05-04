@@ -1,0 +1,102 @@
+/* INVIA UNA DIRECTORY =================================== SNIPPET */
+/* Variabili ----------------------------------------------------- */
+long numeroByte;
+byte[] buffer = new byte[DIM_BUFF];
+int cont = 0;
+int read_bytes = 0;
+DataInputStream src_stream = null;
+
+/* Logica di business -------------------------------------------- */
+File directory = new File(dirName);
+if ( !directory.exists() && !directory.isDirectory()) {
+    outSock.writeUTF("a"); // messaggio di errore
+    System.out.println("Directory \"" + dirName + "\" non esiste o non è una directory");
+} else {
+    System.out.println("Invio directory \"" + dirName + "\"");
+    outSock.writeUTF("p"); // messaggio di successo
+    File[] files = directory.listFiles();
+    for (int i = 0; i < files.length; i++) {
+        File file = files[i];
+        System.out.println("Trovato file con nome: " + file.getName());
+        
+        // 1. invio il nome
+        outSock.writeUTF(file.getName());
+        numeroByte = file.length();
+        
+        // 2. invio la lunghezza
+        outSock.writeLong(numeroByte);
+
+        // trasferisce il file in linea
+        src_stream = new DataInputStream(new FileInputStream(file.getAbsolutePath()));
+        cont = 0;
+        try {
+            // fin quando ho letto il numero di byte ...
+            while (cont < numeroByte) {
+                read_bytes = src_stream.read(buffer);
+                outSock.write(buffer, 0, read_bytes);
+                cont += read_bytes;
+            }
+            outSock.flush();
+            System.out.println("Byte trasferiti: " + cont);
+        } catch (EOFException e) {
+            System.out.println("Problemi, i seguenti: ");
+            e.printStackTrace();
+            //ERRORE
+        }
+    }
+    outSock.writeUTF("FINE"); // protocollo per indicare la fine
+    System.out.println("Cartella inviata con successo");
+}
+
+/* FINE INVIA UNA DIRECTORY =============================== SNIPPET */
+
+/* RICEVI UNA DIRECTORY ================================== SNIPPET */
+/* Variabili ----------------------------------------------------- */
+byte[] buffer = new byte[DIM_BUFF];
+int cont = 0;
+int read_bytes = 0;
+DataOutputStream dest_stream = null;
+
+String nomeFileRicevuto;
+long numeroByte;
+File fileRicevuto;
+FileOutputStream outfileRicevuto;
+
+/* Logica di business -------------------------------------------- */
+if (inSock.readUTF().equals("a")) {
+    System.out.println("Directory richiesta non esistente lato servitore");
+} else{
+    
+    while (!(nomeFileRicevuto = inSock.readUTF()).equals("FINE")) { // protocollo
+
+        fileRicevuto = new File(nomeFileRicevuto); // se devo controllare se esiste già, non necessario ora
+        
+        // 2. leggo dimensione file
+        numeroByte = inSock.readLong();
+
+        System.out.println("Ricevuto file " + nomeFileRicevuto + " di " + numeroByte + " byte");
+        outfileRicevuto = new FileOutputStream(nomeFileRicevuto);
+
+        // ricevo il file in linea
+        dest_stream = new DataOutputStream(outfileRicevuto);
+        try {
+            cont = 0;
+            // fin quando ho letto il numero di byte ...
+            while (cont < numeroByte) {
+                read_bytes = inSock.read(buffer, 0, Math.min(buffer.length, (int)(numeroByte - cont)));
+                dest_stream.write(buffer, 0, read_bytes);
+                cont += read_bytes;
+            }                        
+            dest_stream.flush();
+            System.out.println("Byte trasferiti: " + cont);
+
+        } catch (EOFException e) {
+            System.out.println("Problemi, i seguenti: ");
+            e.printStackTrace();
+            //ERRORE
+        }
+        outfileRicevuto.close();
+    }
+}
+
+/* FINE RICEVI UNA DIRECTORY ============================== SNIPPET */

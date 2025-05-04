@@ -1,0 +1,133 @@
+// SOSTITUZIONE CARATTERI =========================== SNIPPET
+// Variabili ------------------------------------------------
+File originalFile, tempFile = null;
+byte[] buffer = new byte[DIM_BUFF];
+int bytesRead;
+
+// Algoritmo ------------------------------------------------
+originalFile = new File(filename);
+if ( !originalFile.exists() || !originalFile.isFile() ){
+    System.err.println("File richiesto non esise");
+    //ERRORE
+} else {
+    try (FileInputStream inputStream = new FileInputStream(filename)) {
+        tempFile = File.createTempFile("tempfile", ".tmp");
+        try (FileOutputStream tempOutputStream = new FileOutputStream(tempFile)) {
+
+            while ((bytesRead = inputStream.read(buffer)) > 0) {
+                for ( i = 0; i < bytesRead; i++ ) {
+                    if (!Character.isAlphabetic((char) buffer[i])) { // condizione di scrittura
+                        tempOutputStream.write(buffer[i]);
+                        //tempOutputStream.write(stringa.getBytes()); // Scrive una stringa
+                    }
+                }
+            }
+        }
+
+        // Rinominazione del file temporaneo 
+        originalFile = new File(filename);
+        if (!originalFile.delete()) {
+            System.err.println("Impossibile eliminare il file originale");
+            //ERRORE
+
+        }
+        if (!tempFile.renameTo(originalFile)) {
+            System.err.println("Impossibile rinominare il file temporaneo");
+            //ERRORE
+
+        }
+    } catch (IOException e) {
+        if ( tempFile == null || tempFile.exists()) {
+            tempFile.delete(); // Pulizia in caso di errore
+        }
+        e.printStackTrace(); 
+        //ERRORE
+    }
+}
+
+// FINE SOSTITUZIONE CARATTERI ====================== SNIPPET
+
+// SOSTITUZIONE RIGHE =========================== SNIPPET
+// Variabili ------------------------------------------------
+File originalFile, tempFile = null;
+String line;
+
+// Algoritmo ------------------------------------------------
+originalFile = new File(filename);
+if (!originalFile.exists() || !originalFile.isFile()) {
+    System.err.println("File richiesto non esiste");
+    // ERRORE
+} else {
+    try (BufferedReader reader = new BufferedReader(new FileReader(originalFile))) {
+        tempFile = File.createTempFile("tempfile", ".tmp");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("ciao")) { // Condizione di scrittura
+                    writer.write(line);
+                    writer.newLine(); // Aggiunge un terminatore di riga
+                }
+            }
+        }
+
+        // Rinominazione del file temporaneo
+        if (!originalFile.delete()) {
+            System.err.println("Impossibile eliminare il file originale");
+            // ERRORE
+        }
+        if (!tempFile.renameTo(originalFile)) {
+            System.err.println("Impossibile rinominare il file temporaneo");
+            // ERRORE
+        }
+    } catch (IOException e) {
+        if (tempFile == null || tempFile.exists()) {
+            tempFile.delete(); // Pulizia in caso di errore
+        }
+        e.printStackTrace(); 
+        // ERRORE
+    }
+}
+
+// FINE SOSTITUZIONE RIGHE ====================== SNIPPET
+
+
+/* CREAZIONE ============================ SNIPPET */
+try {
+    File file = new File(fileName);
+    if (file.createNewFile()) {
+        System.out.println("File creato: " + file.getName());
+    } else {
+        System.out.println("Il file esiste già.");
+    }
+} catch (IOException e) {
+    System.err.println("Errore nella creazione del file: " + e.getMessage());
+}
+/* FINE CREAZIONE ======================== SNIPPET */
+
+/* SCRITTURA ============================ SNIPPET */
+try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+    writer.write("Hello, World!\n");
+} catch (IOException e) {
+    System.err.println("Errore nella scrittura del file: " + e.getMessage());
+}
+/* FINE SCRITTURA ======================== SNIPPET */
+
+/* LETTURA ============================ SNIPPET */
+try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+    String line;
+    while ((line = reader.readLine()) != null) {
+        System.out.println("Contenuto letto: " + line);
+    }
+} catch (IOException e) {
+    System.err.println("Errore nella lettura del file: " + e.getMessage());
+}
+/* FINE LETTURA ======================== SNIPPET */
+
+/* RIMOZIONE ============================ SNIPPET */
+try {
+    Files.deleteIfExists(Paths.get(fileName));
+    System.out.println("File rimosso.");
+} catch (IOException e) {
+    System.err.println("Errore nella rimozione del file: " + e.getMessage());
+}
+/* FINE RIMOZIONE ======================== SNIPPET */

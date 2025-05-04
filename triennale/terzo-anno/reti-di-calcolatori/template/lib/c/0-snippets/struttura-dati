@@ -1,0 +1,73 @@
+=== DEFINIZIONE ===
+
+#define N 12 // Numero candidati
+
+/*STATO INTERNO PRIVATO DEL SERVER*/
+typedef struct {
+    char candidato[MAX_NAME_SIZE];
+    char giudice[MAX_NAME_SIZE];
+    char categoria[2];
+    char nomeFile[FILENAME_MAX];
+    char fase[10];
+    int  voto;
+} Riga;
+
+// variabili globali private (static)
+static Riga t[N];
+static int  inizializzato = 0;
+
+/* Inizializza lo stato del server */
+void inizializza() {
+    int i;
+    if (inizializzato == 1) {
+        return;
+    }
+
+    // Tutti inizialmente liberi
+    for (i = 0; i < N; i++) {
+        strcpy(t[i].candidato, "L");
+        strcpy(t[i].giudice, "L");
+        strcpy(t[i].categoria, "L");
+        strcpy(t[i].nomeFile, "L");
+        strcpy(t[i].fase, "L");
+        t[i].voto = -1;
+    }
+
+    // Inizializziamo qualche valore per i test
+    strcpy(t[0].candidato, "Brasco");
+    strcpy(t[0].giudice, "Bowie");
+    strcpy(t[0].categoria, "U");
+    strcpy(t[0].nomeFile, "brasco.txt");
+    strcpy(t[0].fase, "A");
+    t[0].voto = 75;
+
+    strcpy(t[1].candidato, "Viga");
+    strcpy(t[1].giudice, "Winehouse");
+    strcpy(t[1].categoria, "D");
+    strcpy(t[1].nomeFile, "viga.txt");
+    strcpy(t[1].fase, "S");
+    t[1].voto = 98;
+
+    strcpy(t[2].candidato, "Paperino");
+    strcpy(t[2].giudice, "Bowie");
+    strcpy(t[2].categoria, "O");
+    strcpy(t[2].nomeFile, "paperino.txt");
+    strcpy(t[2].fase, "A");
+    t[2].voto = 58;
+
+    strcpy(t[2].candidato, "Mikes");
+    strcpy(t[2].giudice, "Steve");
+    strcpy(t[2].categoria, "B");
+    strcpy(t[2].nomeFile, "mikes.txt");
+    strcpy(t[2].fase, "B");
+    t[2].voto = 45;
+
+    inizializzato = 1;
+    printf("Terminata inizializzazione struttura dati!\n");
+}
+
+=== INIZIALIZZAZIONE ===
+
+if (inizializzato == 0) {
+        inizializza();
+    }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
+
+    <display-name>LavagnaCondivisa</display-name>
+    <description>
+      A JSP-based project to use as a template for your own ones
+    </description>
+    
+    <!-- Session listener -->
+    
+    <listener>
+        <listener-class>servlets.SessionListener</listener-class>
+    </listener>
+
+    <!-- Define servlets that are included in the application -->
+    
+    <!-- Servlet login -->
+
+    <servlet>
+        <servlet-name>Login</servlet-name>
+        <servlet-class>servlets.Login</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/loginServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Data servlets -->
+    <servlet>
+        <servlet-name>DataServlet</servlet-name>
+        <servlet-class>servlets.DataServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DataServlet</servlet-name>
+        <url-pattern>/dataServlet</url-pattern>
+    </servlet-mapping>
+    
+        <servlet>
+        <servlet-name>AdminServlet</servlet-name>
+        <servlet-class>servlets.AdminServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/adminServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Welcome pages -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+        
+    <!-- Handle exceptions and errors -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/errors/notfound.html</location>
+    </error-page>
+
+</web-app>

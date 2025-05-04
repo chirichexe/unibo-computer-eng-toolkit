@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
+
+    <display-name>Cifratura</display-name>
+    <description>
+      A JSP-based project to use as a template for your own ones
+    </description>
+
+    <!-- Define servlets that are included in the application -->
+    
+    <!-- Servlet login -->
+
+    <!-- Servlet S2/S1 -->
+    
+    <servlet>
+        <servlet-name>S1</servlet-name>
+        <servlet-class>servlets.S1</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>S1</servlet-name>
+        <url-pattern>/S1</url-pattern>
+    </servlet-mapping>
+    
+        <servlet>
+        <servlet-name>S2</servlet-name>
+        <servlet-class>servlets.S2</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>S2</servlet-name>
+        <url-pattern>/S2</url-pattern>
+    </servlet-mapping>
+
+    <!-- Welcome pages -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+        
+    <!-- Handle exceptions and errors -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/errors/notfound.html</location>
+    </error-page>
+
+</web-app>

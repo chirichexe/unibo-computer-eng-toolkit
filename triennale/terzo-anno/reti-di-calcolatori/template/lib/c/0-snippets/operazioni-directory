@@ -1,0 +1,13 @@
+// Crea directory
+
+if (mkdir(dirname, 0755) == -1) {
+    perror("Errore nella creazione della directory");
+    //ERRORE
+}
+
+// Elimina directory
+
+if (rmdir(dirname) == -1) {
+    perror("Errore nell'eliminazione della directory");
+    //ERRORE
+}

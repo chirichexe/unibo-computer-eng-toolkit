@@ -1,0 +1,468 @@
+ -------------------------------------------------- SCRITTURA SU FILE JAVA: -------------------------------------------------
+
+import java.io.*;
+import java.util.*;
+
+public class ModificaFile {
+    public static void main(String[] args) throws IOException {
+
+	System.out.println( System.getProperty("user.dir")); // per la directory corrente
+
+        String percorsoFile = "file.txt";
+        List<String> righe = new ArrayList<>();
+
+        // Legge tutte le righe del file
+        try (BufferedReader reader = new BufferedReader(new FileReader(percorsoFile))) {
+            String linea;
+            while ((linea = reader.readLine()) != null) {
+                righe.add(linea);
+            }
+        
+
+        // Modifica le prime due righe
+        if (righe.size() > 0) {
+            righe.set(0, "Questa è la nuova prima riga");
+        } else {
+            righe.add("Questa è la nuova prima riga");
+        }
+        if (righe.size() > 1) {
+            righe.set(1, "Questa è la nuova seconda riga");
+        } else {
+            righe.add("Questa è la nuova seconda riga");
+        }
+
+        // Riscrive il file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(percorsoFile))) {
+            for (String linea : righe) {
+                writer.write(linea);
+                writer.newLine();
+            }
+        }
+
+	} catch (Exception e) {
+		System.error.println("File inesistente o non accessibile!");
+            	e.printStackTrace();
+        }
+    }
+}
+ -------------------------------------------------- METODI GSON IN JAVA ---------------------------------------------------
+
+// Matrice - SERIALIZZAZIONE
+
+int[][] matrix = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+String json = gson.toJson(matrix);
+System.out.println(json); // Output: [[1,2,3],[4,5,6],[7,8,9]]
+
+// Matrice - DESERIALIZZAZIONE
+
+String json = "[[1,2,3],[4,5,6],[7,8,9]]";
+int[][] matrix = gson.fromJson(json, int[][].class);
+
+for (int[] row : matrix) {
+    for (int element : row) {
+        System.out.print(element + " ");
+    }
+    System.out.println();
+}
+
+// OPPURE, se non ho classi apposite, deserializzo come
+JsonObject jsonObject = JsonParser.parseString(JSONSTRING).getAsJsonObject();
+
+--------------------------------------------- VISUALIZZA VARIABILI JSP NELLA TEXTAREA -------------------------------------
+
+    <% 
+        // Ottieni l'oggetto Articolo dalla sessione
+        Articolo myArticolo = (Articolo) request.getSession().getAttribute("articolo");
+        String articoloString = myArticolo.getContenuto();
+    %>
+    
+    <!-- Visualizzazione di toString in una textarea -->
+    <textarea id="articoloText" ><%= articoloString %></textarea>
+
+---------------------------------------------------- DATA CREAZIONE HTTPSESSION -------------------------------------------
+
+HttpSession session = request.getSession();
+long creationTime = session.getCreationTime();
+Date creationDate = new Date(creationTime);
+// LocalDateTime creationDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(creationTime), ZoneId.systemDefault());
+System.out.println("Session created at: " + creationDate);
+
+------------------------------------------------------- RICHIESTA AJAX ----------------------------------------------------
+
+var xhr = new XMLHttpRequest();  // Crea un nuovo oggetto XMLHttpRequest
+
+// Imposta il metodo (GET, POST, etc.) e l'URL
+xhr.open('GET', 'https://api.example.com/data', true);
+xhr.setRequestHeader('Content-Type', 'application/json');  // Imposta il tipo di contenuto come JSON
+
+// Imposta una funzione da eseguire quando la richiesta cambia stato
+xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+        // La risposta è pronta e il codice di stato HTTP è 200 (OK)
+        console.log(xhr.responseText);  // Elenco della risposta del server
+    }
+};
+
+// Invia la richiesta con dati JSON
+var data = JSON.stringify({ name: 'John', age: 30 });
+xhr.send(data);
+
+------------------------------------------------------- OGGETTO GSON ------------------------------------------------------
+
+Gson gson = new Gson();
+String jsonResult = gson.toJson(new OBJECT); // Posso inserire una varisabile o un oggetto che verrà jsonizzato con campo: valore
+System.out.println("Ottengo " + jsonResult);
+
+response.setCharacterEncoding("UTF-8");
+response.setContentType("application/json");
+PrintWriter out = response.getWriter();
+out.print(jsonResult);
+out.flush();
+
+------------------------------------------------ CONTROLLO DATI JAVASCRIPT ------------------------------------------------
+
+function isUpperCase(str) {
+    return /^[A-Z]+$/.test(str);
+}
+
+function isLowerCase(str) {
+    return /^[a-z]+$/.test(str);
+}
+
+function isNumeric(str) {
+    return /^[0-9]+$/.test(str);
+}
+
+function isAlphabetic(str) {
+    return /^[A-Za-z]+$/.test(str);
+}
+
+----------------------------------------------- PARAMETRI RICHIESTE NON JSON ----------------------------------------------
+
+	fetch("dataServlet", {
+	    method: "POST",
+	    body: new URLSearchParams({ "servizio" : "R" }) // Potrei anche fare il .append("campo":valore)
+	})
+	.then(response => response.text())
+	.then(data => {
+	    console.log("Risposta dal server:", data);
+	})
+	.catch(error => {
+	    console.error("Errore durante l'invio dei dati:", error);
+	});
+
+----------------------------------------------------- CREAZIONE DI UN THREAD ----------------------------------------------
+
+new Thread(() -> {
+	while(true) {}
+}).start();
+
+---------------------------------------------------- CREAZIONE MATRICE INPUT ----------------------------------------------
+
+// Funzione per generare axb campi di input per inserire una matrice
+function createMatrixInput(a, b) {
+    // Contenitore principale
+    const container = document.createElement('div');
+    const table = document.createElement('table');
+
+    for (let i = 0; i < a; i++) {
+        const row = document.createElement('tr');
+
+        for (let j = 0; j < b; j++) {
+            const cell = document.createElement('td');
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.style.width = '50px';
+            input.style.textAlign = 'center';
+            input.dataset.row = i;
+            input.dataset.col = j;
+            cell.appendChild(input);
+            row.appendChild(cell);
+        }
+
+        table.appendChild(row);
+    }
+
+    container.appendChild(table);
+
+    // Bottone per inviare la matrice
+    const button = document.createElement('button');
+    button.textContent = 'Stampa Matrice';
+    button.addEventListener('click', () => {
+        const inputs = container.querySelectorAll('input');
+        const matrix = [];
+
+        for (let i = 0; i < a; i++) {
+            const row = [];
+            for (let j = 0; j < b; j++) {
+                const input = Array.from(inputs).find(
+                    el => el.dataset.row == i && el.dataset.col == j
+                );
+                row.push(Number(input.value) || 0); // Converte in numero, 0 se vuoto
+            }
+            matrix.push(row);
+        }
+
+        console.log(matrix); // Stampa la matrice in console
+        alert(JSON.stringify(matrix)); // Mostra la matrice in un alert
+    });
+
+    container.appendChild(button);
+
+    // Aggiunge il contenitore al body della pagina
+    document.body.appendChild(container);
+}
+
+---------------------------------------------------- DATI XML -----------------------------------------------------
+
+// Scrivi i dati in formato XML
+out.println("<parametro>");
+out.println("<id>" + parametro + "</id>");
+out.println("<valore>" + parametro + "</valore>");
+out.println("</parametro>");
+
+// Converti i parametri da javascript
+const parser = new DOMParser();
+const xmlDoc = parser.parseFromString(xmlString, "application/xml");
+const param = xmlDoc.querySelector("PARAMETRO_DA_OTTENERE").textContent;
+
+-------------------------------------- ADMIN: INTERROMPE ESECUZIONE SERVLET ---------------------------------------
+
+// 1. Crea classe setSession.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="java.util.*" %>
+
+<%
+	System.out.println("Cambio stato in esecuzione...");
+	
+	// ---- Parametri in ingresso ---- 
+    
+	boolean newStatus = Boolean.parseBoolean(request.getParameter("status"));
+    
+   	// ---- Esecuzione programma -----
+   	
+   	request.getSession().setAttribute("trovata", newStatus);
+   	
+   	// ---- Stampa in uscita --------- 
+    response.getWriter().println("Settata con successo a " + newStatus);
+%>
+
+
+// 2. Funzione javascript per inizializzare il valore 
+// Invocata anche all'ONLOAD
+
+function setTrovata( status ) {
+    fetch( "setSession.jsp?status=" + status, {
+        method: "GET"
+    })
+    .then(data => {
+        console.log("Risposta dal server:", data);
+    })
+}
+
+// 3. Servlet: esegue finchè non trova il valore a false
+
+boolean statoRichiesta = (boolean) request.getSession().getAttribute("trovata");
+if ( !statoRichiesta ) {
+	// esegue...
+} else {
+	// setta la risposta negativa
+	return;
+}
+
+------------------------------------- ADMIN: NUMERO RICHIESTE ENTRO 60 MINUTI -------------------------------------
+
+// 1. Crea il RequestManager e instanzialo dell'index.jsp
+
+public class RequestManager {
+
+    // Liste per i gruppi
+    private final List<Richiesta> richieste;
+
+    public RequestManager() {
+        this.richieste = new ArrayList<>();
+        System.out.println("Istanzio la classe RequestManager...");
+        
+    }
+    
+    public synchronized void addRichiesta(HttpSession utente) {
+    	System.out.println(utente.getId() + " fa una nuova richiesta...");
+        this.richieste.add(new Richiesta(utente, LocalTime.now()));
+    }
+    
+    public int getRichieste() {
+    	int richiesteUtenti = 0;
+    	
+    	for (Richiesta richiesta : richieste) {
+			if ( richiesta.getOrarioRichiesta().plusMinutes(1).isAfter(LocalTime.now()) ) {
+				richiesteUtenti ++;
+			}
+		}
+    	
+    	return richiesteUtenti;
+    }
+    
+}
+
+// 2. Crea l'oggetto richiesta
+
+public class Richiesta {
+	private HttpSession utente;
+	private LocalTime orarioRichiesta;
+	
+	public Richiesta(HttpSession utente, LocalTime orarioRichiesta) {
+		super();
+		this.utente = utente;
+		this.orarioRichiesta = orarioRichiesta;
+	}
+
+	public HttpSession getUtente() {
+		return utente;
+	}
+
+	public LocalTime getOrarioRichiesta() {
+		return orarioRichiesta;
+	}
+
+	@Override
+	public String toString() {
+		return "[sessione=" + utente.getId() + ", orarioRichiesta=" + orarioRichiesta
+				+ "]\n";
+	}
+}
+
+---------------------------------------- ADMIN: NUM RICHIESTE ULTIME 24 ORE ---------------------------------------
+
+// 1. Crea l'oggetto richiesta
+
+public class Richiesta {
+	private String nomeFile;
+	private LocalDateTime lastAccessedTime;
+	private int numAccessi;
+	
+	public Richiesta(String nomeFile, LocalDateTime lastAccessedTime) {
+		super();
+		this.nomeFile = nomeFile;
+		this.lastAccessedTime = lastAccessedTime;
+		this.numAccessi = 1;
+	}
+
+	public LocalDateTime getLastAccessedTime() {
+		return lastAccessedTime;
+	}
+
+	public void setLastAccessedTime(LocalDateTime lastAccessedTime) {
+		this.lastAccessedTime = lastAccessedTime;
+	}
+
+	public String getNomeFile() {
+		return nomeFile;
+	}
+
+	public void nuovoAccesso() {
+		this.numAccessi++;
+	}
+
+	@Override
+	public String toString() {
+		return "Richiesta [nomeFile=" + nomeFile + ", lastAccessedTime=" + lastAccessedTime + ", numAccessi="
+				+ numAccessi + "]";
+	}
+}
+
+// Lo istanzio con scope di application
+
+------------------------------------------- ADMIN: RICHIESTE DEL GIORNO ATTUALE -----------------------------------
+
+// Lista di richieste con localdatetime
+
+ <% 
+        List<Richiesta> richieste = (List<Richiesta>) getServletContext().getAttribute("richieste");
+        if (richieste == null ) {
+        	richieste = new ArrayList<>();
+        	getServletContext().setAttribute("richieste", richieste);
+        }
+        for (Richiesta richiesta : richieste) {
+        	if ( richiesta.getDateTime().toLocalDate().equals(LocalDateTime.now().toLocalDate()) )
+        %>
+            <li>Elementi processati: <%= richiesta.getNumElementiMatrice() %> - Utente: <%= richiesta.getUtente().getId() %></li>
+        <% } 
+%>
+
+---------------------------------------------------- FUNZIONI UTILI -----------------------------------------------
+ ======== JAVA ==============
+
+    // 1. Randomizza un carattere
+    public static char randomizeChar() {
+        Random random = new Random();
+        // Genera un carattere random dall'alfabeto ASCII stampabile
+        return (char) (random.nextInt(94) + 33); // Da '!' (33) a '~' (126)
+    }
+
+    // 2. Trova le occorrenze di una stringa in un'altra stringa
+    public static int countOccurrences(String source, String target) {
+        if (target.isEmpty()) {
+            return 0;
+        }
+        int count = 0;
+        int index = source.indexOf(target);
+        while (index != -1) {
+            count++;
+            index = source.indexOf(target, index + target.length());
+        }
+        return count;
+    }
+
+    // 3. Shuffle di un array
+    public static void shuffleArray(int[] array) {
+        Random random = new Random();
+        for (int i = array.length - 1; i > 0; i--) {
+            int j = random.nextInt(i + 1);
+            // Scambia array[i] con array[j]
+            int temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+    }
+
+    // 4. Shuffle dei caratteri di una stringa
+    public static String shuffleString(String input) {
+        ArrayList<Character> characters = new ArrayList<>();
+        for (char c : input.toCharArray()) {
+            characters.add(c);
+        }
+        Collections.shuffle(characters);
+        StringBuilder result = new StringBuilder(characters.size());
+        for (char c : characters) {
+            result.append(c);
+        }
+        return result.toString();
+    }
+
+ ======== JAVASCRIPT ========
+
+// 1. Randomizza un carattere
+function randomizeChar() {
+    const charCode = Math.floor(Math.random() * (126 - 33 + 1)) + 33; // Da '!' (33) a '~' (126)
+    return String.fromCharCode(charCode);
+}
+
+// 2. Trova le occorrenze di una stringa in un'altra stringa
+function countOccurrences(source, target) {
+    if (target === "") return 0;
+    let count = 0;
+    let index = source.indexOf(target);
+    while (index !== -1) {
+        count++;
+        index = source.indexOf(target, index + target.length);
+    }
+    return count;
+}
+
+// Test delle funzioni
+console.log("Random Character:", randomizeChar());
+console.log("Occurrences of 'ab' in 'abcabcab':", countOccurrences("abcabcab", "ab"));
+
+
+ --------------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,64 @@
+/* FINE SCORRE SOTTODIRECTORY INDICE ====================================== SNIPPET */
+// Variabili --------------------------------------------------------------------
+File file, directory;
+File[] files, subfiles;
+int arraySize, count, index, j;
+int parametro = 2;
+
+// Algoritmo --------------------------------------------------------------------
+directory = new File(dirName);
+if (directory.exists() && directory.isDirectory()) {
+    files = directory.listFiles();
+
+    // Primo ciclo: Conta quante sottodirectory soddisfano il criterio (numero file txt > parametro)
+    arraySize = 0;
+    for ( i = 0; i < files.length && arraySize < MAX_LIST_SIZE; i++) {
+        file = files[i];
+        if (file.isDirectory()) {
+            System.out.println("Trovata directory: " + file.getName());
+            subfiles = file.listFiles();
+            count = 0;
+
+            // Conta file .txt nella sottodirectory
+            for ( j = 0; subfiles != null && j < subfiles.length; j++) {
+                if (subfiles[j].isFile() && subfiles[j].getName().endsWith(".txt")) {
+                    count++;
+                }
+            }
+
+            if (count >= parametro) {
+                arraySize++;
+            }
+        }
+    }
+
+    // Allocazione array per il risultato
+    result = new String[arraySize];
+
+    // Secondo ciclo: Riempie l'array con i nomi delle directory valide
+    index = 0;
+    for (i = 0; i < files.length && index < arraySize; i++) {
+        file = files[i];
+        if (file.isDirectory()) {
+            subfiles = file.listFiles();
+            count = 0;
+
+            // Conta file .txt nella sottodirectory
+            for (j = 0; subfiles != null && j < subfiles.length; j++) {
+                if (subfiles[j].isFile() && subfiles[j].getName().endsWith(".txt")) {
+                    count++;
+                }
+            }
+
+            if (count >= parametro ) {
+                result[index] = file.getName();
+                index++;
+            }
+        }
+    }
+} else {
+    System.out.println("Errore: Directory non esiste o non è una directory");
+    result = new String[1];
+    result[0] = "ERRORE";
+}
+/* FINE SCORRE SOTTODIRECTORY INDICE ====================================== SNIPPET */

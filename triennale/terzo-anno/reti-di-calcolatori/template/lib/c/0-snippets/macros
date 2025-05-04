@@ -1,0 +1,9 @@
+#define IS_TEXT(file_name) (file_name[strlen(file_name)-4] == '.' && file_name[strlen(file_name)-3] == 't' && file_name[strlen(file_name)-2] == 'x' && file_name[strlen(file_name)-1] == 't' ? 1 : 0)
+
+#define IS_NUMERIC(c) ((c) >= '0' && (c) <= '9')
+
+#define IS_LOWERCASE(c) ((c) >= 'a' && (c) <= 'z')
+#define IS_UPPERCASE(c) ((c) >= 'A' && (c) <= 'Z')
+#define IS_ALPHABETIC(c) (IS_LOWERCASE(c) || IS_UPPERCASE(c))
+
+#define IS_ALPHANUMERIC(c) (IS_NUMERIC(c) || IS_ALPHABETIC(c))

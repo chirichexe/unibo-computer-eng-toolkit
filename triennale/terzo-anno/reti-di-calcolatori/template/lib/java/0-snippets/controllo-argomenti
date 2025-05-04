@@ -1,0 +1,29 @@
+// Controllo intero
+int num = -1;
+String numString = null;
+
+try {
+    num = Integer.parseInt(numString);
+    if (num < 0) {
+        System.out.println("Numero inserito non positivo");
+    }
+} catch (NumberFormatException e) {
+    System.out.println("Numero inserito non valido");
+}
+
+// Controllo carattere
+char carattere = ' ';
+
+do {
+    System.out.println("Inserisci carattere:");
+    String input = stdIn.readLine();
+    if (input.length() == 1) {
+        carattere = input.charAt(0);
+        if (carattere < 'a' || carattere > 'z') {
+            System.out.println("Carattere inserito non valido");
+            carattere = ' ';
+        }
+    } else {
+        System.out.println("Inserisci un solo carattere");
+    }
+} while (carattere == ' ');

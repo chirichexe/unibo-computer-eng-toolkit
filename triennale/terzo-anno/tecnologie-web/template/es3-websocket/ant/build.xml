@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+
+<project name="es3-websocket" basedir=".." default="02.print.properties">
+
+	<!-- ================ -->
+	<!-- Properties setup -->
+	<!-- ================ -->
+
+	<target 
+		name="00.init.properties" 
+		description="Sets up properties"
+	>
+		<!-- Environment properties -->
+		<property file="ant/environment.properties"/>
+		<!-- Project properties -->
+		<property file="ant/project.properties"/>
+		<!-- Project structure -->
+	    <property name="src.dir" value="src"/>
+	    <property name="test.dir" value="test"/>
+		<property name="build.dir" value="build"/>
+	    <property name="build.classes.dir" value="${build.dir}/classes"/>
+	    <property name="build.tests.dir" value="${build.dir}/tests"/>
+	    <property name="build.archives.dir" value="${build.dir}/archives"/>
+	    <property name="build.exploded.dir" value="${build.dir}/exploded"/>
+		<property name="lib.dir" value="lib"/>
+		<property name="tmp.dir" value="tmp"/>
+		<property name="web.dir" value="web"/>
+	</target>
+
+	<target 
+		name="01.set.classpath" depends="00.init.properties" 
+		description="Sets up classpath properties for other tasks"
+	>
+	    <path id="ant-classpath">
+	    	<!-- Project-specific libraries -->
+	        <fileset dir="${lib.dir}">
+	            <include name="*.jar"/>
+	        </fileset>
+	        <fileset dir="${web.dir}">
+	            <include name="WEB-INF/lib/*.jar"/>
+	        </fileset>
+	    	<!-- Project classes -->
+	        <pathelement path="${build.classes.dir}"/>
+	    </path>
+	</target>
+
+	<!-- ================= -->
+	<!-- Informative tasks -->
+	<!-- ================= -->
+
+	<target 
+		name="02.print.properties" depends="00.init.properties"
+		description="Prints properties on screen for verification purpose" 
+	>
+        <echo message="-----------------------------------"/>
+        <echo message="Properties are:"/>
+        <echo message="-----------------------------------"/>
+		<echo message="{ant.project.name} is '${ant.project.name}'"/>
+		<echo message="{basedir} is '${basedir}'"/>
+		<echo message="{src.dir} is '${src.dir}'"/>
+		<echo message="{test.dir} is '${test.dir}'"/>
+		<echo message="{web.dir} is '${web.dir}'"/>
+		<echo message="{build.classes.dir} is '${build.classes.dir}'"/>
+		<echo message="{build.tests.dir} is '${build.tests.dir}'"/>
+		<echo message="{build.archives.dir} is '${build.archives.dir}'"/>
+		<echo message="{build.exploded.dir} is '${build.exploded.dir}'"/>
+		<echo message="{lib.dir} is '${lib.dir}'"/>
+		<echo message="{tmp.dir} is '${tmp.dir}'"/>
+        <echo message="..................................."/>
+		<echo message="{java.home} is '${java.home}'"/>
+        <echo message="..................................."/>
+		<!--
+		<echo message="{} is '${}'"/>
+		-->
+        <echo message=" "/>
+	</target>
+
+	<!-- ============= -->
+	<!-- Project tasks -->
+	<!-- ============= -->
+
+	<target 
+		name="03.clean" depends="00.init.properties"
+		description="Creates project structure, if needed"
+	>
+        <delete dir="${build.dir}"/>
+        <delete dir="${tmp.dir}" includes="**"/>
+	</target>
+
+	<target 
+		name="04.prepare" depends="03.clean"
+		description="Creates project structure, if needed"
+	>
+        <mkdir dir="${src.dir}"/>
+        <mkdir dir="${lib.dir}"/>
+        <mkdir dir="${build.classes.dir}"/>
+        <mkdir dir="${build.tests.dir}"/>
+        <mkdir dir="${build.archives.dir}"/>
+        <mkdir dir="${build.exploded.dir}"/>
+		<mkdir dir="${lib.dir}"/>
+        <mkdir dir="${tmp.dir}"/>
+        <mkdir dir="${web.dir}"/>
+	</target>
+    
+	<target 
+    	name="05.build" depends="01.set.classpath, 04.prepare"
+		description="Compile main source tree java files"
+    >
+        <mkdir dir="${build.classes.dir}"/>
+        <javac destdir="${build.classes.dir}" debug="true"
+		deprecation="false" optimize="false" failonerror="true">
+            <src path="${src.dir}"/>
+            <classpath refid="ant-classpath"/>
+        </javac>
+	</target>
+
+	<target 
+    	name="05.build.tests" depends="05.build"
+		description="Compile test java files"
+    >
+        <javac destdir="${build.tests.dir}" 
+		deprecation="false" optimize="false" failonerror="true">
+            <src path="${test.dir}"/>
+            <classpath refid="ant-classpath"/>
+        	<classpath location="${build.classes.dir}"/>
+        </javac>
+    </target>
+
+	<target name="06.test" depends="05.build">
+		<input
+		    message="JUnit test suite (canonical class name):"
+		    addproperty="suite"
+		/>
+		<junit fork="yes" printsummary="yes" dir="${tmp.dir}">
+			<formatter type="xml" />
+			<test name="${suite}" />
+            <classpath refid="ant-classpath"/>
+        	<classpath path="${build.classes.dir}"/>
+        	<classpath path="${build.tests.dir}"/>
+		</junit>	
+	</target>
+    
+    <target name="07.package" depends="05.build" >
+        <war destfile="${build.archives.dir}/${ant.project.name}.war" webxml="${web.dir}/WEB-INF/web.xml">
+            <fileset dir="${web.dir}">
+                <include name="**/*.*"/>
+            	<exclude name="WEB-INF/web.xml" />
+            </fileset>
+        	<zipfileset dir="${build.classes.dir}" prefix="WEB-INF/classes"/>
+        </war>
+		<unwar src="${build.archives.dir}/${ant.project.name}.war" dest="${build.exploded.dir}/${ant.project.name}"/>
+    </target>
+
+	<target name="08.undeploy" depends="00.init.properties" >
+		<delete file="${deploy.path}/${ant.project.name}.war"/>
+		<delete dir="${deploy.path}/${ant.project.name}"/>
+    </target>
+
+	<target name="09a.deploy.war" depends="08.undeploy, 07.package" >
+    	<copy todir="${deploy.path}" preservelastmodified="true">
+            <fileset dir="${build.archives.dir}">
+                <include name="${ant.project.name}.war"/>
+            </fileset>
+        </copy>
+    </target>
+
+	<target name="09b.deploy.dir" depends="08.undeploy, 07.package" >
+		<unwar src="${build.archives.dir}/${ant.project.name}.war" dest="${deploy.path}/${ant.project.name}"/>
+    </target>
+
+	<target name="10.update.pages" depends="00.init.properties">
+		<copy overwrite="false" todir="${deploy.path}/${ant.project.name}">
+            <fileset dir="${web.dir}">
+                <include name="**/**"/>
+            </fileset>
+		</copy>
+	</target>
+
+	<!-- ========== -->
+	<!-- More tasks -->
+	<!-- ========== -->
+	
+	<target name="99.run.tcptunnel" depends="01.set.classpath">
+		<java classname="org.apache.soap.util.net.TcpTunnelGui" fork="true">
+			<classpath refid="ant-classpath" />
+			<arg value="8081" />
+			<arg value="localhost" />
+			<arg value="8080" />
+		</java>
+	</target>
+	
+</project>

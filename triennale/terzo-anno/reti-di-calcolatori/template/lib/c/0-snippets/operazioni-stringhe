@@ -1,0 +1,124 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+// Esempio di strlen - Lunghezza della stringa
+char str1[] = "Hello, world!";
+size_t len = strlen(str1); // len = 13
+
+// Esempio di strcpy - Copia una stringa
+char dest1[20];
+strcpy(dest1, str1); // dest1 = "Hello, world!"
+
+// Esempio di strncpy - Copia n caratteri
+char dest2[20];
+strncpy(dest2, str1, 5); // dest2 = "Hello"
+
+// Esempio di strcat - Concatenazione di stringhe
+char str2[30] = "Hello";
+char str3[] = ", world!";
+strcat(str2, str3); // str2 = "Hello, world!"
+
+// Esempio di strncat - Concatenazione con massimo n caratteri
+char str4[30] = "Hello";
+strncat(str4, str3, 7); // str4 = "Hello, wor"
+
+// Esempio di strcmp - Confronto di stringhe
+char str5[] = "abc";
+char str6[] = "abd";
+int cmp1 = strcmp(str5, str6); // cmp1 < 0 (str5 precede str6)
+
+// Esempio di strncmp - Confronto di n caratteri
+int cmp2 = strncmp(str5, str6, 2); // cmp2 == 0 (prime due lettere uguali)
+
+// Esempio di strchr - Cerca un carattere in una stringa
+char *pos1 = strchr(str1, 'o'); // pos1 punta alla prima 'o' in str1
+
+// Esempio di strrchr - Cerca l'ultima occorrenza di un carattere
+char *pos2 = strrchr(str1, 'o'); // pos2 punta all'ultima 'o' in str1
+
+// Esempio di strstr - Cerca una sottostringa
+char *substr = strstr(str1, "world"); // substr punta a "world!"
+
+// Esempio di strtok - Tokenizzazione di una stringa
+char str7[] = "Hello, world!";
+char *token = strtok(str7, ", "); // token = "Hello"
+while (token != NULL) {
+    token = strtok(NULL, ", "); // token successivo
+}
+
+// Esempio di memset - Riempie una stringa con un carattere
+char str8[10];
+memset(str8, 'A', 9);
+str8[9] = '\0'; // str8 = "AAAAAAAAA"
+
+// Esempio di memcpy - Copia blocchi di memoria
+char src[] = "Data";
+char dest3[10];
+memcpy(dest3, src, strlen(src) + 1); // dest3 = "Data"
+
+// Esempio di memmove - Copia sicura di blocchi di memoria
+char str9[] = "Overlap";
+memmove(str9 + 2, str9, 4); // str9 = "OvOvelap"
+
+// Esempio di strcmpi (o strcasecmp su alcuni sistemi) - Confronto ignorando maiuscole/minuscole
+char str10[] = "hello";
+char str11[] = "HELLO";
+int cmp3 = strcasecmp(str10, str11); // cmp3 == 0 (uguali ignorando maiuscole)
+
+// Esempio di strspn - Lunghezza di prefisso contenente solo caratteri specifici
+char str12[] = "abc123";
+size_t prefix_len = strspn(str12, "abc"); // prefix_len = 3
+
+// Esempio di strcspn - Lunghezza fino al primo carattere non contenuto
+size_t non_match = strcspn(str12, "123"); // non_match = 3
+
+// Esempio di strdup - Duplica una stringa
+char *copy = strdup(str1); // copy = "Hello, world!"
+free(copy); // Rilascia la memoria allocata
+
+
+// -------------------------------------------------
+
+/*CONTA_OCCORRENZE ========================== SNIPPET*/
+// Variabili ------------------------------------------
+char *testo = "abcabcabc";
+char *pattern = "abc";
+int count = 0;
+char *pos = testo;
+// Algoritmo -------------------------------------------
+while ((pos = strstr(pos, pattern)) != NULL) {
+    count++;
+    pos += strlen(pattern); // Avanza oltre l'ultima occorrenza trovata
+}
+// `count` contiene il numero di occorrenze di `pattern` in `testo`
+/* FINE CONTA_OCCORRENZE ==================== SNIPPET*/
+
+/*INIZIA_CON_PREFISSO ======================== SNIPPET*/
+// Variabili -----------------------------------------------------------------------------------
+char *stringa = "prefisso_test";
+char *prefisso = "prefisso";
+int inizia_con_prefisso = 0;
+
+// Algoritmo --------------------------------------------------------------------------------
+if (strncmp(stringa, prefisso, strlen(prefisso)) == 0) {
+    inizia_con_prefisso = 1;
+}
+/* FINE INIZIA_CON_PREFISSO ==================== SNIPPET*/
+
+/*FINISCE_CON_SUFFISSO ======================== SNIPPET*/
+// Variabili -----------------------------------------------------------------------------------
+char *stringa = "test_suffisso";
+char *suffisso = "suffisso";
+int finisce_con_suffisso = 0;
+size_t len_stringa = strlen(stringa);
+size_t len_suffisso = strlen(suffisso);
+
+// Algoritmo --------------------------------------------------------------------------------
+if (len_stringa >= len_suffisso &&
+    strcmp(stringa + len_stringa - len_suffisso, suffisso) == 0) {
+    finisce_con_suffisso = 1;
+}
+/* FINE FINISCE_CON_SUFFISSO ==================== SNIPPET*/
+
+

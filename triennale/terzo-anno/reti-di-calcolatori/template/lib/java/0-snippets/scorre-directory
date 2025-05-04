@@ -1,0 +1,15 @@
+/* SCORRE DIRECTORY ================================== SNIPPET */
+File directory = new File(dirName);
+if (directory.exists() && directory.isDirectory()) {
+    File[] files = directory.listFiles();
+    for (int i = 0; i < files.length; i++) {
+        File file = files[i];
+        if (file.isFile()) {
+            System.out.println("Trovato file: " + file.getName());
+        }
+    }
+} else {
+    outSock.writeUTF("errore"); // messaggio di errore
+    System.out.println("Errore: Directory non esiste o non è una directory");
+}
+/* FINE SCORRE DIRECTORY ============================== SNIPPET */

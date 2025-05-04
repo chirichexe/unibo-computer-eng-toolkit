@@ -1,0 +1,1 @@
+gcc server.c -o server && gcc client_datagram.c -o udp && gcc client_stream.c -o tcp && ./server 1234

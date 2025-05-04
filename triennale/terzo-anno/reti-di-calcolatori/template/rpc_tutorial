@@ -1,0 +1,3 @@
+rpcgen esame.x &&
+gcc -I /usr/include/tirpc RPC_Server.c esame_svc.c esame_clnt.c esame_xdr.c -o server -ltirpc &&
+gcc -I /usr/include/tirpc RPC_Client.c esame_clnt.c esame_xdr.c esame.h -o client -ltirpc

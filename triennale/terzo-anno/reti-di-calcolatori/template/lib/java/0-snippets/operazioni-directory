@@ -1,0 +1,29 @@
+import java.io.File;
+
+public class Main {
+    public static void main(String[] args) {
+        String dirName = "mia_cartella";
+        File directory = new File(dirName);
+
+        if (directory.mkdir()) {
+            System.out.println("Directory '" + dirName + "' creata con successo.");
+        } else {
+            System.out.println("Errore nella creazione della directory.");
+        }
+    }
+}
+
+import java.io.File;
+
+public class Main {
+    public static void main(String[] args) {
+        String dirName = "mia_cartella";
+        File directory = new File(dirName);
+
+        if (directory.delete()) {
+            System.out.println("Directory '" + dirName + "' eliminata con successo.");
+        } else {
+            System.out.println("Errore nell'eliminazione della directory. Assicurati che sia vuota.");
+        }
+    }
+}

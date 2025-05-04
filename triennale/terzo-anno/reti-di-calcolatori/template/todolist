@@ -1,0 +1,12 @@
+Prima di consegnare
+
+1. Tutte le variabili sono dichiarate in alto?
+2. C'è il tuo nome su tutti i file?
+3. Hai eliminato strutture dati (RMI_OBJECT, ELEMENTO) che non servono?
+4. Hai tolto tutti i commenti degli snippet? es. Variabili (spostare), SNIPPETS... ?
+5. Controlla break e continue e evitane più che puoi
+6. Controlla apertura / chiusura file e le gestione degli errori
+7. I flag hanno senso?
+8. La snprintf da warning?
+9. Hai tolto i memset?
+10. quando premo ctrl+d deve chiudersi il server, non ricevere null (in C, read <= 0)

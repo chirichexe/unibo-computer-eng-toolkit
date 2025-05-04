@@ -1,0 +1,175 @@
+/* RICEZIONE DIRECTORY ========================================= SNIPPET */
+// prima mando il nome della directory (input)
+// Variabili (da spostare sopra) ------------------------------------------
+
+int result;
+char file_name[MAX_NAME_SIZE];
+int fd, file_size = 0;
+char file_buffer[DIM_BUFF];
+int bytes_read, bytes_left;
+
+// Algoritmo --------------------------------------------------------------
+if(read(sd, &result, sizeof(result)) < 0) {
+    perror("read");
+    close(sd);
+    exit(1);
+}
+
+if (result < 0) {
+    printf("Directory non presente lato servitore.\n");
+    printf("Inserisci XXX\n");
+} else {
+    while(1){
+        memset(file_name, 0, MAX_NAME_SIZE); // non necessario
+
+        // Ricevo nome file
+        if (read(sd, file_name, MAX_NAME_SIZE) < 0) {
+            perror("read");
+            close(sd);
+            exit(1);
+        }
+
+        // Se il nome file è FINE ho terminato ed esco
+        if (strcmp(file_name, "FINE") == 0) {
+            printf("Directory ricevuta con successo\n");
+            break;
+        }
+        
+        // Ricevo dimensione file
+        if (read(sd, &file_size, sizeof(int)) < 0) {
+            perror("read");
+            close(sd);
+            exit(1);
+        }
+
+        printf("Ricevuto file: %s di lunghezza %d\n", file_name, file_size);
+
+        // Creo il file
+        fd = open(file_name, O_CREAT | O_WRONLY, 0777);
+        if (fd < 0) {
+            perror("open");
+            close(sd);
+            exit(1);
+        }
+
+        // Ricevo contenuto ("countdown" sui byte da ricevere)
+        bytes_left = file_size;
+        while (bytes_left > 0) {
+            bytes_read = read(sd, file_buffer, (bytes_left < MAX_NAME_SIZE) ? bytes_left : MAX_NAME_SIZE);
+            
+            if (bytes_read <= 0) {
+                perror("read");
+                close(sd);
+                close(fd);
+                exit(1);
+            }
+            
+            write(fd, file_buffer, bytes_read);
+            bytes_left -= bytes_read;
+        }
+
+        close(fd);
+    }
+}
+/* FINE RICEZIONE DIRECTORY ==================================== SNIPPET */
+
+/* INVIO DIRECTORY ============================================== SNIPPET */
+// ricevo il nome della directory (input)
+// Variabili (da spostare sopra) -------------------------------------------
+
+DIR* dir;
+int fd, file_size, bytes_read, result = 0;
+struct dirent *entry;
+char file_path[MAX_NAME_SIZE * 2];
+char buffer[MAX_NAME_SIZE];
+
+// Algoritmo ---------------------------------------------------------------
+
+dir = opendir(input);
+// Directory non esiste
+if (dir == NULL) {
+
+    printf("Directory non trovata\n");
+    result = -1;
+    if (write(connfd, &result, sizeof(result)) < 0){
+        perror("write");
+        close(connfd);
+        exit(1);
+    }
+
+} 
+// Directory esiste, la scorro
+else {
+    result = 0;
+    if (write(connfd, &result, sizeof(result)) < 0){
+        perror("write");
+        closedir(dir);
+        close(connfd);
+        exit(1);
+    }     
+    while ((entry = readdir(dir)) != NULL) {
+        if (entry -> d_name[0] == '.'){ // Solo file regolari
+            continue;
+        }
+        
+        snprintf(file_path, sizeof(file_path), "%s/%s", input, entry -> d_name);
+        printf("Trovato file %s\n", file_path);
+
+        // Apertura file
+        fd = open(file_path, O_RDONLY);
+        if (fd < 0) {
+            perror("open");
+            continue;
+        }
+
+        // Calcolo dimensione file
+        file_size = lseek(fd, 0, SEEK_END);
+        lseek(fd, 0, SEEK_SET);
+
+        // Invio nome file
+        if (write(connfd, entry -> d_name, MAX_NAME_SIZE) < 0) {
+            perror("write");
+            close(fd);
+            closedir(dir);
+            close(connfd);
+            exit(1);
+        }    
+
+        // Invio dimensione file
+        if (write(connfd, &file_size, sizeof(int)) < 0) {
+            perror("write");
+            close(fd);
+            closedir(dir);
+            close(connfd);
+            exit(1);
+        }
+
+
+        // Invio contenuto
+        while ((bytes_read = read(fd, buffer, MAX_NAME_SIZE)) > 0) {
+            if (write(connfd, buffer, bytes_read) < 0) {
+                perror("write");
+                close(fd);
+                closedir(dir);
+                close(connfd);
+                exit(1);
+            }
+        }
+
+        // File inviato, chiudo
+        close(fd);
+
+    }
+
+    // Invio segnale di fine e chiudo directory
+    if (write(connfd, "FINE", 5) < 0) {
+        perror("write");
+        closedir(dir);
+        close(connfd);
+        exit(1);
+    }
+
+    closedir(dir);
+}
+
+/* FINE INVIO DIRECTORY ========================================= SNIPPET */

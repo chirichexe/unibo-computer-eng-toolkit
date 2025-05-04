@@ -1,0 +1,60 @@
+/*
+* recvfrom:
+* - sockfd: Socket descriptor, buf: Buffer per i dati ricevuti, len: Dimensione massima del buffer.
+* - flags: 0, src_addr: Indirizzo del mittente, addrlen: Dimensione di src_addr (inizializzata prima, aggiornata dopo).
+*
+* sendto:
+* ssize_t sendto(int sockfd, const void *buf, size_t len, int flags, const struct sockaddr *dest_addr, socklen_t addrlen);
+* - sockfd: Socket descriptor, buf: Buffer dei dati da inviare, len: Numero di byte da inviare.
+* - flags: 0, dest_addr: Indirizzo del destinatario, addrlen: Dimensione di dest_addr.
+*/
+
+// INVIO UDP
+
+if (sendto(sd, nome_comando, LENGTH_FILE_NAME, 0, (struct sockaddr *)&servaddr, len) < 0)
+{
+    perror("scrittura socket");
+    close(sd);
+    //ERRORE
+}
+
+// RICEZIONE UDP
+
+if (recvfrom(sd, &exit_status, sizeof(exit_status), 0, (struct sockaddr *)&servaddr, &len) < 0)
+{
+    perror("recvfrom");
+    close(sd);
+    //ERRORE
+}
+
+
+/*
+ * write:
+ * ssize_t write(int sockfd, const void *buf, size_t count);
+ * - sockfd: Socket descriptor (aperto e connesso).
+ * - buf: Puntatore al buffer contenente i dati da inviare.
+ * - count: Numero di byte da scrivere (da inviare).
+ * Restituisce: Il numero di byte inviati (o -1 in caso di errore).
+
+ * read:
+ * ssize_t read(int sockfd, void *buf, size_t count);
+ * - sockfd: Socket descriptor (aperto e connesso).
+ * - buf: Puntatore al buffer dove verranno memorizzati i dati ricevuti.
+ * - count: Numero massimo di byte da leggere.
+ * Restituisce: Il numero di byte effettivamente ricevuti (0 se il peer ha chiuso la connessione, -1 in caso di errore).
+ */
+
+// INVIO TCP
+
+if (write(sd, input, strlen(input)) < 0) {
+    perror("write");
+    //ERRORE
+}
+
+// RICEZIONE TCP
+
+if (read(sd, &result, sizeof(result)) < 0) {
+    perror("read");
+    //ERRORE
+}
+

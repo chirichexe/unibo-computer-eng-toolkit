@@ -1,0 +1,4 @@
+WARNING: A terminally deprecated method in java.lang.System has been called
+WARNING: System::setSecurityManager has been called by sun.rmi.registry.RegistryImpl
+WARNING: Please consider reporting this to the maintainers of sun.rmi.registry.RegistryImpl
+WARNING: System::setSecurityManager will be removed in a future release
