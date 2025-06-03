@@ -1,0 +1,5 @@
+auto eth2
+iface eth2 inet static
+    address 10.9.9.1
+    netmask 255.255.255.0
+    up /usr/sbin/ip r add 10.2.2.0/24 via 10.9.9.2

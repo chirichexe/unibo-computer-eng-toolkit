@@ -1,0 +1,17 @@
+---
+- name: Install snmpd
+  ansible.builtin.apt:
+    name: snmpd
+    state: present
+
+- name: Configure snmpd
+  ansible.builtin.copy:
+    src: snmpd.conf
+    dest: /etc/snmp/snmpd.conf
+  notify: Restart snmpd
+
+- name: Enable privileged cat
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    state: present
+    line: 'Debian-snmp ALL=(vagrant) NOPASSWD:/usr/bin/cat /home/vagrant/keys/*'

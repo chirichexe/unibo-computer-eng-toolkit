@@ -1,0 +1,37 @@
+---
+- name: Install debconf and debconf-utils
+  ansible.builtin.apt:
+    name:
+      - debconf
+      - debconf-utils
+    update_cache: true
+
+- name: Setup debconf for slapd
+  ansible.builtin.debconf:
+    name: slapd
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "{{ item.vtype }}"
+  loop: "{{ slapd }}"
+  notify: Restart slapd
+
+- name: Install slapd
+  ansible.builtin.apt:
+    name: slapd
+    update_cache: true
+
+- name: Copy ldif files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /tmp
+    mode: "644"
+  loop:
+    - groups.ldif
+    - people.ldif
+  notify: Import ldif files
+
+#- name: Copy setup.sh script
+#  ansible.builtin.copy:
+#    src: "setup.sh"
+#    dest: /tmp/setup.sh
+#    mode: "755"

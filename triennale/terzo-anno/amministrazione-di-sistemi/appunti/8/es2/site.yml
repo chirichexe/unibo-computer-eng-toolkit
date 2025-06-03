@@ -1,0 +1,30 @@
+---
+- name: Configure endpoints
+  hosts: server,client-*
+  become: true
+  roles:
+   - set_proxy
+   - common
+   - eth1dhcp
+
+- name: Configure R1
+  hosts: r1
+  become: true
+  roles:
+   - set_proxy
+   - common
+   - netr1
+   - ipforward
+   - dnsmasq_install
+   - dnsmasqr1
+
+- name: Configure R2
+  hosts: r2
+  become: true
+  roles:
+   - set_proxy
+   - common
+   - ipforward
+   - netr2
+   - dnsmasq_install
+   - dnsmasqr2

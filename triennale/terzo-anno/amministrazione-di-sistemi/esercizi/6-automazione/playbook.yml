@@ -1,0 +1,77 @@
+---
+- name: "First playbook" # Ogni playbook deve avere un nome; tutti i "name" devono iniziare con una lettera maiuscola"
+  hosts: all
+  become: yes # esegue i comandi remoti con sudo; invece che globale potrebbe essere locale ai task che lo richiedono
+  tasks:
+
+  # 1. Creazione utente johnd
+
+  # imposta una password
+  # disabilita l'utente dopo 180 giorni
+  # crea automaticamente la home directory
+  # crea anche il gruppo johnd e aggiungerci l'utente
+    - name: Create group jhond
+      ansible.builtin.group:
+        name: jhond
+
+    - name: Create user jhond
+      ansible.builtin.user:
+        name: jhond
+        password: "{{ 'password' | password_hash('sha512') }}"
+        shell: /bin/bash
+        groups: jhond
+        create_home: true
+        expires: "{{ (ansible_date_time.epoch | int + (180 * 24 * 60 * 60)) }}"  # 180 giorni
+
+  # 2. Login con chiave SSH
+
+  # Fare in modo che il vostro utente standard del Control Node possa accedere come "johnd" 
+  # sul Managed Node, senza bisogno di inserirne la password.
+
+    - name: SSH key for jhond
+      ansible.builtin.authorized_key:
+        user: jhond
+        state: present
+        key: "{{ lookup('file', 'files/id_rsa_ansible.pub') }}"
+
+  # 3. Installazione di uno script
+
+  # Crea un archivio di nome bck.timestamp_in_formato_ISO8601.tgz contenente tutti i file 
+  # elencati nel file di configurazione save.list
+
+    - name: Copy script
+      ansible.builtin.copy:
+        src: /home/davide/Desktop/uni/las/esercizi/0-test/files/copy.sh
+        dest: /etc/copy.sh
+        mode: '0755'
+
+    - name: Copy config file 
+      ansible.builtin.copy:
+        src: /home/davide/Desktop/uni/las/esercizi/0-test/files/save.list
+        dest: /etc/save.list
+        mode: '0644'
+
+  # 4. Controlla la presenza della riga /etc/passwd nel file save.list
+
+    - name: Ensure passwd is backed up
+      ansible.builtin.lineinfile:
+        path: /etc/save.list
+        line: /etc/passwd
+
+  # 5. Pianificazione periodica del backup
+
+    - name: Schedule backup
+      ansible.builtin.cron:
+        name: "backup selected files"
+        minute: "*/2"
+        weekday: "1-5"
+        month: "1-7,9-12"
+        job: "/usr/bin/copy.sh 2>/dev/null >/dev/null"
+
+  # 6. Garantire che il sistema di loggin sia attivo
+
+    - name: Ensure rsyslog is running
+      ansible.builtin.service:
+        name: rsyslog
+        state: started
+        enabled: yes

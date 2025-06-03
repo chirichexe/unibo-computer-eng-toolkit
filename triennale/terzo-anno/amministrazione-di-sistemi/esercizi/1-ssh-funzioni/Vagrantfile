@@ -1,0 +1,17 @@
+Vagrant.configure("2") do |config|
+
+  # Configurazione macchina A
+  config.vm.define "A" do |a|
+    a.vm.box = "debian/bookworm64"  # puoi cambiare box se vuoi
+    a.vm.hostname = "A"
+    a.vm.network "private_network", ip: "192.168.56.10"
+  end
+
+  # Configurazione macchina B
+  config.vm.define "B" do |b|
+    b.vm.box = "debian/bookworm64"
+    b.vm.hostname = "B"
+    b.vm.network "private_network", ip: "192.168.56.11"
+  end
+
+end

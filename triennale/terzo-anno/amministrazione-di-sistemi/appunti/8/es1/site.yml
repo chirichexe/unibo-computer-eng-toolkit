@@ -1,0 +1,33 @@
+---
+- hosts: C*
+  become: true
+  roles:
+   - set_proxy
+   - common
+   - eth1dhcp
+
+
+- hosts: R1
+  become: true
+  roles:
+   - set_proxy
+   - common
+   - netr1
+   - dnsmasqr1
+
+
+- hosts: R2
+  become: true
+  roles:
+   - set_proxy
+   - common
+   - netr2
+   - dnsmasqr2
+
+
+- hosts: S
+  become: true
+  roles:
+   - set_proxy
+   - common
+   - eth1dhcp

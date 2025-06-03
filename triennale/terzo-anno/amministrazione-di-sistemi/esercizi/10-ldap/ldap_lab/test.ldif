@@ -1,0 +1,21 @@
+dn: uid=test,ou=People,dc=labammsis
+objectClass: top
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: inetOrgPerson
+givenName: test
+cn: test
+sn: test
+mail: t@e.st
+uid: test
+uidNumber: 10000
+gidNumber: 10000
+homeDirectory: /tmp
+loginShell: /bin/bash
+userPassword: {crypt}x
+
+dn: cn=test,ou=Groups,dc=labammsis
+objectClass: top
+objectClass: posixGroup
+cn: test
+gidNumber: 10000

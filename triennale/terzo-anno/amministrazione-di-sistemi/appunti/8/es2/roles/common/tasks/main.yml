@@ -1,0 +1,11 @@
+- name: "Update all packages"
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: "Change allow-hotplug with auto"
+  ansible.builtin.replace:
+    path: '/etc/network/interfaces'
+    regexp: '^allow\-hotplug'
+    replace: 'auto'
+    validate: /usr/sbin/ifup --no-act -i %s eth0
+  notify: Restart Networking

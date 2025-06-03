@@ -1,0 +1,11 @@
+---
+- name: Copy scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /home/vagrant/
+    owner: root
+    group: root
+    mode: "0755"
+  loop:
+    - create-dump.sh
+    - delete-dump.sh

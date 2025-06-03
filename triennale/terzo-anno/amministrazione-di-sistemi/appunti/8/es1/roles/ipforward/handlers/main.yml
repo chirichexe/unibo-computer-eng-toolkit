@@ -1,0 +1,3 @@
+---
+- name: Reload sysctl
+  ansible.builtin.command: /usr/sbin/sysctl -p

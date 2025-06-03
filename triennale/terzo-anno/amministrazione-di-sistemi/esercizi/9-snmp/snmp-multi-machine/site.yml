@@ -1,0 +1,43 @@
+---
+- hosts: all
+  become: true
+  roles:
+#   - role: base_set_proxy
+    - role: base_common
+
+- hosts: Controller
+  become: true
+  roles:
+    - net_ipforward
+    - net_dnsmasq
+    - net_controller
+    - log_rsyslog_controller
+    - scripts_controller
+    - snmp_controller
+    - LDAP_login_setup
+#   - ldap_login
+#   - ssh_controller
+
+- hosts: Agent1
+  become: true
+  roles:
+    - net_agent
+    - scripts_agent1
+    - log_rsyslog_agent
+    - snmp_agent
+    - LDAP_server_installation
+    - LDAP_server_users_setup
+#   - ldap_server
+#   - ldap_users_setup
+#   - ssh_agent1
+
+- hosts: Agent2
+  become: true
+  roles:
+    - net_agent
+    - scripts_agent2
+    - snmp_agent
+    - log_rsyslog_agent
+    - LDAP_login_setup
+#   - ldap_login
+#   - ssh_agent2

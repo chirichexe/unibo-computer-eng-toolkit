@@ -1,0 +1,9 @@
+---
+- name: Configure dnsmasq
+  ansible.builtin.copy:
+    src: dnsmasq.conf
+    dest: /etc/dnsmasq.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart dnsmasq

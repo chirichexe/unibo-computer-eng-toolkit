@@ -1,0 +1,49 @@
+# Vagrantfile per l'esame "Amministrazione di Sistemi T"
+# Nome: Davide Chirichella
+# Matricola: 00010714141
+
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "debian/bookworm64"
+  config.vm.provider "virtualbox" do |vb|
+    vb.linked_clone = true
+  end
+
+  config.vm.define "Agent1" do |machine|
+    machine.vm.hostname = "Agent1"
+
+    machine.vm.network "private_network", virtualbox__intnet: "NET1", auto_config: false
+
+    machine.vm.synced_folder ".", "/vagrant", disabled: true
+    machine.vm.provision "ansible" do |ansible|
+      ansible.playbook = "site.yml"
+    end
+  end
+
+  config.vm.define "Agent2" do |machine|
+    machine.vm.hostname = "Agent2"
+    
+    machine.vm.network "private_network", virtualbox__intnet: "NET2", auto_config: false
+
+    machine.vm.synced_folder ".", "/vagrant", disabled: true
+    machine.vm.provision "ansible" do |ansible|
+      ansible.playbook = "site.yml"
+    end
+  end
+
+  config.vm.define "Controller" do |machine|
+    machine.vm.hostname = "Controller"
+    
+    machine.vm.network "private_network", virtualbox__intnet: "NET1", auto_config: false
+    machine.vm.network "private_network", virtualbox__intnet: "NET2", auto_config: false
+    
+    machine.vm.synced_folder ".", "/vagrant", disabled: true
+    machine.vm.provision "ansible" do |ansible|
+      ansible.playbook = "site.yml"
+    end
+  end
+
+end

@@ -1,6 +1,6 @@
 # unibo-computer-eng-toolkit
 
-I'm Davide, a [Computer Engineering](corsi.unibo.it/laurea/IngegneriaInformatica) student at the University of Bologna (unibo), enrolled since 2022.
+I'm Davide Chirichella, a [Computer Engineering](corsi.unibo.it/laurea/IngegneriaInformatica) student at the University of Bologna (unibo), enrolled since 2022.
 
 This repo collects some of the libraries and utilities I’ve built for my courses. 
 

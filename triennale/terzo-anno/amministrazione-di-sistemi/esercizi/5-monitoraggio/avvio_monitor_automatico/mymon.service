@@ -1,0 +1,15 @@
+[Unit]
+Description=Lancia uno script che senza sosta, ogni 10 secondi, logga un messaggio etichettato local1.info contenente (su di una riga) la quantita' di RAM liberla e la tripla username/pid/comando del processo che sta consumando piu' CPU
+Requires=mylog.service
+#After=mylog.service
+Documentation=Prof. Prandini
+
+[Service]
+PIDFile=/tmp/mymon.pid
+Type=simple
+ExecStart=/home/vagrant/Avvio_e_monitoraggio_automatico/mymon.sh
+TimeoutStartSec=5min
+
+[Install]
+WantedBy=multi-user.service
+

@@ -1,0 +1,7 @@
+# le righe che iniziano con hash devono essere ignorate
+# campi delle righe valide:
+# username;userid;password
+jack;10000;44fubwcdx,
+jane;10001;nfj4ehfwi--
+dave;10002;f7u49fknhw
+lana;10003;3efv.8gf7/

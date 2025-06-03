@@ -1,0 +1,23 @@
+---
+slapd:
+  - question: slapd/no_configuration
+    value: false
+    vtype: boolean
+  - question: slapd/domain
+    value: labammsis
+    vtype: string
+  - question: shared/organization
+    value: Unibo
+    vtype: string
+  - question: slapd/password1
+    value: gennaio.marzo
+    vtype: string
+  - question: slapd/password2
+    value: gennaio.marzo
+    vtype: string
+  - question: slapd/purge_database
+    value: true
+    vtype: boolean
+  - question: slapd/move_old_database
+    value: true
+    vtype: boolean

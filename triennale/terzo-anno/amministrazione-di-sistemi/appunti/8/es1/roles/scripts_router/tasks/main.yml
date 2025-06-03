@@ -1,0 +1,29 @@
+---
+- name: Copy scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /home/vagrant/
+    owner: vagrant
+    group: vagrant
+    mode: "700"
+  loop:
+    - insert-users.sh
+
+- name: Copy input files, for debugging
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /home/vagrant/
+    owner: vagrant
+    group: vagrant
+    mode: "500"
+  loop:
+    - example
+
+- name: Enable privileged use of snmpd.conf
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    state: present
+    line: "{{ item }}"
+  loop:
+   - 'vagrant ALL=(root) NOPASSWD:/usr/bin/tee -a /etc/snmp/snmpd.conf'
+   - 'vagrant ALL=(root) NOPASSWD:/usr/bin/systemctl restart snmpd.service'

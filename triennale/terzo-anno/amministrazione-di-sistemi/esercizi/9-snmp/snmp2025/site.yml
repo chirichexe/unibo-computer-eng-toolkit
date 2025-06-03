@@ -1,0 +1,16 @@
+---
+- name: Configura snmp manager
+  hosts: manager
+  become: true
+  roles:
+#   - set_proxy
+   - common
+   - netmanager
+
+- name: Configura snmp agent
+  hosts: agent
+  become: true
+  roles:
+ #  - set_proxy
+   - common
+   - netagent

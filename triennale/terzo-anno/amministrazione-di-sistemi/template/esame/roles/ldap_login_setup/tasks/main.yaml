@@ -1,0 +1,70 @@
+- name: install ldap utils
+  become: true
+  ansible.builtin.apt:
+   name: ldap-utils
+   state: present
+   update_cache: yes   
+
+- name: "configure libnss-ldap"
+  become: true
+  ansible.builtin.debconf:
+    name: "libnss-ldap"
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "{{ item.vtype }}"
+  loop: "{{ libnss_ldap }}"
+
+- name: "libnss-ldap password"
+  become: true
+  ansible.builtin.debconf:
+    name: libnss-ldap
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "password"
+  loop: "{{ libnss_ldap_password }}"
+  
+- name: "configure libpam-ldap"
+  become: true
+  ansible.builtin.debconf:
+    name: libpam-ldap
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "{{ item.vtype }}"
+  loop: "{{ libpam_ldap }}"
+
+- name: "libpam-ldap password"
+  become: true
+  ansible.builtin.debconf:
+    name: libpam-ldap
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "password"
+  loop: "{{ libpam_ldap_password }}"
+  
+- name: create ldap directory
+  become: true
+  ansible.builtin.file:
+   path: "/etc/ldap"
+   state: directory
+
+- name: "copy files"
+  become: true
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  loop: "{{ files }}"
+
+- name: "configure ldap file"
+  become: true
+  ansible.builtin.replace:
+    path: "/etc/ldap/ldap.conf"
+    regexp: "<ADDRESS>"
+    replace: '{{ address }}'
+
+- name: "Ldap installation"
+  become: true
+  ansible.builtin.apt:
+    name:
+      - libnss-ldap
+      - libpam-ldap
+    update_cache: yes

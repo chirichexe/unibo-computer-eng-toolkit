@@ -1,0 +1,16 @@
+---
+- name: Config LDAP client
+  hosts: client
+  become: true
+  roles:
+   - set_proxy
+   - common
+   - ldap_login
+
+- name: Config LDAP server
+  hosts: server
+  become: true
+  roles:
+   - set_proxy
+   - common
+   - ldap_server

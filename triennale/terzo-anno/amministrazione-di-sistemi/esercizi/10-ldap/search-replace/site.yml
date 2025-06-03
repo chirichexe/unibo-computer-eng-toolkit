@@ -1,0 +1,26 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - role: base_set_proxy
+    - role: base_common
+
+- hosts: R*
+  become: true
+  roles:
+    - net_ipforward
+    - net_interfaces_forward
+
+- hosts: C*
+  become: true
+  roles:
+    - net_static_client
+    - ldap_login_setup
+    - scripts_simple
+
+- hosts: S*
+  become: true
+  roles:
+    - net_static_server
+    - ldap_server_setup
+    - ldap_server_multi_users_setup

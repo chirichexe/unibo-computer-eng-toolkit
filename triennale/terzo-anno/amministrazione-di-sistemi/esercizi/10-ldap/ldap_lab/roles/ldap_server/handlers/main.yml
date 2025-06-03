@@ -1,0 +1,12 @@
+---
+- name: Restart slapd
+  become: true
+  ansible.builtin.service:
+    name: slapd
+    state: restarted
+
+- name: Import ldif files
+  ansible.builtin.shell: |-
+    ldapadd -x -H ldapi:/// -D "cn=admin,dc=labammsis" -w "gennaio.marzo" -f /tmp/groups.ldif
+    ldapadd -x -H ldapi:/// -D "cn=admin,dc=labammsis" -w "gennaio.marzo" -f /tmp/people.ldif
+

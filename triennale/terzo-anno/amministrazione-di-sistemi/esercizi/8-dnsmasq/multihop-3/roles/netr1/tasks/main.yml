@@ -1,0 +1,30 @@
+---
+- name: Copy a new eth1 configuration "interfaces" file into place, after passing validation with ifup
+  ansible.builtin.copy:
+    src: r1eth1
+    dest: /etc/network/interfaces.d/eth1
+    owner: root
+    group: root
+    mode: '0644'
+    validate: /usr/sbin/ifup --no-act -i %s eth1
+  notify: Restart Networking
+
+- name: Copy a new eth2 configuration "interfaces" file into place, after passing validation with ifup
+  ansible.builtin.copy:
+    src: r1eth2
+    dest: /etc/network/interfaces.d/eth2
+    owner: root
+    group: root
+    mode: '0644'
+    validate: /usr/sbin/ifup --no-act -i %s eth2
+  notify: Restart Networking
+
+- name: Copy a new eth3 configuration "interfaces" file into place, after passing validation with ifup
+  ansible.builtin.copy:
+    src: r1eth3
+    dest: /etc/network/interfaces.d/eth3
+    owner: root
+    group: root
+    mode: '0644'
+    validate: /usr/sbin/ifup --no-act -i %s eth3
+  notify: Restart Networking

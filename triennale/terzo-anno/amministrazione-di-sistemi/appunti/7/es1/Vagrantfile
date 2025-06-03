@@ -1,0 +1,25 @@
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "debian/bookworm64"
+
+  # Definizione delle macchine client
+
+  config.vm.define "client" do |machine|
+    machine.vm.hostname = "client"  # nome della macchina
+    machine.vm.network "private_network", virtualbox__intnet: "LAN1", auto_config: false # Necessaria a creare un'interfaccia di rete eth1
+  end
+
+  config.vm.define "router" do |machine|
+    machine.vm.hostname = "router"
+    machine.vm.network "private_network", virtualbox__intnet: "LAN1", auto_config: false # creare un'interfaccia di rete eth1, attaccata a LAN1
+    machine.vm.network "private_network", virtualbox__intnet: "LAN2", auto_config: false # creare un'interfaccia di rete eth2, attaccata a LAN2
+  end
+
+  config.vm.define "server" do |machine|
+    machine.vm.hostname = "server"
+    machine.vm.network "private_network", virtualbox__intnet: "LAN2", auto_config: false # Necessaria a creare un'interfaccia di rete eth1 (si chiamerà allo stesso modo perchè c'è solo quella)
+  end
+
+end
+  

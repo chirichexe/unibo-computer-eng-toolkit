@@ -1,0 +1,30 @@
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "debian/bookworm64"
+  
+  config.vm.provider "virtualbox" do |vb|
+    vb.linked_clone = true
+  end
+
+  machines = {
+    "client" => "192.168.56.10",
+    "r1"     => "192.168.56.11",
+    "r2"     => "192.168.56.12",
+    "server" => "192.168.56.13"
+  }
+
+  machines.each do |name, ip|
+    config.vm.define name do |machine|
+      machine.vm.hostname = name
+      machine.vm.network "private_network", ip: ip
+
+      # Provisioning solo per r1
+      if name == "r1"
+        machine.vm.provision "ansible_local" do |ansible|
+          ansible.playbook = "r1.yaml"
+        end
+      end
+    end
+  end
+end

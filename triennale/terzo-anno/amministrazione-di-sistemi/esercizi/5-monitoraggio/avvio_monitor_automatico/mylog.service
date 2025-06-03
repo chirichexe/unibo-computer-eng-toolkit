@@ -1,0 +1,11 @@
+[Unit]
+Description=Aggiunge/rimuove un canale di log rsyslog su local1
+
+[Service]
+Type=oneshot
+RemainAfterExists=yes
+ExecStart=/usr/local/bin/add_channel.sh
+ExecStop=/usr/local/bin/rm_channel.sh
+
+[Install]
+WantedBy=multi-user.target

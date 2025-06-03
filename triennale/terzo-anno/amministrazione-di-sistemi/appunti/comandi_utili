@@ -1,0 +1,9 @@
+
+# File e utenti
+
+
+- Per ogni file che rispetta un certo parametro mostra il contenuto
+	```find /usr/src -name '*.c' -size +100k -exec cat {} \;```
+- Elenca solo i file regolari “orfani” modificati meno di due giorni (2*24 ore) fa che contengono TXT 
+	```find / -type f -nouser -mtime -2 -exec grep -l TXT {} \;```
+

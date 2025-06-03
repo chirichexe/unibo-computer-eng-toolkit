@@ -1,0 +1,12 @@
+---
+- name: Install dnsmasq
+  ansible.builtin.apt:
+    name: dnsmasq
+    state: present
+    update_cache: true
+
+- name: Configure dnsmasq
+  ansible.builtin.copy:
+    src: dnsmasq.conf
+    dest: /etc/dnsmasq.conf
+  notify: Restart dnsmasq

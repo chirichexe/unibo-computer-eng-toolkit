@@ -1,0 +1,5 @@
+dn: ou=People,dc=labammsis
+objectClass: organizationalunit
+ou: People
+description: system users
+

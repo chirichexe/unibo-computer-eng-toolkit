@@ -1,0 +1,35 @@
+---
+- name: Copy scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /home/vagrant/
+    owner: vagrant
+    group: vagrant
+    mode: "700"
+  loop:
+    - managed-dump.sh
+
+- name: esegui sull'agent 1 ogni 6 minuti partendo da 0
+  ansible.builtin.cron:
+    name: "managed-dump-arg1"
+    minute: "*/6"
+    user: "{{ cron_user }}"
+    job: "{{ script_path }} {{ arg1 }}"
+
+- name: esegui sull'agent 1 ogni 6 minuti partendo da 3
+  ansible.builtin.cron:
+    name: "managed-dump-arg2"
+    minute: "3-59/6"
+    user: "{{ cron_user }}"
+    job: "{{ script_path }} {{ arg2 }}"
+
+- name: cron test
+  ansible.builtin.cron:
+    name: "test"
+    minute: "*/10"  # Esegui ogni 10 minuti
+    hour: "10-20"   # Dalle 10 alle 20
+    day: "*"        # Ogni giorno del mese
+    month: "*"      # Ogni mese
+    weekday: "1-6"  # Dal lunedì (1) al sabato (6)
+    user: "{{ cron_user }}"
+    job: "/home/vagrant/cron-test.sh"
