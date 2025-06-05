@@ -1,4 +1,0 @@
-A seguito della scansione effettuata con Wireshark dsi è individuato un traffico da 192.168.56.1 a 192.168.56.12 sia TCP che UDP 
-(quello rilevante ai fini di individuazione della flag).
-In particolare il traffico TCP avviene sulle porte 52048 (in uscita) e 777 (in entrata), quello UDP su 49267 (in uscita) e 777 (in entrata)
-Da notare vari tentativi per sviare il ritrovamento della flag con frasi, parole o spezzoni di esse contententi "SEC,{,.."

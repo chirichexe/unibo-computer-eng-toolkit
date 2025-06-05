@@ -1,8 +1,0 @@
-
-COSE UTILI
-
-Quando si sta facendo un esercizio di iptables:
-
-- se la rete è PRIVATA e si sta mandato una richiesta verso il SERVER (il cui indirizzo non deve essere conosciuto dal client in quanto è su una rete privata), allora nel router va inserita una regola nella catena di PREROUTING (dove bisogna settere -j DNAT --to-destination)
-
-- se la rete è PRIVATA e si sta mandato una risposta verso il CLIENT (il cui indirizzo non deve essere conosciuto dal server in quanto è su una rete privata), allora nel router va inserita una regola nella catena di POSTROUTING (dove bisogna settere -j SNAT --to-source)

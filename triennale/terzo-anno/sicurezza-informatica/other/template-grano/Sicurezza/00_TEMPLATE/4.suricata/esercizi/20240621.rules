@@ -1,6 +1,0 @@
-#provenienti dalla rete /24 su cui si trova il mittente del pacchetto individuato
-alert tcp 172.21.1.0/24 any -> 172.23.3.195 80 (msg:"Individuato pacchetto malevolo"; content:"onerror"; sid:10000001; rev:1;)
-
-#destinati alla rete /24 su cui si trova il destinatario del pacchetto individuato
-alert tcp 172.23.3.195 80 -> 172.21.1.0/24 any (msg:"Individuato pacchetto di risposta"; content:"200"; sid:10000002; rev:1;)
-

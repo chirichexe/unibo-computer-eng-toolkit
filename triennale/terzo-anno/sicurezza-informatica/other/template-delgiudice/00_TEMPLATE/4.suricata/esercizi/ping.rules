@@ -1,1 +1,0 @@
-alert icmp any any -> any any (msg:"Ping detected"; itype:8; sid:1000477; rev:1;)

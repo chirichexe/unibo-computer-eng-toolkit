@@ -1,9 +1,0 @@
-
-SOLUZIONE DELLA REGOLA SURICATA DELL'ESAME DEL 21 GIUGNO 24:
-
-Dal tracciato pcap si vede che c'è una richiesta GET dall'indirizzo sorgente 172.21.1.126 (dalla porta 39534) all'indirizzo 172.23.3.195 (alla porta 80, ovviamente) con richiesta di un'immagine un po' sus (con url specificato che non esiste quindi si sta cercando di fare xss). 
-
-Quindi la regola che intercetta solamente quel pacchetto è:
-alert 172.21.1.126 39534 -> 172.23.3.195 80 (msg:"sus"; flow:established,to_server; http.method; content:"GET"; http.url; content:"/?q=<img"; sid:1000007; rev:1;)
-
-°vedere il file suricata_esecuzione*

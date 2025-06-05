@@ -1,7 +1,0 @@
-Nella pagina iniziale di login, provo a fare SQL INJECTION e nonostante inizialmente non ottengo nulla, 
-Email : ' OR '1'='1
-Password : "qualsiasi"
-Riesco ad entrare come admin, osservando da burp infatti, viene restituita la mail (admin@juice-sh.op) e un token di autenticazione.
-
-Per accedere alla score board con tutti le challenges lo inserisco direttamente nell'url come localhost/#/score-board
-

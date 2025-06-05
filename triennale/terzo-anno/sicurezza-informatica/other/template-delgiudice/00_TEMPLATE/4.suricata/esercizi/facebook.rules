@@ -1,1 +1,0 @@
-alert tls any any -> any any (msg:"SURICATA TRAFFIC-ID: facebook"; tls_sni; content:"facebook.com"; isdataat:!1,relative; flow:to_server,established; flowbits: set,traffic/id/facebook; flowbits:set,traffic/label/social-network; sid:300000001; rev:1;)

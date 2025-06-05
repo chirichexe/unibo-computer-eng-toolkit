@@ -1,1 +1,0 @@
-alert tcp 10.10.31.2 1159 -> $HOME_NET any (msg:"SYN flood attack"; tcp_flags; content:"syn"; flow:to_server; flowbits:set,syn_tcp; sid: 1000001; rev:1)

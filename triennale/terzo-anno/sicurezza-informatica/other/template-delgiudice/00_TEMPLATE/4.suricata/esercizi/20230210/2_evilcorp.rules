@@ -1,7 +1,0 @@
-#2) Scrivere una (o più) regola suricata in modalità alert per qualsiasi richiesta a 
-#   evilcorp.com. Nota bene NON è possibile utilizzare il protocollo http o la porta 80 
-#   per creare questa regola.
-
-alert tls any any -> any any (msg:"[TLS]SURICATA TRAFFIC-ID: evilcorp"; tls_sni; content:"evilcorp.com"; isdataat:!1,relative; flow:to_server,established; sid:300000001; rev:1;)
-alert dns any any -> any any (msg:"[DNS]SURICATA DNS Query for evilcorp.com"; dns.query; content:"evilcorp.com"; nocase; sid:1000003; rev:1;)
-alert ip any any -> evilcorp.com any (msg:"[IP]Request for evilcorp.com"; sid:100003; rev:1;)

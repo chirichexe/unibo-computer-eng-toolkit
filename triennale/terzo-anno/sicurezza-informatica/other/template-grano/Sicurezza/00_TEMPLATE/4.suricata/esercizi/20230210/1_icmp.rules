@@ -1,6 +1,0 @@
-#1) Scrivere una regola suricata in modalità alert per TUTTO il traffico icmp 
-#   SOLTANTO IN ENTRATA sulla rete 192.168.X.X
-
-#Necessario modificare in /etc/suricata/suricata.yaml -> HOME_NET: "[192.168.0.0/16]"
-
-alert icmp any any -> $HOME_NET any (msg:"Traffico icmp in entrata sulla rete 192.168.0.0/16"; sid:100001; rev:1;)
