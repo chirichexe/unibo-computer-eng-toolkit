@@ -1,0 +1,32 @@
+---
+- hosts: client
+  become: true
+  roles:
+   - common
+   - netclient
+
+- hosts: r1
+  become: true
+  roles:
+   - common
+   - netr1
+   - ipforward
+
+- hosts: r2
+  become: true
+  roles:
+   - common
+   - ipforward
+   - netr2
+
+- hosts: s1
+  become: true
+  roles:
+   - common
+   - nets1
+
+- hosts: s2
+  become: true
+  roles:
+   - common
+   - nets2

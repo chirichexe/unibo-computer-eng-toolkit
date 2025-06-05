@@ -1,0 +1,97 @@
+##IPTables
+
+--gestione delle catene ###########
+
+	iptables [-t <tabella>] -CMD [catena] [match] [-j <target>]
+
+----------------------
+
+--CMD ###########
+
+	– L list: elenca le regole della catena (se presente, o tu6e)
+	– C check: ritorna true se una regola fa match e coi target specificati 
+	    esiste nella catena
+	– A append: aggiunge una regola in fondo alla catena
+	– I [n] insert: inserisce una regola 
+                (in n-esima posizione, o in testa se manca n)
+	– D [n] delete: rimuove una regola (in n-esima posizione, 
+                o quella che ha esattamente i match e il target specifica<)
+	– R n replace: sostituisce la regola in n-esima posizione
+	– F flush: svuota la catena 
+	– P policy: imposta la policy di default della catena
+
+----------------------
+
+--catena ###########
+
+	PREROUTING
+	INPUT
+	FORWARD
+	OUTPUT
+	POSTROUTING
+
+----------------------
+
+--match ###########
+
+	Caratteristiche“Layer1” 
+	-i <input_interface> -o <output_interface> 
+	
+	Caratteristiche“Layer2”
+	solo caricando l’estensione con -m mac
+	--mac-source <source_mac_addrs>
+
+	Caratteristiche“Layer3”
+	-s <source_addrs>
+	-d <dest_addrs>
+	-f (fa match coi frammenti dal secondo in poi) 
+        solo caricando l’estensione con -m iprange --src-range from-to
+	--dst-range from-to
+
+	Caratteristiche “Layer 4”
+	-p <tcp|udp|udplite|icmp|icmpv6|esp|ah|sctp|mh> 
+	se il protocollo supporta le porte, 
+	abilita l’interpretazione di 
+	--dport port[:port]
+	--sport port[:port]
+	se il protocollo è tcp, abilita l’interpretazione di
+	--tcp-flags mask comp
+	• i flag sono SYN ACK FIN RST URG PSH ALL NONE
+	• mask = elenco flag “interessanti” (gli altri flag del pacchetto sono ignorati)
+	• comp = elenco flag tra quelli interessanti che devono essere settati per fare match
+	se il protocollo è icmp, abilita l’interpretazione di
+	--icmp-type <type>
+	• elenco tipi: iptables -p icmp -h
+
+----------------------
+
+--Terminating target -j ###########
+
+	ACCEPT termina la scansione della catena e prosegui con la successiva
+	DROP termina la scansione e scarta il pacchetto
+	RETURN termina passando la politica di default
+
+----------------------
+
+--NON-Terminating target -j ###########
+
+	nessun target! Ad ogni regola associati due contatori 
+	               incrementati ad ogni match (pacchetti-byte trasportati)
+	LOG il kernel logga i dettagli del pacchetto
+		opzioni:
+		--log-level <priority>
+		--log-prefix <prefisso>
+		--log-uid
+
+----------------------
+
+--Filtraggio degli stati ###########
+
+> pacchetti validi come iniziatori di connessioni
+	-m state --state NEW,ESTABLISHED
+
+> pacchetto validi a risposte a una connessione già iniziata
+	-m state --state ESTABLISHED
+
+----------------------
+

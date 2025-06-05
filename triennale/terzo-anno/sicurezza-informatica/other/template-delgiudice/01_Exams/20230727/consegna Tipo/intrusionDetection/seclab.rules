@@ -1,0 +1,1 @@
+alert tcp 192.168.56.1 54968 -> 192.168.56.3 6666 (msg:"logged ircu traffic"; flow:to_server; sid:1009481; rev:1;)

@@ -1,0 +1,68 @@
+Adesso si vedranno alcuni strumenti per rilevare le modifiche fatte a un sistema.
+Alterazioni ai permessi possono concedere a un utente standard (come un attaccante che ha trovato il modo di eseguire comandi sfruttando vulnerabilità dei binari o via web) di guadagnare privilegi più elevati.
+---------------------
+SUDOERS:
+Lavorando come root creiamo l'utente "user_test"
+< useradd -m user_test >
+
+Con il comando visudo inseriamo una riga in fondo al file /etc/sudoers
+< visudo >
+La riga da inserire è < user_test ALL=(root) NOPASSWD:/usr/bin/vi /var/www/html/* >
+In questo modo abbiamo dato il permesso a user_test di eseguire senza password quel comando
+Quindi l'utente può avviare "vi" come root, ma solo su file all'interno di /var/www/htlm/
+
+Possiamo vedere cosa un utente NON privilegiato può fare con sudo lanciando come root
+< sudo -l -U user_test >
+
+Oppure trasformandoci in user_test tramite < su - user_test > e lanciando < sudo -l >
+Lavorando come user_test lanciamo un editor: < sudo /usr/bin/vi /var/www/html/file_a_caso >
+Se digitiamo all'interno dell'editor <:!/bin/bash > otteniamo una shell interattiiva come root 
+
+Se lanciamo un editor sfruttando un path trasversal < sudo /usr/bin/vi /var/www/html/../../../etc/shadow >
+è leggibile e scrivibile
+----------------
+SUID
+
+Da root assegniamo il SUID bit al comando cp (chiunque esegua quel programma lo eseguirà con i privilegi dell'utente proprietario del file, root in questo caso)
+< chmod u+s /bin/cp >
+
+Per vedere i privilegi di chiunque
+< ls -al /bin/cp >
+
+TORNIAMO USER NORMALE
+Se copiamo un file protetto come /etc/passwd nella home 
+< cp /etc/passwd . >
+E poi controlliamo i diritti
+< ls -l > 
+Vediamo che non possiamo editare, ma qualcosa è cambiato, possiamo leggerli per crearne una copia editabile.
+< cat passwd > pass.rw >
+< ls -l >
+
+Adesso possiamo editare questo "passw.rw" e col cp "SUID" metterli al posto di quelli di sistema.
+
+Si possono cercare a tappeto file e directory con permessi speciali settati 
+< find / -perm /7000 > -> "7000" include i file che abbiano uno qualsiasi dei bit speciali settato
+-----------------------
+ACL
+Le ACL POSIX sono un'estensione dei permessi standard, che permette di assegnarli specificatamente a soggetti diversi da proprietario, gruppo proprietario ed "altri"
+
+Modifica le Access Control List (ACL) del file /etc/sudoers per concedere i permessi specifici all'utente kali
+< setfacl -m u:kali:rw /etc/sudoers >
+
+È usato per ottenere le ACL di un intero filesystem, in particolare a partire dalla radice "/" 
+< getfacl -sR / >
+----------------------
+CAPABILITIES:
+Le capabilities sono gli specifici permessi di svolgere operazioni privilegiate, caratteristiche di root.
+Diventando root si acquisiscono tutte le capabilities esistenti, come visto i programmi SUID usano questo meccanismo per concedere azioni privilegiate a utenti standard.
+
+È possibile contrassegnare un programma affinché, quando viene eseguito, generi un processo con la specifica capability e non altre, riducendo il rischio che venga usato a sproposito se può essere dirottato.
+
+Programmi con troppe capabilities possono essere usati per condurre attacchi
+
+Assegna una capability al file binario /user/bin/vim.tiny, in particolare la CAP_DAC_OVERRIDE che consente di bypassare i permessi di accesso ai file. (ignora i permessi di lettura, scrittura ed esecuzione su file e directory, come se fosse root)
+
+< sudo /usr/sbin/setcap "CAP_DAC_OVERRIDE=eip" /usr/bin/vim.tiny >
+
+Per individuare i file a cui siano state assegnate capabilities si può usare
+< /usr/sbin/getcap -r / 2>/dev/null >

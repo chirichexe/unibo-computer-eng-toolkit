@@ -1,0 +1,678 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>COMANDI SICUREZZA</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="e27ffd9b-3c27-42b4-9702-8448e9796369" class="page sans"><header><h1 class="page-title">COMANDI SICUREZZA</h1><p class="page-description"></p></header><div class="page-body"><ul id="e33f3724-45e0-4b71-8716-988a74c65561" class="toggle"><li><details open=""><summary><strong>Misconfiguration</strong></summary><ul id="1b4e2cf1-511a-4ff3-9481-92a1beb10be6" class="bulleted-list"><li style="list-style-type:disc">Privilegi di root = tutti gli utenti che presentano privilegi di root per eseguire delle operazioni vengono riportati all’interno del file /etc/sudoers. Andando a leggere tale file è possibile scoprire di più sulle modifiche eseguite da un attaccante. Se per esempio viene inserita questa riga:<p id="4863c58d-6034-4d92-8c90-c410b5d39c0e" class=""><em>user_test ALL=(root) NOPASSWD:/usr/bin/vi /var/www/html/*</em></p><p id="3c5290d7-ff9e-4471-bc36-4aa83f3f6380" class="">L’utente user_test può eseguire con privilegi di root l’editor vi per modificare il file riportato. Però con un path traversal può benissimo modificare anche altri file, molti più critici, con privilegi di root.</p></li></ul><ul id="59fa8940-0152-4a6d-8ce0-a87c7e82892a" class="bulleted-list"><li style="list-style-type:disc">SUID = i file con suid settato permettono di essere eseguiti con uid dell’utente proprietario. Alcuni comandi che possono essere utilizzati per fare privilege escalation con SUID settato sono:<ul id="bd6324db-7fb1-476b-992e-9f681782313a" class="bulleted-list"><li style="list-style-type:circle"><code>cp</code> = si può eseguire una copia di file critici come /etc/passwd o /etc/shadow all’interno della propria home. Tali file avranno permessi di lettura e di conseguenza se ne può creare una copia che andrà a sostituire quella di sistema. </li></ul><ul id="b7f10a99-021f-48d7-a44b-c5588b3a845f" class="bulleted-list"><li style="list-style-type:circle"><code>find</code> = tale comando permette di eseguire un comando per ogni file che viene trovato. Per esempio, attraverso il comando <code>find /etc/shadow -exec cat {} \</code> permette di leggere il file contenente l’hash delle password. Un altro esempio è quello del comando <code>find /any/file -exec nc -l -p 80 \</code> che permette di aprire una porta privilegiata in ascolto</li></ul><ul id="4e3540bc-c57c-4964-a706-04740682b574" class="bulleted-list"><li style="list-style-type:circle"><code>sed</code> = con l’opzione -e permette l’esecuzione di uno script che, con SUID settato, presenta privilegi di root.</li></ul></li></ul><ul id="cc922848-d085-4b25-8e97-ee064ef420ea" class="bulleted-list"><li style="list-style-type:disc">ACL = estensione rispetto ai permessi standard che si possono assegnare ad utenti specifici e non solo a utente proprietario, gruppo proprietario e others. I comandi per manipolarle sono:<ul id="a15d2d63-c44d-4c5f-9f83-20488f19cedf" class="bulleted-list"><li style="list-style-type:circle"><code>setfacl -m u:UTENTE:permessi FILE</code> = per assegnare i permessi specificati all’utente specificato. Alcune volte il sistema si lamenta se vengono assegnati permessi troppo larghi a file critici, ma non notano le ACL. </li></ul><ul id="c6ab571a-d311-47dc-b80a-d344ad8ab0d3" class="bulleted-list"><li style="list-style-type:circle"><code>getfacl</code> = per vedere i file con ACL</li></ul></li></ul><ul id="9c318388-f110-4299-a222-61f78d5ce918" class="bulleted-list"><li style="list-style-type:disc">Capabilities = 42 capacità che vengono assunte da root. I comandi per modificare le capability sono:<ul id="79c4eb44-a36a-4356-994d-e91211b47d0f" class="bulleted-list"><li style="list-style-type:circle"><code>sudo /usr/sbin/setcap &quot;capability&quot; PATH_CON_CAP</code> = per assegnare la capability specificata al path specificato. Due capability importanti sono:<ul id="93f93ed7-5c11-4b64-95c1-51fc5c0ec3c3" class="bulleted-list"><li style="list-style-type:square"><code>CAP_DAC_OVERRIDE=eip</code> = capability che permette di ignorare completamente tutti i permessi sul filesystem</li></ul><ul id="5ef374c8-cb74-4f59-9efe-d6a26a53ffad" class="bulleted-list"><li style="list-style-type:square"><code>CAP_FOWNER=eip</code> = capability che permette di ignorare la coerenza di ownership tra processo e file. </li></ul></li></ul><ul id="62aedef7-5292-4ebc-949e-aa6c00ead23c" class="bulleted-list"><li style="list-style-type:circle"><code>/usr/sbin/getcap -r / 2&gt;/dev/null</code> = per vedere i file che presentano capability aggiuntive</li></ul></li></ul></details></li></ul><ul id="369d9c96-be11-4428-be59-c2ad979c30ff" class="toggle"><li><details open=""><summary><strong>OSINT/enumeration</strong></summary><ul id="e6ca062b-9e3b-4a61-9a80-b7d6fdbc5e32" class="bulleted-list"><li style="list-style-type:disc"><code>nslookup [OPZIONI] DOMINIO</code> = comando che permette di ottenere informazioni dal server DNS riguardo al nome di un dominio. Tra le opzioni più importanti è presente:<ul id="c73dd7d1-347e-486a-bad2-5aefc004834a" class="bulleted-list"><li style="list-style-type:circle"><code>-type=TIPO</code> = si ottiene il record DNS specificato dal TIPO (con ANY si visualizzano tutti i record). Le tipologie di record più importanti sono:<figure id="83b06692-1b5f-4c6c-8c7e-102528ecc235" class="image"><a href="COMANDI%20SICUREZZA%20e27ffd9b3c2742b497028448e9796369/Untitled.png"><img style="width:480px" src="COMANDI%20SICUREZZA%20e27ffd9b3c2742b497028448e9796369/Untitled.png"/></a></figure></li></ul></li></ul><ul id="a317e68f-abb4-4ba2-9daf-bb8846803ee4" class="bulleted-list"><li style="list-style-type:disc"><code>nmap [OPZIONI] DOMINIO/IP</code> = effettua uno scan del dominio o dell’indirizzo IP passato (nel caso di un dominio viene interrogato il server DNS per la risoluzione) per determinare una serie di informazioni dell’host ricercato come i servizi offerti (su un insieme di porte empiricamente stabilito), la versione del sistema operativo ecc. Alcune opzioni importanti sono:<ul id="58c213e5-7f16-4429-b3b6-f50ea1884ff1" class="bulleted-list"><li style="list-style-type:circle"><code>-A</code> = effettua una scansione completa e aggressiva abilitando le opzioni (-O), (-sV), -(sC) e –traceruote</li></ul><ul id="05f6b1e6-3626-45ec-b72a-29c3c6a00a7f" class="bulleted-list"><li style="list-style-type:circle"><code>-O</code> = detection del sistema operativo</li></ul><ul id="41211782-2d95-48a3-89de-be145903d5a2" class="bulleted-list"><li style="list-style-type:circle"><code>-sV</code> = detenction delle versioni</li></ul><ul id="db6b5920-672e-43a5-b9f4-2534086529c5" class="bulleted-list"><li style="list-style-type:circle"><code>-sC</code> = detenction degli script</li></ul><ul id="0fe8dc62-05d4-4997-aaca-45e3b3a6e849" class="bulleted-list"><li style="list-style-type:circle"><code>- traceroute</code> = instradamento dei pacchetti</li></ul><ul id="9db38126-7a67-4406-8550-90f19d5239ff" class="bulleted-list"><li style="list-style-type:circle"><code>- allports</code> = effettua uno scan su tutte le porte</li></ul><ul id="d3f6b53a-a982-4d6e-b107-3b0d7128bb5e" class="bulleted-list"><li style="list-style-type:circle"><code>-F </code>= effettua una scansione veloce. Solitamente nmap controlla le 1000 porte di default, con questa scansione ne controlla solamente 100.</li></ul><ul id="c7af5f10-7ef3-4495-b03f-992319581e50" class="bulleted-list"><li style="list-style-type:circle"><code>- top-ports N</code> = controlla solamente le prime N porte tra quelle di default.</li></ul><ul id="5a8a029f-9116-4170-81be-2d51a63e2fad" class="bulleted-list"><li style="list-style-type:circle"><code>-sN; -sF; -sX</code> (TCP NULL, FIN, and Xmas scans) = servono per controllare che le porte di default siano aperte o chiuse. Eseguono tutti la stessa azione, ma settano bit differenti.</li></ul></li></ul><ul id="6b71621f-e6ae-4d68-9e31-277a6c349e6c" class="bulleted-list"><li style="list-style-type:disc"><code>dnsrecon [OPZIONI] DOMINIO/IP</code> = comando che serve per scoprire informazioni collegate ad un particolare dominio come indirizzi IP, subdomains, DNS record e altro. Alcune opzioni importanti sono:<ul id="b309af30-124a-4a16-bde6-37a93fc21903" class="bulleted-list"><li style="list-style-type:circle"><code>-d DOMINIO</code> = server per elencare i dubdomains di un determinato dominio. </li></ul><ul id="327892d4-5071-4beb-adaa-838ee76067f4" class="bulleted-list"><li style="list-style-type:circle"><code>-t TYPE</code> = per svolgere enumerazione di diverse tipologie. Alcuni TYPE importanti possono essere:<ul id="9b84e162-d880-42ef-b6e3-c360c61be276" class="bulleted-list"><li style="list-style-type:square"><code>std</code> = per i record DNS</li></ul><ul id="66a740f6-829b-4dd2-8bac-0f72847ee8a3" class="bulleted-list"><li style="list-style-type:square"><code>axfr</code> = per zone transfer</li></ul></li></ul><ul id="60083f2b-3eb8-45b3-a538-bb744f3bac76" class="bulleted-list"><li style="list-style-type:circle"><code>-r range_indirizzi_ip</code> = permette di eseguire DNS reverse lookup, per scoprire il nome di dominio degli indirizzi IP specificati. </li></ul></li></ul><ul id="5de7cbd0-3ae9-4d17-8cf6-384d2e3d9f9d" class="bulleted-list"><li style="list-style-type:disc"><code>dnsmap [OPZIONI] DOMINIO</code> = comando che serve per enunerare/eseguire brute forcing dei subdomains di un dominio noto. Se non ci specifica nessuna wordlist con l’opzione <code>-w</code>, viene utilizzata la lista built in del comando.  </li></ul></details></li></ul><ul id="7f0833e7-eeb8-406f-9fb1-5ab6b25a3ebb" class="toggle"><li><details open=""><summary><strong>Generazione di wordlist</strong></summary><ul id="de17bc4f-2dae-4bce-ae91-38b0852e1555" class="bulleted-list"><li style="list-style-type:disc"><code>cup OPZIONI</code> = con l’opzione <code>-i</code> si apre una schermata interattiva per l’inserimento di informazioni legate alla vittima con la conseguente creazione di una wordlist specifica.</li></ul><ul id="62be99ed-5c7b-4016-8066-1542d6238600" class="bulleted-list"><li style="list-style-type:disc"><code>cewl [OPZIONI] URL</code> = tale comando sniffa un particolare URL dato con una determinata profondità producendo una wordlist che può essere utilizzata per eseguire brute-force di password. Alcune opzioni importanti sono:<ul id="0e43c3f4-3f15-4ce6-93b4-10e6ce454273" class="bulleted-list"><li style="list-style-type:circle"><code>-d</code> = specifica la profondità della ricerca nell’URL specificato</li></ul><ul id="93a6a3c4-16a7-4209-97d5-e06bfec7358f" class="bulleted-list"><li style="list-style-type:circle"><code>-m</code> = per specificare la lunghezza minima delle parole.</li></ul></li></ul><ul id="c9b43edf-ac4c-4eab-b018-e8799e16b635" class="bulleted-list"><li style="list-style-type:disc"><code>crunch &lt;min_lenghth&gt; &lt;max_length&gt; [charset_string] [opzioni]</code> = serve per creare una wordlist in base ai parametri specificati. Se non viene specificato nessun charset di caratteri, crunch utilizza quelli di default. Tra le varie opzioni importanti sono presenti:<ul id="fd8d3026-fc3d-4ffb-a70c-7ce044490ab9" class="bulleted-list"><li style="list-style-type:circle"><code>-t @,%^</code> = serve per specificare un pattern per la creazione delle word</li></ul><ul id="10ceaff5-e830-4b20-99b9-a6b8c6a6c6b8" class="bulleted-list"><li style="list-style-type:circle"><code>-s startblock</code> = specifica una stringa che verrà presa come stringa iniziale delle word generate.</li></ul><ul id="daf459cd-d414-4826-9cb4-43c18520c413" class="bulleted-list"><li style="list-style-type:circle"><code>-p charset/ -p word1 .. </code>= per specificare un charset di caratteri o una lista di parole</li></ul><ul id="128bedc0-da86-4f85-8c6f-648582b80e54" class="bulleted-list"><li style="list-style-type:circle"><code>-c NUM</code> = per specificare il numero di righe del file</li></ul></li></ul></details></li></ul><ul id="5f29ef6a-b048-4a86-9c10-c486a069ad44" class="toggle"><li><details open=""><summary><strong>Manipolazione hash</strong></summary><ul id="66074953-52a1-4bbf-9fab-7e379085be4b" class="bulleted-list"><li style="list-style-type:disc"><code>hashid [OPZIONi] INPUT</code> = serve per identificare i codici hash presi in input. Alcune opzioni importanti sono:<ul id="f915870b-fd09-4787-b49b-45248d06cd20" class="bulleted-list"><li style="list-style-type:circle"><code>-m</code> = per includere anche in output la modalià di hash per il successivo utilizzo con hashcat</li></ul><ul id="88504943-fc48-4b10-a099-f02097eee48f" class="bulleted-list"><li style="list-style-type:circle"><code>-j</code> = per il formato corrispondente per il successivo utilizzo con john</li></ul></li></ul><ul id="81233a54-f92b-4e0b-9688-ef38dd9ef504" class="bulleted-list"><li style="list-style-type:disc"><code>hash-identifier</code> = apre una schermata interattiva che permette l’inserimento del codice hash, listando una lista di possibili algoritmi.</li></ul><ul id="13f8c044-308b-4213-acc7-5c11effc995b" class="bulleted-list"><li style="list-style-type:disc"><code>hashcat HASH</code> = permette di identificare l’algoritmo di HASH utilizzato</li></ul><ul id="95d05722-31ac-4ca9-bb8b-4b533baca6f1" class="bulleted-list"><li style="list-style-type:disc"><code>sha256sum FILE</code> = per la creazione di un hash del FILE. </li></ul></details></li></ul><ul id="6b6c16e4-6935-4693-89a4-3bf8629fe814" class="toggle"><li><details open=""><summary><strong>Cracking hash</strong></summary><ul id="1bb7d6a0-65c5-4f15-8a98-54dd817a34f7" class="bulleted-list"><li style="list-style-type:disc"><code>john [OPZIONI] HASH</code> = tramite il comando è possibile realizzare una molteplicità di attacchi:<ul id="467c97db-fee5-4032-b3d8-34dded8d3df4" class="bulleted-list"><li style="list-style-type:circle"><code>--single</code> = per eseguire la modalità di attacco single crack mode. In questa modalità viene considerata una stringa e vengono generate variazioni di quest’ultima.</li></ul><ul id="7327446a-8dca-4a26-a95a-cda41d51f517" class="bulleted-list"><li style="list-style-type:circle"><code>-- wordlist=WORDLIST</code>  = per eseguire un attacco tramite wordlist. In questa modalità John The Ripper prova tutti gli hash corrispondenti alle password già note inserite in un dizionario.</li></ul><ul id="0677e775-0357-44ec-8e63-8822d486853d" class="bulleted-list"><li style="list-style-type:circle"><code>--incremental</code> = incremental mode. La modalità incrementale è la modalità più potente offerta da John The Ripper: quando attivata, infatti, essa prova tutte le possibili combinazioni di caratteri per cercare di risalire alla password in chiaro.</li></ul><ul id="f030bc7d-677a-4d9a-ad5a-47f606a235d6" class="bulleted-list"><li style="list-style-type:circle">external mode = utilizzato per archivi criptati del tipo .zip/.rar/.7z. In questi casi si utilizzano dei comandi ausiliari che permettono di ricavare il codice hash degli archivi che poi possono essere forzati secondo una delle modalità viste in precedenza. Tra questi comandi sono presenti <code>zip2john</code>, <code>rar2john</code> e <code>7z2john</code>.</li></ul><p id="b729240b-0ef7-457c-b824-6baf9dba2634" class="">Altre opzioni che si possono specificare con tale comando sono:</p><ul id="00702125-9327-4eb2-a32c-619f6b02b029" class="bulleted-list"><li style="list-style-type:circle"><code>-- format=FORMATO</code> = per specificare il formato dell’hash che si sta analizzando.</li></ul></li></ul><ul id="3fda9b75-5429-4476-a5ce-c2b767d2453e" class="bulleted-list"><li style="list-style-type:disc"><code>hashcat [OPZIONI] HASH</code> = permette di eseguire eseguire il crack dell’hash. Le opzioni da utilizzare per l’attacco sono: <ul id="48bead5b-8272-46bd-89f4-1d891c192986" class="bulleted-list"><li style="list-style-type:circle"><code>-a N</code> = per specificare la modalità di attacco, se N=0 straight </li></ul><ul id="2ae42b2d-650f-4062-995a-38e951e533bd" class="bulleted-list"><li style="list-style-type:circle"><code>- m N</code> = per specificare l’algoritmo di hash utilizzato (si può vedere tramite i comandi di manipolazione)</li></ul></li></ul></details></li></ul><ul id="017efe92-0c15-4bc4-8c4d-68096755068d" class="toggle"><li><details open=""><summary><strong>Binary exploits</strong></summary><ul id="408ff423-3218-45ad-b62a-a341adb11194" class="bulleted-list"><li style="list-style-type:disc"><code>sudo apt install gcc-multilib</code> = permette al compilatore gcc di compilare su diverse architetture, permettendo di lavorare con architetture a 32 bit su macchine a 64 bit.</li></ul><ul id="f032ae51-f421-45a3-a3ad-bf42afaf2f6b" class="bulleted-list"><li style="list-style-type:disc"><code>echo “0” &gt; /proc/sys/kernel/randomize_va_space</code> = permette di disabilitare la randomizzazione della memoria</li></ul><ul id="7cad8297-42d4-45bb-88bd-0b215c418083" class="bulleted-list"><li style="list-style-type:disc"><code>gcc -o es -fno-stack-protector -m32 -z execstack </code><a href="http://es.cl"><code>es.c</code></a>= dove le varie opzioni inserite sono:<ul id="a3e686ec-5c9a-4b86-8e6a-fe687fb850eb" class="bulleted-list"><li style="list-style-type:circle">-fno-stack-protector = disabilita i canarini</li></ul><ul id="b9c9a2ca-cb01-478e-907a-b48590e277a2" class="bulleted-list"><li style="list-style-type:circle">-m32 = compila per architettura a 32 bit</li></ul><ul id="1f37b090-e816-4259-a656-9cdd18cec70f" class="bulleted-list"><li style="list-style-type:circle">-z execstack = rende lo stack eseguibile</li></ul></li></ul><ul id="93b497fb-8627-4874-ada1-5fe763d82db8" class="bulleted-list"><li style="list-style-type:disc"><code>gdb</code> = debugger per testare altri programmi. Alcuni comandi importanti sono:<ul id="2e2175cf-e528-4358-8630-583dbbe69cd3" class="bulleted-list"><li style="list-style-type:circle"><code>disass </code>= per disassemblare le funzioni dell’eseguibile, visualizzando le istruzioni assembly. Se il comando non funziona digitare il comando file NOME_SORGENTE per il caricamento della tabella dei simboli. Se l’operazione continua a non andare è necessario ri-compilare il sorgente con l’opzione -ggdb. </li></ul><ul id="1385709e-05d1-4f2f-9563-1f30780e07f9" class="bulleted-list"><li style="list-style-type:circle"><code>run STRINGA</code> = per eseguire il programma con input stringa.</li></ul><ul id="40cebf32-2635-4359-9280-d1281d7759aa" class="bulleted-list"><li style="list-style-type:circle"><code>b * </code>= per inserire un breakpoint. Questo break point può essere inserito anche all’inizio di una funzione (attraverso l’istruzione b *main viene posizionato un breakpoint all’inizio del main).</li></ul><ul id="a11ea849-55b1-416c-a2c8-62b02770a27f" class="bulleted-list"><li style="list-style-type:circle"><code>next </code>= per passare all’istruzione successiva.</li></ul><ul id="6f0e6efb-7894-4525-9b63-8c5ed7033506" class="bulleted-list"><li style="list-style-type:circle"><code>step </code>= per eseguire di istruzione in istruzione.</li></ul><ul id="82fd8286-1179-481c-8448-db6a141d82f7" class="bulleted-list"><li style="list-style-type:circle"><code>continue </code>= per saltare il breakpoint.</li></ul><ul id="bbfc0b6c-d410-472a-ad80-29484e32a95f" class="bulleted-list"><li style="list-style-type:circle"><code>x/200xw $esp</code> = per visualizzare i 200 byte successivi a partire dal valore del registro esp, visualizzando lo stack di memoria.</li></ul><ul id="581b4c2a-3bf4-45fd-81fe-9881787bfa9d" class="bulleted-list"><li style="list-style-type:circle"><code>info function</code> = serve per visualizzare gli indirizzi di tutte le funzioni caricate in memoria dal processo. Molte funzioni sono funzioni di libreria.</li></ul><ul id="76a08781-e25a-4076-a4f3-f5e0e1233964" class="bulleted-list"><li style="list-style-type:circle"><code>info register</code> = per visualizzare lo stato attuale dei registri</li></ul><ul id="cffb029d-5a65-4606-bc35-edfa7d7d51d7" class="bulleted-list"><li style="list-style-type:circle"><code>p function</code> = comando che permette di vedere l’indirizzo della funzione function.</li></ul></li></ul><ul id="d4cf8125-9dff-4008-9beb-58e425213072" class="bulleted-list"><li style="list-style-type:disc"> <code>$(perl -e ‘print “A”x100’)</code> = per formare una stringa di caratteri ripetuti. Si possono concatenare dei caratteri semplicemente mettendo una virgola e aggiungendo i caratteri da concatenare</li></ul><ul id="035635cb-b37b-46fa-87d8-01c223b45575" class="bulleted-list"><li style="list-style-type:disc"><code>python3</code> = comando con diverse funzioni utili:<ul id="10365e60-1654-42fc-a139-d8a03a0f351f" class="bulleted-list"><li style="list-style-type:circle"><code>hex()</code> = per eseguire somme tra esadecimali</li></ul><ul id="1316f8fb-1311-4552-94aa-6f53a675ff7f" class="bulleted-list"><li style="list-style-type:circle"><code>len(b’stringa’)</code> = per calcolare la lunghezza della stringa</li></ul><p id="d497951e-ec8c-4061-b2f7-4a36fa0e532e" class="">Alcune volte la flag trovata potrebbe essere un hash in base64. Per trovare il suo valore si può usare il comando <code>echo “stringa” &gt; base64 -d </code></p></li></ul></details></li></ul><ul id="dfe9b9c2-cc83-41ca-a2df-02a5c240a33b" class="toggle"><li><details open=""><summary><strong>Sicurezza delle comunicazioni</strong></summary><ul id="9a79d5ec-c552-44eb-9e9c-fee97343d546" class="bulleted-list"><li style="list-style-type:disc"><code>arp</code> = per manipolare la tabella arp con le associazioni tra indirizzi IP e MAC address. Alcune opzioni importanti sono:<ul id="dc5cb5fb-7eab-4968-bd96-5063d8672d76" class="bulleted-list"><li style="list-style-type:circle"><code>-n</code> = per visualizzare il contenuto della tabella in forma numerica</li></ul><ul id="09a4bd70-80bd-4fa9-b7c0-4ecb2490bd31" class="bulleted-list"><li style="list-style-type:circle"><code>-i</code> = per selezionare un’interfaccia</li></ul><ul id="838e23fb-ca2d-4d80-a2dc-daa996da872e" class="bulleted-list"><li style="list-style-type:circle"><code>-d indirizzo_ip</code> = per rimuovere l’associazione contenuta all’interno della tabella arp relativa all’indirizzo ip specificato</li></ul></li></ul><ul id="d9bbe2be-3c68-4805-8295-e5853825b099" class="bulleted-list"><li style="list-style-type:disc"><code>ettercap</code> = tool per eseguire attacchi di MITM. Le opzioni più importanti sono:<ul id="ef89f40e-62d1-4c0b-9648-9c4a26f81882" class="bulleted-list"><li style="list-style-type:circle"><code>-T</code> = formato di visualizzazione testuale</li></ul><ul id="7e8f0992-5853-4a5a-84fa-738a796630cc" class="bulleted-list"><li style="list-style-type:circle"><code>-M metodo </code>= per eseguire un attacco di MITM con il metodo specificato. Alcuni metodi sono:<ul id="81d489dd-c787-44ef-ab44-af698f606c7f" class="bulleted-list"><li style="list-style-type:square"><code>arp target1 target2</code> = serve per eseguire un attacco di arp poisoning, ovvero ad un arp_broadcast dove viene richiesto il mac address di un determinato indirizzo ip, ettercap risponde segnalando il mac address della macchina dell’attaccante (il traffico verrà ridiretto all’attaccante). I target devono essere specificati con una sintassi del tipo: /IP// , se non viene specificato nessun IP i target sono tutti quelli della subnet. </li></ul><ul id="50cf716e-0c6c-4e81-ba96-28c1197e569a" class="bulleted-list"><li style="list-style-type:square"><code>dhcp:range_indirizzi/netmask/dns</code> = serve per eseguire un attacco di DHCP spoofing, fornendo ad una macchina richiedente l’indirizzo IP quello voluto dall’attaccante, fornendogli anche il server dns. Se il cliente manda una DHCP_REQUEST, ettercap la approverà modificando solamente il gateway. In caso contrario, se il cliente esegue una DHCP_DISCOVER, ettercap risponderà con il primo indirizzo libero del range specificato. Quando terminano tutti gli indirizzi liberi, ettercap risponderà solamente a DHCP_REQUEST. </li></ul></li></ul></li></ul><ul id="e2008134-6e58-4306-aa7d-a78c1a325288" class="bulleted-list"><li style="list-style-type:disc"><code>iperf</code> = comando per verificare le prestazioni tra due diverse macchine. Per verificarle è necessario avere un client è un server, predisposti in questo modo:<ul id="e1ffe69d-9354-4b2d-8f0e-7a4c5cd772ba" class="bulleted-list"><li style="list-style-type:circle"><code>iper -s</code> = comando da eseguire sul server che si mette in ascolto sulla porta 5001</li></ul><ul id="e3fd0cf0-c15d-48ec-8fd9-9136dfb701fd" class="bulleted-list"><li style="list-style-type:circle"><code>iperf -c indirizzo_ip_server</code> = comando da eseguire sul client</li></ul></li></ul><ul id="ecc9b0c4-5007-40ac-b035-9f7a22e103ff" class="bulleted-list"><li style="list-style-type:disc"><code>hping3</code> = comando per eseguire un attacco di DDoS. Alcune opzioni importanti sono: <ul id="a5d48956-9b12-4bc6-b683-b2d76470ec3d" class="bulleted-list"><li style="list-style-type:circle"><code>-c num </code>= numero di pacchetti da inviare</li></ul><ul id="b6dd3840-8c16-4054-b3d0-64316a3a0f62" class="bulleted-list"><li style="list-style-type:circle"><code>-d dim</code> = dimensione dei pacchetti da inviare</li></ul><ul id="0784e276-5b0e-44d6-9cc7-da809841efb5" class="bulleted-list"><li style="list-style-type:circle"><code>-S</code> = per inviare dei pacchetti con il flag SYN settato</li></ul><ul id="df2b3658-a232-47d6-9547-69e128de1348" class="bulleted-list"><li style="list-style-type:circle"><code>-- icmp o -1</code> = per mandare dei pacchetti ICMP echo/request (ovvero dei ping)</li></ul><ul id="4e9d7b36-65b0-4a37-8ab0-552025fd9de0" class="bulleted-list"><li style="list-style-type:circle"><code>-- udp o -2</code> = per mandare dei pacchetti UDP alla porta 0 del destinatario. </li></ul><ul id="2e0bc80d-ec9d-40f2-8e63-e7ff5a234d8d" class="bulleted-list"><li style="list-style-type:circle"><code>-- frag </code>= per attivare la frammentazione dei pacchetti</li></ul><ul id="40e21aca-6e67-4820-a219-29e6a2254da1" class="bulleted-list"><li style="list-style-type:circle"><code>-w dim(64) </code>= TCP window size.</li></ul><ul id="e3cd5c6f-428c-4468-ba46-bdce1c9b22ca" class="bulleted-list"><li style="list-style-type:circle"><code>-p num</code> = porta di destinazione</li></ul><ul id="6ad1bf6c-d8a4-4377-8097-4be8d50a3484" class="bulleted-list"><li style="list-style-type:circle"><code>--flood </code>= per mandare i pacchetti il più velocemente possibile, senza preoccuparsi della risposta.</li></ul><ul id="5ac4ddb9-b42c-4903-8561-b6a49aef90c6" class="bulleted-list"><li style="list-style-type:circle"><code>--rand-source</code> = utilizza un indirizzo IP sorgente random ( si può anche utilizzare -a or –spoof to hide hostnames)</li></ul></li></ul></details></li></ul><ul id="95857eb6-6f4b-465d-85fd-bbdfabad55c8" class="toggle"><li><details open=""><summary><strong>Crittografia</strong></summary><ul id="44c3054f-0044-430c-8c4a-311290a5fceb" class="bulleted-list"><li style="list-style-type:disc"><code>gpg</code> = gpg è un comando che si utilizza per la generazione di chiavi, la loro gestione e de/cifratura di file. I comandi principali sono:<ul id="1daa9896-6472-438b-bf07-bcddd8800f47" class="bulleted-list"><li style="list-style-type:circle"><span style="border-bottom:0.05em solid">Generazione e gestione</span><ul id="9c7f4cad-0416-4d40-9874-89c39d883fae" class="bulleted-list"><li style="list-style-type:square"><code>gpg --gen-key</code> = Questo comando, dopo la richiesta di varie domande per la costruzione di una identità univoca, genera una coppia di chiavi. La chiave generata deve essere protetta con passphare e viene inserita all’interno della cartella .gnupg nella home directory.</li></ul><ul id="678972c0-e503-4c50-8175-1e09daaf2525" class="bulleted-list"><li style="list-style-type:square"><code>gpg --list-key Key-Id </code>= per vedere le chiavi generate. Senza specificare l’id della chiave, vengono stampate tutte</li></ul><ul id="cc28fdd7-970e-49ad-9b01-234a44e2106f" class="bulleted-list"><li style="list-style-type:square"><code>gpg --keyid-format LONG --list-keys vostraidentità@email</code> = per ottenere l’id della chiave pubblica. L’output del comando è il seguente, l’id della chiave è sottolineato<figure id="595b6433-29df-4312-977d-dbad520f9861" class="image"><a href="CRITTOGRAFIA%200edf42483b0a4e39b4855765e5308623/Untitled%2014.png"><img style="width:480px" src="CRITTOGRAFIA%200edf42483b0a4e39b4855765e5308623/Untitled%2014.png"/></a></figure></li></ul></li></ul><ul id="ac1ecb77-1ebd-498f-9d74-9462093f51c4" class="bulleted-list"><li style="list-style-type:circle"><span style="border-bottom:0.05em solid">Importazione</span><ul id="03aaead3-2930-49f6-a6fc-2abdbfbe848c" class="bulleted-list"><li style="list-style-type:square"><code>gpg --import</code> = per incollare la chiave pubblica. </li></ul><ul id="81a75c51-b7ba-41e9-9084-cee22279a734" class="bulleted-list"><li style="list-style-type:square"><code>gpg --import vostrachiavepubblica.pub </code>= per importare la chiave vi verrà stampato il Key-ID</li></ul></li></ul><ul id="6ed65aae-991a-42fb-992b-540e532ed01b" class="bulleted-list"><li style="list-style-type:circle"><span style="border-bottom:0.05em solid">Esportazione</span><ul id="cbbe7b6b-022c-4349-97d6-be3423fe4659" class="bulleted-list"><li style="list-style-type:square">Chiave privata<ul id="0a111c16-8271-4c07-a1f6-8e12b9f0a8f3" class="bulleted-list"><li style="list-style-type:disc"><code>gpg --output private.pgp --armor --export-secret-key vostraidentita@email</code> = per l’esportazione della chiave privata. Solitamente quest’operazione si esegue solamente se è un’operazione di backup motivo per il quale il comando più giusto sarebbe: <p id="eddea198-bedb-4dd5-a2ba-2d74e699e59c" class=""><code>gpg --output backupkeys.pgp --armor --export-secret-keys --export-options export-backup vostraidentita@email</code></p></li></ul></li></ul><ul id="4225a798-c9ca-4f6b-a9af-50f0d2db597c" class="bulleted-list"><li style="list-style-type:square">Chiave pubblica<ul id="e4dfd839-ac6d-43cd-b8a9-9427ab3b3fcf" class="bulleted-list"><li style="list-style-type:disc">Esportazione normale<ul id="ade1afd3-ab3f-438d-aa73-a80fde8420f6" class="bulleted-list"><li style="list-style-type:circle"><code>gpg --output public.pgp --armor --export identita@email</code> = per esportare la chiave pubblica</li></ul></li></ul><ul id="825be73b-daa5-4b32-9ca4-893287665e1b" class="bulleted-list"><li style="list-style-type:disc">Esportazione su server<ul id="bde35dee-01e7-4906-afc2-a142072d748a" class="bulleted-list"><li style="list-style-type:circle"><code>gpg --keyserver </code><code><a href="http://pgp.mit.edu/">pgp.mit.edu</a></code><code> –send-keys ID_CHIAVE</code> = per pubblicare la chiave all’interno di un server (in questo caso quello del mit, un server alternativo sarebbe <a href="http://keys.openpgp.org/">keys.openpgp.org</a> ) specificando l’ID della chiave precedenetemente ricavato grazie all’apposito comando.</li></ul><ul id="96f79b88-764c-4776-a29c-3379e2cd4b43" class="bulleted-list"><li style="list-style-type:circle"><code>gpg --keyserver </code><code><a href="http://pgp.mit.edu/">pgp.mit.edu</a></code><code> --recv-keys ID_UTENTE</code> = per scaricare la chiave dal server dopo aver ottenuto l’ID dell’utente di cui si vuole scaricare la chiave pubblica (generalmente dopo l’invio di una mai</li></ul></li></ul></li></ul></li></ul><ul id="f7af365c-7279-41e2-bfd3-1b19d042c02c" class="bulleted-list"><li style="list-style-type:circle"><span style="border-bottom:0.05em solid">Cifratura, decifratura e firma</span><ul id="45f135c6-4ebb-418c-b63a-772492582678" class="bulleted-list"><li style="list-style-type:square"><code>gpg --encrypt --armor -r identita@mail file_da_crittare</code> = cifratura di un file tramite chiave pubblica. L’opzione -r serve per crittare con più chiavi.</li></ul><ul id="2e029355-3f98-4b5b-abac-334ed6cd7745" class="bulleted-list"><li style="list-style-type:square"><code>gpg --encrypt --armor --sign -r identita@mail file_da_crittare</code> = per firmare è necessario aggiungere l’opzione --sign</li></ul><ul id="3107fd2f-5836-43b2-8951-bddb3ca5e074" class="bulleted-list"><li style="list-style-type:square"><code>gpg --decrypt file_da_crittare</code> = per decifrare un file con la chiave privata. </li></ul><ul id="7ac31660-320f-4647-acb7-df7f6becaed2" class="bulleted-list"><li style="list-style-type:square"><code>gpg --sign-key identita@mail</code> = per utilizzare il modello web of trust e firmare la chiave pubblica di qualcun&#x27;altro. </li></ul></li></ul></li></ul><ul id="26e7f8c2-e717-4676-a0cd-f957b85997c0" class="bulleted-list"><li style="list-style-type:disc"><code>openssl</code> = openssl è una libreria c che implementa le principali operazioni crittografiche. I principali comandi che si possono utilizzare sono:<ul id="79a873c4-9edd-4443-a60d-66ee0853569b" class="bulleted-list"><li style="list-style-type:circle">ca = creare una certifcation authority</li></ul><ul id="c5ade5df-fb6d-493e-8785-5eb0752cca4c" class="bulleted-list"><li style="list-style-type:circle">passwd = per la generazione degli hash di una password</li></ul><ul id="cdfddd52-143c-4e06-b9d1-7b47b4f479a7" class="bulleted-list"><li style="list-style-type:circle"><strong>dgst</strong> = calcolare digest (stringa che identifica in modo univoco il file e il suo contenuto) con le funzioni hash<ul id="973fa4df-e0cd-4472-bc7c-aef2e5595eb7" class="bulleted-list"><li style="list-style-type:square"><code>openssl dgst -md5 -out digestfile testo.txt</code> = all’interno del digestfile è presente l’hash rappresentativo del contenuto del file. L’algortimo utilizzato per la generazione dell’hash è md5</li></ul></li></ul><ul id="e2f37a23-83b1-48d0-90ef-317398b838df" class="bulleted-list"><li style="list-style-type:circle"><strong>enc</strong> = de/cifrare utilizzando algoritmi a chiave simmetrica. Alcuni comandi utili sono:<ul id="61878ee1-4d41-41d0-bd58-528dc9063a4e" class="bulleted-list"><li style="list-style-type:square"><code>openssl enc -ciphers</code> = per vedere gli algoritmi simmetrici supportati</li></ul><ul id="17106797-1564-460f-bb0b-e80e23e74121" class="bulleted-list"><li style="list-style-type:square"><code>openssl enc -base64 -in file_base64.txt</code> = per cifrare un file con un algortimo specificato (in questo caso base64)</li></ul><ul id="6f9e69ae-da6e-4c3a-94cb-69c3b48c36e3" class="bulleted-list"><li style="list-style-type:square"><code>openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 100000 -salt -in file_testo.txt -out cifrato.bin</code> = per cifrare un file con diverse opzioni:<ul id="2dce9b1c-d6ba-4a5e-abe5-25cdb134f846" class="bulleted-list"><li style="list-style-type:disc">-aes-256-cbc = per utilizzare l’algoritmo aes 256 CBC, molto sicuro</li></ul><ul id="e73ce56c-41fc-4701-951a-4bf4181af668" class="bulleted-list"><li style="list-style-type:disc">-md sha512 = per utillizzare l’algoritmo di hash, della famiglia dello sha2</li></ul><ul id="36822b68-402f-4f78-a24e-ef1319af5149" class="bulleted-list"><li style="list-style-type:disc">-pbkdf2 = usa l’algoritmo Password-Based Key Derivation Function 2 per la chiave</li></ul><ul id="f7d2aaad-cc6c-4fc1-8ff1-8122b6361dc5" class="bulleted-list"><li style="list-style-type:disc">-iter 100000 = numero di iterazioni necessarie per derivare la chiave. Più è alto il numero più tempo è necessario per fare il brute-force del file. </li></ul></li></ul><ul id="82c36de5-8df9-4444-998f-266194535558" class="bulleted-list"><li style="list-style-type:square"><code>openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 100000 -salt -d -in cifrato.bin</code> = per decifrare un file</li></ul></li></ul><ul id="65264dfd-f15f-4c47-85a3-136ee15f6326" class="bulleted-list"><li style="list-style-type:circle"><strong>genrsa</strong> = generare una coppia di chiavi per l&#x27;algoritmo RSA<ul id="9934f12a-4ca9-4996-890d-9bcdd953b7d0" class="bulleted-list"><li style="list-style-type:square"><code>openssl genrsa -out chiave.pem 2048</code> = per la generazione di una coppia di chiavi di lunghezza 2048 bit all’interno del file chiave.pem. Il file contiene sia la chiave pubblica che quella privata.</li></ul></li></ul><ul id="9ef5f4b4-fc54-4ea4-9675-a32b13ea32dd" class="bulleted-list"><li style="list-style-type:circle">password = generare &quot;hashed password&quot;</li></ul><ul id="8c4e653c-3c7a-44bc-8b5c-60eef792d822" class="bulleted-list"><li style="list-style-type:circle">pkcs7 = gestire le informazioni secondo lo standard PKCS # 7</li></ul><ul id="1438dd0f-de01-4259-bec5-62326856fc6d" class="bulleted-list"><li style="list-style-type:circle"><strong>pkeyutl</strong> = de/cifrare o firmare/verificare con algoritmi asimmetrici. <ul id="90904e07-36d4-467d-ae7a-9e5e8f893d70" class="bulleted-list"><li style="list-style-type:square"><span style="border-bottom:0.05em solid">Per la cifratura/decifratura di un file</span><ul id="b40ef51a-fb02-4be8-856c-7bd0299049d1" class="bulleted-list"><li style="list-style-type:disc"><code>openssl rsautl -encrypt -in testo.txt -inkey chiave.pem -out cifrato_rsa.bin</code> = per cifrare un file usando una chiave. Se si specifica l’opzione -pubin si cifra utilizzando solamente la chiave pubblica. </li></ul><ul id="a50b787f-92d9-49b4-a1c4-b79b3d277002" class="bulleted-list"><li style="list-style-type:disc"><code>openssl rsautl -decrypt -in testo.txt -inkey chiave.pem -out nuova.txt</code> = per decifrare un file</li></ul></li></ul><ul id="56f4cdc2-f61f-418d-bdbe-7d8375dc219c" class="bulleted-list"><li style="list-style-type:square"><span style="border-bottom:0.05em solid">Per la firma di un digest</span><ul id="4b384b43-855d-4402-a389-6f718e21304e" class="bulleted-list"><li style="list-style-type:disc"><code>openssl rsautl -sign -in digestfile -out digest_firmato -inkey chiave.pem</code> = per la firma del digest</li></ul><ul id="606de553-2000-4b5f-82ca-e0a07a69aba0" class="bulleted-list"><li style="list-style-type:disc"><code>openssl rsautl -verify -in digest_firmato -out digest_verifica -inkey chiave.pem</code> = per la verifica di un digest firmato</li></ul></li></ul></li></ul><ul id="2c7e5006-6d5d-43b5-9e49-78c6e04572a1" class="bulleted-list"><li style="list-style-type:circle">rand = generare di stringhe di bit pseudo-casuali.</li></ul><ul id="0e32e002-674f-47db-ab17-2432a822a808" class="bulleted-list"><li style="list-style-type:circle"><strong>rsa</strong> = manipolare chiavi per l’algoritmo RSA.<ul id="5e3cf9b2-e72f-4a78-8f7a-f53562298a87" class="bulleted-list"><li style="list-style-type:square"><code>openssl rsa -in chiave.pem -text</code> = per vedere il contenuto della coppia di chiavi generate con il comando openssl genrsa in fomato human readable. </li></ul><ul id="85f06a2f-7e8f-4a64-9710-b3551e4b6c35" class="bulleted-list"><li style="list-style-type:square"><code>openssl rsa -in chiave.pem -aes-256-cbc -out enc_chiave.pem</code> = per cifrare la chiave con un algoritmo simmetrico (come gpg che richiedava l’inserimento di una passphrase).</li></ul><ul id="e1c81ce0-6a1c-4ee5-a3b6-b16e79daf11f" class="bulleted-list"><li style="list-style-type:square"><code>openssl rsa -in chiave.pem -pubout -out pub_chiave.pem</code> = per estrarre la chiave pubblica</li></ul></li></ul><ul id="b134ce58-50bf-414a-bdd8-c9adf87d12a3" class="bulleted-list"><li style="list-style-type:circle">verify = verificare certificati (e catene) X509</li></ul><ul id="ed2f20f1-f013-4a2e-91cc-5e60b30055f6" class="bulleted-list"><li style="list-style-type:circle"><strong>req</strong> = per le richeste di certificati e loro generazione<ul id="4bb5d950-7c89-4b71-92c7-1bd32802ef07" class="bulleted-list"><li style="list-style-type:square"><code>openssl req -x509 -new -key rootCA.key -days 3650 -out rootCA.pem</code> = generazione del certificato per la CA in quanto con l’opzione -x509 si ha un certificato autofirmato. Il certificato conterrà solamente la chiave pubblica, non quella privata che invece viene utilizzata per validare altri certificati.</li></ul><ul id="a782fa26-7a7a-4aa7-94c1-5c843fcb5034" class="bulleted-list"><li style="list-style-type:square"><code>openssl req -new -key client1.key -out client1.csr</code> = generazione della richiesta di certificato di un utente. All’interno di client1.key sono contenute le chiavi, all’interno di client1.csr la richiesta di certificato.  </li></ul></li></ul><ul id="5cb57ef1-d308-4247-9e39-5b4b0018cc6a" class="bulleted-list"><li style="list-style-type:circle"><strong>x509</strong> = manipolare certificati x509<ul id="a872ad80-8e65-4695-83a0-e647e89a88b9" class="bulleted-list"><li style="list-style-type:square"><code>openssl x509 -in rootCA.pem -outform DER -out cacert.der</code> = per convertire il certificato in formato DER e caricarlo sul browser</li></ul><ul id="5eca3edc-0518-4e88-b0c8-bdf7d101c6df" class="bulleted-list"><li style="list-style-type:square"><code>openssl x509 -req -days 365 \ -CA rootCA.pem -CAkey rootCA.key \-CAcreateserial -CAserial serial\-copy_extensions copy \ -in client1.csr -out client1.pem</code> = per firmare la richiesta di certificato da parte di un cliente. In questo comando è necessario specificare il certificato e la chiave della CA e la richiesta di certificato dell’utente. </li></ul><ul id="83e597f4-baf1-462a-b913-2d073886e39d" class="bulleted-list"><li style="list-style-type:square"><code>openssl x509 -in client1.pem -text</code> = per visualizzare il contenuto di un certificato in formato human readable. </li></ul></li></ul></li></ul></details></li></ul><ul id="5c2375d6-8091-4a9b-82b7-4f128d4c6e27" class="toggle"><li><details open=""><summary><strong>Firewall</strong></summary><figure id="f0435553-c482-4d1b-8417-e03b15cd230e" class="image"><a href="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%2010.png"><img style="width:432px" src="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%2010.png"/></a><figcaption>Appena il pacchetto entra all’interno dello stack di rete viene assoggettato all’hook di prerouting, dove passa attraverso le catena delle tabelle raw, conntrack, mangle e nat. Successivamente a seconda  della destinazione si avranno comportamenti differenti, ma indipendentemente l’hook postrouting è l’ultimo hook che viene analizzato. </figcaption></figure><ul id="59d858b7-6521-4902-b394-6c5ba3a0998f" class="bulleted-list"><li style="list-style-type:disc"><code>iptables</code> = comando che si utiizza per modificare le regole del PF di Linux . La struttura del comando è del tipo: <p id="d84d3bfd-23d4-4c95-a106-0ffde7e97a9f" class=""><code>iptables [-t &lt;tabella&gt;] CMD [catena] [match] [-j target]</code></p><ul id="de14f3cb-6809-458f-b86a-889a26c14263" class="bulleted-list"><li style="list-style-type:circle">Tabella = se non viene specificata nessuna tabella, la regola viene inserita nella tabella filter</li></ul><ul id="b5811c7e-6021-4d20-b987-ce940701b860" class="bulleted-list"><li style="list-style-type:circle">CMD = I comandi principali per la gestione delle catene sono: <ul id="4b5937bd-84a7-4a0f-9148-41fa8437308a" class="bulleted-list"><li style="list-style-type:square"><code>-vnL [catena]</code> = elenca le regole della catena (se presente, o tutte)</li></ul><ul id="b570fc19-274f-48a4-a0aa-fcdb8c3b75c2" class="bulleted-list"><li style="list-style-type:square"><code>-C</code> = ritorna true se la regola specificata esiste nella catena</li></ul><ul id="438cb532-93e5-4800-9e64-95c26e6d3ff0" class="bulleted-list"><li style="list-style-type:square"><code>-A</code> = aggiunge una regola in fondo alla catena</li></ul><ul id="edc68aaf-a266-4d1a-a62a-f5638aeb5961" class="bulleted-list"><li style="list-style-type:square"><code>-I [N]</code> = inserisce una regola in N-esima posizione o in testa se manca N. In questo caso bisogna fare molta attenzione che la regola inserita sia più prioritaria rispetto alle precedenti</li></ul><ul id="531d0580-c044-4415-a643-37656cb6e177" class="bulleted-list"><li style="list-style-type:square"><code>-D [N]</code> =  rimuove una regola in N-esima posizione o la regola che fa match con quella inserita</li></ul><ul id="6cd3699e-4851-4c7a-8f37-e31878aaa796" class="bulleted-list"><li style="list-style-type:square"><code>-R n </code>=  sostituisce la regola in N-esima posizione</li></ul><ul id="9418520f-b60d-4e9c-8ecc-e5f682626a0d" class="bulleted-list"><li style="list-style-type:square"><code>-F</code> = svuota tutte le regole della catena</li></ul><ul id="7650c8a3-4265-4b13-b1cb-d5f97b5df7a1" class="bulleted-list"><li style="list-style-type:square"><code>-P</code> = imposta la policy di default della catena. Può assumere valore DROP o ACCEPT</li></ul></li></ul><ul id="6ce0fdb2-cf4e-4db2-a2f4-7440ac31cecc" class="bulleted-list"><li style="list-style-type:circle">Match = condizione che deve essere soddifatta dal pacchetto per eseguire il target. Le opzioni sono:<ul id="db7287b4-8cae-43eb-bbdc-3b1ae6ef9130" class="bulleted-list"><li style="list-style-type:square">Caratteritiche di livello 1<ul id="94f86de8-ee45-4b58-b7c2-a9cff644a739" class="bulleted-list"><li style="list-style-type:disc"><code>-i &lt;input interface&gt;</code></li></ul><ul id="de6afbf1-107e-4a71-b270-2bddcf2933be" class="bulleted-list"><li style="list-style-type:disc"><code>-o &lt;output interface&gt;</code></li></ul></li></ul><ul id="c6faa93b-7b5e-4f74-a12b-2f7eba068c10" class="bulleted-list"><li style="list-style-type:square">Caratteristiche di livello 3<ul id="77261ca6-089d-4176-bdce-ce1a32a765f3" class="bulleted-list"><li style="list-style-type:disc"><code>-s &lt;source address&gt;</code></li></ul><ul id="95f3a0c6-8da2-4ffe-93ca-354fe06f3e2c" class="bulleted-list"><li style="list-style-type:disc"><code>-d &lt;destination address&gt;</code></li></ul></li></ul><ul id="9d78479a-0c04-48cc-b926-cd9d3e8694a3" class="bulleted-list"><li style="list-style-type:square">Caratteristiche di livello 4<ul id="5bdefc0e-2608-47a7-8ac6-c288b44f04b0" class="bulleted-list"><li style="list-style-type:disc"><code>-p &lt;tcp|udp|udplite|icmp|icmpv6|esp|ah|sctp|mh&gt;</code> = per specificare il protocollo. Se il protocollo supporta le porte si utilizzano i comandi:<ul id="0aac425a-89e9-47d3-9289-c458d9ad0ea2" class="bulleted-list"><li style="list-style-type:circle"><code>--dport port[:port]</code></li></ul><ul id="b07cb334-0f24-4cde-9588-95d1c1d29d1e" class="bulleted-list"><li style="list-style-type:circle"><code>--sport port[:port]</code></li></ul></li></ul></li></ul><ul id="749caa21-29e7-45b1-8c4e-c2159d7d9f19" class="bulleted-list"><li style="list-style-type:square">Stato della connessione:<ul id="2bdf578d-50c0-4a84-9a7f-3ecacaf8659e" class="bulleted-list"><li style="list-style-type:disc"><code>-m state --state NEW,ESTABLISHED</code> = per accettare solo pacchetti validi come iniziatori di<br/>una connessione (nella direzione lecita da un client ad un server)<br/></li></ul><ul id="00a9bbfe-114b-40f7-98b9-4e2b85748098" class="bulleted-list"><li style="list-style-type:disc"><code>-m state --state ESTABLISHED</code> = per accettare solo pacchetti validi come risposte a una<br/>connessione già iniziata (nella direzione lecita da un server verso un client)<br/></li></ul></li></ul></li></ul><ul id="2a28cfd4-ea62-495a-af2f-0f5e2572d3f1" class="bulleted-list"><li style="list-style-type:circle">Target = azione che viene eseguita se il pacchetto fa match con la condizione. Sono presenti diversi target:<ul id="5d255fb9-ad8b-4312-b6d5-a52515c695c3" class="bulleted-list"><li style="list-style-type:square"><code>ACCEPT</code> = il pacchetto viene accettato e la scansione della catena termina</li></ul><ul id="3596fcb8-0aaf-4d76-b909-9b812f784f36" class="bulleted-list"><li style="list-style-type:square"><code>DROP</code>= il pacchetto viene scartato e la scansione della catena termina</li></ul><ul id="819f018a-993a-407c-a453-8928ba5ddf77" class="bulleted-list"><li style="list-style-type:square"><code>RETURN</code> = viene attuata la default policy e la scansione della catena termina</li></ul><ul id="d092aa78-9df3-42e5-9fb3-ad93329d1655" class="bulleted-list"><li style="list-style-type:square"><code>DNAT</code> = utilizzabile solamente nelle catene di PREROUTING e OUTPUT, si utilizza per specificare la modifica dell&#x27;indirizzo del destinatario con l’indirizzo specificato dall’opzione --to-destination [ipaddr[-ipaddr]][:port[-port]]. Questo comando serve per bucare il firewall e bypassare le regole precedentemente inserite.  </li></ul><ul id="5953b0c4-b0f1-408c-b5c7-00e8edf098e6" class="bulleted-list"><li style="list-style-type:square"><code>SNAT</code> = utilizzabile solamente nelle catene di POSTROUTING e INPUT, si utilizza per specificare la modifica dell&#x27;indirizzo del mittente con l’indirizzo specificato dall’opzione --to-source [ipaddr[-ipaddr]][:port[-port]]</li></ul><ul id="6819efe5-7170-4c4f-8298-2b749e0cf9db" class="bulleted-list"><li style="list-style-type:square"><code>LOG --log-prefix &quot;stringa&quot;</code> = serve per contrassegnare i pacchetti, che verranno trattati con la default policy, con la stringa inserita. Tale traffico è visibile osservando /var/log/kern.log<br/><br/></li></ul></li></ul></li></ul></details></li></ul><ul id="d6a2e6c9-be79-43fe-9845-0384a8b254a6" class="toggle"><li><details open=""><summary><strong>Monitoraggio</strong></summary><ul id="f843fbed-c569-4125-83f6-3bbabacbdb20" class="toggle"><li><details open=""><summary>Integrity checking</summary><p id="c027048c-cda8-4426-9f05-a81063bc41f2" class="">Un tool di integrity checking è AIDE. I comandi più importanti per utilizzare AIDE sono:</p><ul id="e13488ed-ad3e-4d7f-adc7-b49b855fb35a" class="bulleted-list"><li style="list-style-type:disc"><code>aide -v</code> = per vedere le opzioni con cui AIDE è stato compilato</li></ul><ul id="eac4e3a8-064e-468b-b559-c3ba38e52e98" class="bulleted-list"><li style="list-style-type:disc"><code>aideinit </code>= comando di inizializzazione che server per creare lo snapshot del sistema. La prima volta che viene lanciato crea entrambi i db, ovvero aide.db e aide.db.new. La seconda volta richiede se è necessario sovrascrivere i db (il primo è da sovrascrivere solo quando si è certi che il sistema è pulito). </li></ul><ul id="16ae686f-d22a-4b1f-b45f-05f2565acfc4" class="bulleted-list"><li style="list-style-type:disc"><code>aide -c /etc/aide/aide.conf -C</code> = permette di osservare le differenze tra i due snapshot del filesystem. Tale operazione considera anche il backup dei file tenuti in precedenza che vengono indicati con il - alla fine del nome (questo permette anche di osservare le differenze tra i due file attraverso il comando <code>diff</code>). </li></ul></details></li></ul><ul id="ec33b3fd-9a91-4d15-b10f-e20110437b79" class="toggle"><li><details open=""><summary>NIDS</summary><p id="aaf0be80-4816-4cc6-b60b-0898aab2d882" class="">Un tool di NIDS è suricata. Il comando per la sua gestione è suricata, le cui operazioni più importanti sono:</p><ul id="5016e9b2-b64f-4fbd-b796-b1ff0c0305c3" class="bulleted-list"><li style="list-style-type:disc"><code>-c &lt;yaml configuration file location&gt;</code> = per specificare il file di configurazione utilizzato</li></ul><ul id="76c9faac-1c47-441f-874c-4ec4ef18459c" class="bulleted-list"><li style="list-style-type:disc"><code>-i &lt;interface to sniff&gt;</code> = per specificare l’interfaccia da sniffare</li></ul><ul id="661594a5-6adf-4aab-87fa-b59bb136960d" class="bulleted-list"><li style="list-style-type:disc"><code>-s &lt;signatures file&gt;</code> (runs in addition to -c)</li></ul><ul id="69550f71-cc5e-4aa9-bafd-77e61c245fda" class="bulleted-list"><li style="list-style-type:disc"><code>-r &lt;pcap recording file location&gt;</code> = per specificare il file pcap da utilizzare</li></ul><ul id="2b01c0b1-751e-49ba-a15b-2728be120530" class="bulleted-list"><li style="list-style-type:disc"><code>-l &lt;default log directory location&gt;</code> = per specificare la directory dove verranno posti i file di log. </li></ul></details></li></ul></details></li></ul><p id="4e5e30eb-72ab-4dc3-972c-4cb6e4f3506c" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

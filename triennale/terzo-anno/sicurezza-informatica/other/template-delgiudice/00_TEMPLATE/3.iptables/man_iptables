@@ -1,0 +1,25 @@
+####################################################################################################
+iptables -A (append): Aggiunge una regola alla fine della catena specificata. Se si utilizza iptables -A, la nuova regola sarà l'ultima nella lista delle regole di quella catena.
+iptables -I (insert): Inserisce una regola all'inizio della catena specificata, oppure in una posizione specifica se viene indicato un numero di posizione. Per esempio, iptables -I INPUT 1 inserirà una nuova regola come la prima nella catena INPUT.
+
+Perciò quando si dice "Le regole devono essere applicate nell'ordine in cui vengono proposte." ---> usare -A
+####################################################################################################
+
+La direttiva -m state --state ESTABLISHED in una regola iptables è utilizzata per gestire connessioni di rete che sono già state stabilite. Questo è particolarmente utile in scenari in cui è necessario consentire il traffico di ritorno per le connessioni iniziati dal proprio sistema. Ecco alcuni casi comuni in cui è necessario utilizzare questa direttiva:
+
+Nel caso delle connessioni TCP, dopo che una connessione è stabilita (come ad esempio una richiesta HTTP), il traffico di ritorno viene considerato come parte di una connessione "ESTABLISHED". Pertanto, è necessario consentire questo traffico di ritorno utilizzando -m state --state ESTABLISHED.
+
+Esempio:
+# Permette il traffico di ritorno per le connessioni TCP stabilite
+sudo iptables -A INPUT -m state --state ESTABLISHED -j ACCEPT
+####################################################################################################
+                           --dport (Destination Port)
+Scopo: Specifica la porta di destinazione di un pacchetto.
+Uso tipico: Filtrare il traffico in entrata verso servizi specifici.
+Esempio: (Accetta il traffico in entrata verso la porta 80 - HTTP)
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+                          --sport (Source Port)
+Scopo: Specifica la porta di origine di un pacchetto.
+Uso tipico: Filtrare il traffico in uscita basato sulla porta di origine.
+Esempio: (Accetta il traffico in uscita proveniente dalla porta 53 - DNS)
+iptables -A OUTPUT -p udp --sport 53 -j ACCEPT

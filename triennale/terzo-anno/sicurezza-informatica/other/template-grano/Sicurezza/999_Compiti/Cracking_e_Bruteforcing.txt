@@ -1,0 +1,93 @@
+#Del Giudice Domenico 0001049650
+
+
+-----------ESER1----------
+#Copio le seguenti righe rispettivamente in due file eser1_pw.txt e eser1_sh.txt
+	#eser1:x:1003:1003:,,,:/home/eser1:/bin/bash
+	#eser1:$6$ib4iK6iItGvL1NIE$BVsxQzq.mmepXdCTP4zFJlDcDxLaclYLTfgL3aIo8ZogWlM.BNNpmdJfPuWh69d/n2XnPpYAattoC9r2zP7kL/:19052:0:99999:7:::
+
+#Combino i file passwd e shadow
+unshadow eser1_pw.txt eser1_sh.txt > crack_eser1.txt
+
+#Provo a cercare la corrispondenza dell'hash (pw) tra la wordlist rockyou.txt
+john --wordlist=/usr/share/wordlists/rockyou.txt crack_eser1.txt
+
+#Ottengo il risultato
+1a2b3c4d			(eser1)
+
+
+
+
+-------TULIPANO---------
+#Copio le seguenti righe rispettivamente in due file tulipano_pw.txt e tulipan_sh.txt
+tulipano:x:1005:1005:,,,:/home/tulipano:/bin/bash
+tulipano:$6$jBOf0K5/ymFabsrr$E66i753AHnc7A8YB1rIJA0nL2Qe12XD/hrqyuYaPgbNO/NYX1JE4s5Y5bmhnrFJyX.S3DG7tQuWicv7pJjUou/:19052:0:99999:7:::
+
+#Combino i file passwd e shadow
+unshadow tulipano_pw.txt tulipan_sh.txt > crack_tulipano.txt
+
+#Scarico da github una repository da cui uso dutch_wordlist.txt data la probabile corrispondenza semantica con l'username tulipano
+git clone https://github.com/danielmiessler/SecLists.git
+
+#Provo a cercare la corrispondenza dell'hash (pw) tra la wordlist dutch_wordlist.tx
+john --wordlist=Downloads/dutch_wordlist.txt tulipano.txt
+
+#Ottengo il risultato
+betonĳzervlechter4         (tulipano)
+
+
+
+
+-------TIM----------
+#Copio le seguenti righe rispettivamente in due file tim_pw.txt e tim_sh.txt
+tim:x:1002:1002:Sir Tim Berners-Lee,,,,Inventor of the www:/home/tim:/bin/bash
+tim:$6$4mnKuGkT$.mMjEJNNRu5HKhKz3byLHT8GHHTA6xfsiavBWCB8QL8qyJW2BEICTZ6IzRFhRYUNv9PXc/obOtv475WHe.wPm.:19792:0:99999:7:::
+
+#Combino i file passwd e shadow
+unshadow tim_pw.txt tim_sh.txt > tim_crack.txt
+
+#Ottengo informazioni su Tim Berners Lee quali:
+	 il suo nome completo, quello della moglie, dei figli e le rispettive date di nascita; 
+#Eseguo il comando cupp e produco il file Timothy.txt
+
+//Ottengo ulteriori info dal web
+cewl -d 1 -m 5 https://www.wired.it/tim-berners-lee-internet-world-wide-web/ > tim_cewl.txt
+
+//Concateno i due file per creare un unica wordlist
+cat Timothy.txt tim_cewl.txt   > tim_wordlist.txt
+
+//Lancio john
+john --wordlist=tim_wordlist.txt tim_crack.txt
+
+//Ottengo il risultato (nome della figlia al contrario più caratteri speciali)
+ecilA&**  		(tim)
+
+
+
+
+
+
+
+---------ESERCIZIO 2-----------
+#Salvo il seguente hash in un file crack_hash.txt
+85064efb60a9601805dcea56ec5402f7
+
+#Lancio il comando hashcat in modalita forza bruta (-a 0)
+hashcat -a 0 Desktop/crackhash.txt /usr/share/wordlists/rockyou.txt
+
+#Mi chiede di specificare il tipo di hash con il comando -m, specificandomi delle possibili soluzioni con degli esempi, scelgo MD5 (-m 0)
+hashcat -m 0 -a 0 Desktop/crackhash.txt /usr/share/wordlists/rockyou.txt
+
+#Ottengo il risultato
+85064efb60a9601805dcea56ec5402f7		:	qwerty12345  
+
+
+--------ESERCIZIO 3--------
+#Scarico la cartella es.zip
+
+zip2john es.zip > zip_hashed
+
+john zip_hashed --wordlist=/usr/share/wordlists/rockyou.txt
+
+#Ottengo il risultato e accedo ai contenuti della cartella (nessuna chiave trovata...)
+batman 			(es.zip)

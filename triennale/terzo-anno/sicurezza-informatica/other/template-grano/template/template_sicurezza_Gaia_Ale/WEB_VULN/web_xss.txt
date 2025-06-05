@@ -1,0 +1,67 @@
+->Web XSS (Cross-Site Scripting)--------------------------------------------------------------
+Il Cross-Site Scripting (XSS) è una vulnerabilità di sicurezza che permette ad un attaccante di iniettare codice JavaScript malevolo in una pagina web visualizzata da altri utenti. Questo codice può eseguire operazioni come rubare sessioni, defacing di siti web, redirezioni NON autorizzate e altre azioni dannose.
+
+-> Tipi di XSS:
+
+	1 Stored XSS: Il codice malevolo viene salvato nel server e visualizzato ogni volta che un utente accede ad una determinata pagina.
+
+	2 Reflected XSS: Il codice malevolo viene inviato al server tramite una richiesta (come una query string) e immediatamente riflesso indietro all'utente.
+
+	3 DOM-based XSS: Il codice malevolo è eseguito direttamente nel browser manipolando il Document Object Model (DOM).
+
+-> Come Funziona un Attacco XSS -----------------------------------------------------------------
+Un attacco XSS può avvenire quando un'applicazione web prende input dall'utente e lo include nell'output HTML senza una corretta sanitizzazione. 
+Esempio classico:
+
+	1 Input Utente: <script>alert("XSS")</script>
+
+	2 Output NON Sanitizzato: <div>Benvenuto, <script>alert("XSS")</script></div>
+
+Quando l'output viene renderizzato dal browser, esegue il codice JavaScript inserito, in questo caso mostrando un alert con il messaggio "XSS".
+
+-> Bypassare i Filtri: ------------------------------------------------------------
+Spesso, le applicazioni implementano filtri per prevenire l'iniezione di codice dannoso. Ecco alcune tecniche per bypassare questi filtri:
+
+-> Bypassando il Filtro su script --------
+
+	1 Inserire caratteri null (%00): <scrip%00t>alert("XSS")</scrip%00t>
+
+	2 Spezzare la Parola script: <scripscriptt>alert("XSS")</scripscriptt>
+
+-> Bypassando il Filtro su < e > --------
+
+	1 Utilizzare le entità HTML per rappresentare < e >: &#60;script&#62;alert('XSS')&#60;/script&#62;
+
+-> Sfruttare l'Output a Proprio Vantaggio
+Un esempio pratico di sfruttamento dell'output è quando un'applicazione restituisce direttamente l'input dell'utente in un attributo HTML. Consideriamo il seguente scenario:
+Scenario:
+
+	1 Input Utente: 		ciao
+	2 Output: 		<img src="ciao">
+
+Se vediamo un errore 404 (file not found), significa che l'applicazione inserisce direttamente il nostro input nell'attributo src dell'elemento <img>.
+
+-> Sfruttare l'onerror --------
+Per sfruttare questa vulnerabilità, possiamo utilizzare l'attributo onerror dell'elemento <img>, che viene eseguito quando l'immagine NON può essere caricata:
+
+	1 Input Maligno: 		" onerror="alert('XSS')
+
+	2 Output: 		<img src="" onerror="alert('XSS')">
+
+Quando il browser tenta di caricare un'immagine con un src vuoto, l'evento onerror viene attivato ed esegue il codice JavaScript, mostrando un alert con il messaggio "XSS".
+
+-> Altri Attributi HTML Utilizzabili --------------------------------
+Diversi attributi HTML possono essere utilizzati per eseguire JavaScript. Ecco alcuni esempi:
+
+	• <img>: 		<img src="invalid.jpg" onerror="alert('XSS')">
+
+	• <body>: 		<body onload="alert('XSS')">
+
+	• <iframe>: 		<iframe src="invalid.html" onerror="alert('XSS')">
+
+	• <input>: 		<input onfocus="alert('XSS')" autofocus>
+
+	• <div>: 		<div onmouseover="alert('XSS')">Hover over me!</div>
+
+
+

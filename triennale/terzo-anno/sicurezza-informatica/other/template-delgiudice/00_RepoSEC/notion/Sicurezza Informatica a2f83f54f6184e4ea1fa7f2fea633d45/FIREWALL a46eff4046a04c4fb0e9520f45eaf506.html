@@ -1,0 +1,684 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>FIREWALL</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="a46eff40-46a0-4c4f-b0e9-520f45eaf506" class="page sans"><header><h1 class="page-title">FIREWALL</h1><p class="page-description"></p></header><div class="page-body"><ul id="eb1e9924-6dae-42ed-9732-ba16e4d79e51" class="toggle"><li><details open=""><summary>Teoria</summary><p id="0ed92494-031a-429c-8576-e0590e944170" class="">Il firewall è una difesa perimetrale che permette di distinguere ciò che appartiene al mio sistema e quello che sta al di fuori. Il punto di passaggio attraverso la cinta muraria è una porta, nella quale si concentrano tutte le funzionalità più sofisticate, con un doppio ruolo:</p><ul id="7b55c488-fb72-4bde-a6da-7ce78397d23b" class="bulleted-list"><li style="list-style-type:disc">INGRESS filtering = per impedire l’accesso a malintenzionati</li></ul><ul id="dcad6c74-f478-494f-a3b1-897c0074c363" class="bulleted-list"><li style="list-style-type:disc">EGRESS filtering = per impedire l’esfiltrazione di dati riservati e per evitare che i propri sistemi siano usati come base per attaccarne altri</li></ul><p id="5d88b9b1-250f-4439-b1fb-beea6e19ba3d" class="">Il firewall è architettura costituita da una molteplicità di dispositivi, sia hardware che software, che operano in rete filtrando il traffico malevolo. Tale architettura si può progettare secondo due differenti approcci:</p><ul id="385417ba-42b3-484d-94d7-6f1756f20dd3" class="bulleted-list"><li style="list-style-type:disc">Default deny = blocca tutto a prescindere a parte quello che è esplicitamente autorizzato. Molto più efficace dal punto di vista della difesa</li></ul><ul id="65584bcd-af64-4a5e-bab1-a6e829dbe54c" class="bulleted-list"><li style="list-style-type:disc">Comportamento opposto rispetto al precedente è quello di definire tutto ciò che è sfacciatamente sbagliato e permettere tutto il resto. Questo approccio è migliore per l’utente, ma più difficile per il sistemista che deve aggiornare continuamente i comportamenti da bloccare. </li></ul><p id="dd5b7078-30ba-462c-b4aa-777a98db8cf3" class="">Visto che per attaccare il sistema bisogna passare da quella porta, è necessario che il firewall sia robusto, immune agli attacchi. Il funzionamento del firewall si basa su diverse tecniche di controllo dei pacchetti di rete:</p><ul id="999ef2d7-ae6e-4ee4-ac4f-e924d29b7b47" class="bulleted-list"><li style="list-style-type:disc">Traffico = caratteristiche dell’header dei pacchetti </li></ul><ul id="6636fa7d-5bb4-4059-8ecb-a67acced1671" class="bulleted-list"><li style="list-style-type:disc">Direzione = per discriminare da richieste entranti a quelle uscenti. </li></ul><ul id="13dc8ab2-009f-4957-a55a-79f2ca16074a" class="bulleted-list"><li style="list-style-type:disc">Utenti = l’accesso ai servizi viene garantito sulla base di chi lo richiede (N.B nel protocollo TCP/IP non c’è traccia dell’utente responsabile)</li></ul><ul id="fad5dc75-360c-47b1-bdd3-e64ebd4c28b6" class="bulleted-list"><li style="list-style-type:disc">Comportamento = valutare come vengono usati i servizi</li></ul><h2 id="8940b22c-bfff-404f-babe-a5437990602d" class=""><mark class="highlight-blue">Tipologie di firewall</mark></h2><p id="518551aa-a5c1-4f39-9236-db691141d20c" class="">I tipi fondamentali di firewall sono:</p><ul id="80401727-7fc7-4759-a56d-c53c5a302cf6" class="bulleted-list"><li style="list-style-type:disc">Packet filter</li></ul><ul id="e88bbdde-24e7-4110-a9d8-efe4eb752b35" class="bulleted-list"><li style="list-style-type:disc">Application-level gateway</li></ul><ul id="81f597bc-4c09-4bb5-934c-1669fcb014e7" class="bulleted-list"><li style="list-style-type:disc">Circuit-level gateway</li></ul><h3 id="2dff2b79-8392-4358-a450-e5cc2d374bf6" class=""><mark class="highlight-teal">Packet filter</mark></h3><p id="fbf89dd8-ab1b-48a0-87be-414e6afecca3" class="">Il packet filter è un dispositivo che si occupa unicamente di esaminare l’header del pacchetto in transito, senza toccare minimamente il payload, dallo strato data link a quello di trasporto. </p><figure id="772d377e-3ed0-45a0-9e8a-aa2ae32ed9fe" class="image"><a href="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled.png"><img style="width:480px" src="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled.png"/></a><figcaption>Solitamente viene collocato sia un endpoint da proteggere, nel caso di collocazione centralizzato, viene collocato contestualmente al router. </figcaption></figure><p id="c97118cc-3516-4953-b9a9-2f33944db2ad" class="">Tale dispositivo applica al pacchetto in transito una serie di regole di controllo dell’accesso, ovvero una sequenza di regole del tipo “se condizione allora azione”. Naturalmente un pacchetto potrebbe soddisfare più regole con target sovrapposti, ma  la prima regola che fa match interrompe la scansione della lista. Le azioni che possono essere eseguite sui pacchetti sono principalmente 4: </p><ul id="6de60c7c-3183-43fb-b185-9ab3cb3d8a86" class="bulleted-list"><li style="list-style-type:disc">Accattare il pacchetto</li></ul><ul id="d5907fdc-ed9e-475d-84eb-1abe306a1424" class="bulleted-list"><li style="list-style-type:disc">Scartare il pacchetto</li></ul><ul id="85693bc4-cd44-4d09-993d-763dc353f631" class="bulleted-list"><li style="list-style-type:disc">Loggare i dettagli del pacchetto, ma senza fare nulla</li></ul><ul id="69e66d5f-6464-45c3-a365-bb6cca9ad9b8" class="bulleted-list"><li style="list-style-type:disc">Modificare il pacchetto.</li></ul><p id="0e56ab2d-7e04-4d30-8df0-2b4e7c6290d5" class="">Nel caso in cui non venga soddisfatta nessuna regola, adottando l’approccio di progettazione del tipo default deny, deve essere presente una regola di default.  </p><p id="fe0ddb1f-1ae0-4b05-acb1-6c76bdaed31d" class="">Normalmente un packet filter è stateless, ovvero non ha memoria del traffico passato precedentemente e la decisione sull’azione da compiere sul pacchetto si basa unicamente sulle regole. Tuttavia, un evoluzione del concetto originale è quella del packet filter come dispositivo stateful, dove la sorte di un pacchetto viene decisa anche in base ai pacchetti che sono transitati precedentemente. Questa features è particolarmente utile per i protocolli connectionless tipo UDP, in quanto permette di far passare il pacchetto in entrata solo se in precedenza era passato un pacchetto in uscita. </p><p id="b3a59587-e6e2-4630-9437-07a09e99c1fa" class=""><span style="border-bottom:0.05em solid">Vantaggi</span>:</p><ul id="fd25efe1-c532-40a2-b28f-67f92a5813f3" class="bulleted-list"><li style="list-style-type:disc">Semplice e veloce = Implementato tipicamente in tutti i router</li></ul><ul id="97b3c777-9001-483d-b6f5-026ad61d799b" class="bulleted-list"><li style="list-style-type:disc">Trasparente agli utenti = gli utenti non sanno neanche dell’esistenza del firewall e la configurazione deve essere fatta solamente in un punto e non in tutti gli endpoint della subnet. </li></ul><p id="3a8ab6a3-ee66-463b-9b5e-bb9c84af7743" class=""><span style="border-bottom:0.05em solid">Svantaggi</span>:</p><ul id="fc058c93-2911-4ed3-8bb4-353a0d643df4" class="bulleted-list"><li style="list-style-type:disc">Regole di basso livello</li></ul><ul id="ce5f9779-1aa6-42ed-a0bb-0c93d0f58f69" class="bulleted-list"><li style="list-style-type:disc">Mancanza di supporto alla gestione utenti = Negli header non compaiono elementi identificativi dell’utente che ha generato/ricevuto il pacchetto</li></ul><p id="60dd2caf-9850-4596-ad3c-f45ec2b1e09a" class=""><span style="border-bottom:0.05em solid">Vulnerabilità </span></p><p id="f7b283d3-b679-4749-8cae-0b7f0260d192" class="">Le principali vulnerabilità/limitazioni di questa tipologia di firewall sono:</p><ul id="fcc39a06-ea71-4f3c-94ea-fbe2073002b0" class="bulleted-list"><li style="list-style-type:disc">Frammentazione = i pacchetti di rete possono essere frammentati se si eccede nel MTU e ogni volta che un pacchetto viene frammentato, l’header IP viene ripetuto in ogni frammento che presenterà come payload il payload frammentato del pacchetto di partenza. In questo contesto, l’header TCP, dal punto di vista del pacchetto IP, è parte del payload e di conseguenza, in seguito alla frammentazione, solamente un frammento conterrà l’header TCP. Ma se si hanno delle regole più stringenti sull’header del pacchetto TCP, il frammento che non lo contiene potrebbe passare inosservato. Sono presenti diverse soluzioni:<ul id="f2871832-e51e-4a74-a7d2-414c6efed0cf" class="bulleted-list"><li style="list-style-type:circle">Drastica = vengono scartati tutti i pacchetti frammentati</li></ul><ul id="221059b3-0999-42fb-8bbb-482d698ee166" class="bulleted-list"><li style="list-style-type:circle">Costosa = riassemblare il traffico, ma non implementabile da un packet filter puro</li></ul><figure id="e230addb-9a50-4178-8909-085f31845e64" class="image"><a href="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%201.png"><img style="width:432px" src="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%201.png"/></a><figcaption>header IP = blu; header TCP = verde</figcaption></figure></li></ul><ul id="7d604053-2005-461b-9744-5d38cd774229" class="bulleted-list"><li style="list-style-type:disc">Payload = la limitazione principale del PF è quella di non osservare il payload. Questo fatto lo rende vulnerabile ad attacchi del tipo data-driven e consente una gestione più difficile dei protocolli che negoziano dinamicamente le connessioni. <figure id="fc283863-38aa-45e6-bdf6-88bbe915b2e0" class="image"><a href="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%202.png"><img style="width:432px" src="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%202.png"/></a><figcaption>Esistono delle estensioni per sbirciare all’interno di poche negoziazioni</figcaption></figure></li></ul><h3 id="c53e1a70-9814-40d8-a51c-ef5ad0399358" class=""><mark class="highlight-teal">Application-Level Gateway</mark></h3><p id="ffdb350c-f5b2-4990-aa18-76b06532cc80" class="">L’application level gateway, anche chiamato proxy server, è una macchina che in modo non trasparente si interpone nella connessione applicativa, agendo da server nei confronti del client, e propagando la richiesta agendo da client nei confronti del server effettivo. </p><figure id="4ebdbd6f-7578-4c92-b3eb-80459c248b2b" class="image"><a href="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%203.png"><img style="width:432px" src="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%203.png"/></a></figure><p id="e8c0222b-9a0b-4c70-8b94-52d36c2b1233" class=""><span style="border-bottom:0.05em solid">Vantaggi</span>:</p><ul id="a6537ff7-c1c2-461c-b0bf-eb2c7086b0e4" class="bulleted-list"><li style="list-style-type:disc">Essendo specifico di un solo protocollo applicativo, permette dei filtraggi avanzati (per un proxy HTTP si possono vietare richieste GET o POST)</li></ul><ul id="b71a5c0e-46e7-4152-8d89-fbf2fb662209" class="bulleted-list"><li style="list-style-type:disc">Può prendere atto di pacchetti che negoziano il traffico </li></ul><p id="784d9271-c87e-4845-94d7-0ddcc103c56e" class=""><span style="border-bottom:0.05em solid">Svantaggi</span>:</p><ul id="998ecfb5-1b08-4d5f-906d-6e889526e63b" class="bulleted-list"><li style="list-style-type:disc">è specifico di un solo servizio</li></ul><ul id="987edf0b-aa28-402f-93d5-2a8e11a5e537" class="bulleted-list"><li style="list-style-type:disc">Più pesante di PF per il controllo del payload</li></ul><ul id="b3fb14a1-f82a-4515-b813-04f71a5699d7" class="bulleted-list"><li style="list-style-type:disc">Non trasparente = il client deve specificare a livello applicativo il proprio proxy.</li></ul><h3 id="03c81aca-af65-4f9a-81ff-bf7e74370fa9" class=""><mark class="highlight-teal">Circuit-level gateway </mark></h3><p id="71cf763e-af94-4e6f-8784-a677317e7aa0" class="">Il circuit-level gateway è un proxy genaral-purpose che non entra all’interno del contenuto informativo del pacchetto, ma spezza comunque la connessione a livello di trasporto. Agisce in modo contrario rispetto ad un proxy tradizionale in quanto solitamente determina quali connessioni far passare dall’interno verso l’esterno e non viceversa. </p><figure id="7c34118e-ebbf-4c5c-a58f-e2ba94aa0417" class="image"><a href="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%204.png"><img style="width:432px" src="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%204.png"/></a></figure><p id="3abba506-70ae-4e42-b617-9e8737643d24" class=""><span style="border-bottom:0.05em solid">Vantaggi</span>:</p><ul id="64fa3313-7fe1-4547-81b7-c8f6b75c9432" class="bulleted-list"><li style="list-style-type:disc">è generico </li></ul><ul id="59dcac85-20b0-493d-82db-cdae2d94a128" class="bulleted-list"><li style="list-style-type:disc">La negoziazione tra cliente e CLG permette di inserire all’interno della negoziazione elementi che tradizionalmente non sono presenti, per esempio criteri di configurazione dei clienti. </li></ul><p id="e736959a-5ccc-4234-9c31-25e633443f0d" class=""><span style="border-bottom:0.05em solid">Svantaggi</span>:</p><ul id="5a9fc5f1-5c00-466e-9651-ce84ee475aa9" class="bulleted-list"><li style="list-style-type:disc">Le regole di filtraggio sono limitate a indirizzi, porte, utenti</li></ul><ul id="21c89b02-0bf2-4127-8491-ffb0a90aacd5" class="bulleted-list"><li style="list-style-type:disc">Richiede la modifica dello stack dei client</li></ul><h2 id="57be382a-2a1b-4b11-884d-e93d04a8c32b" class=""><mark class="highlight-blue">Collocazione dei firewall</mark></h2><p id="beff0e63-ff68-4ce3-9611-edacffce0751" class="">I firewall possono essere collocati:</p><ul id="13375119-ebfb-44bc-8116-226177cce35a" class="bulleted-list"><li style="list-style-type:disc">Bastion host = sistema dedicato per far girare un firewall software, tipicamente per realizzare ALG o CLG (solitamente i PF sono all’interno dei router)</li></ul><ul id="e4137739-ec65-457f-bc9b-e6024a22ea75" class="bulleted-list"><li style="list-style-type:disc">Personal firewall = installati sui singoli endpoint, permette un controllo maggiore su cosa è lecito e non è lecito fare. </li></ul><h2 id="f689b820-7ae3-49a1-8a0f-880f6ca9222b" class=""><mark class="highlight-blue">Topologia di filtraggio</mark></h2><p id="aac04f83-564b-4724-9ac0-c8cb7e7364fc" class="">Il firewall è un architettura che può essere fatta da numerose componenti, soprattutto per quanto riguarda sistemi costituiti da una molteplicità di apparati, con traffico in entrata e in uscita. La combinazione di componenti firewall da vita a topologie diverse:</p><ul id="8e585edd-72ff-4a9f-8401-e0f8904ed4f3" class="bulleted-list"><li style="list-style-type:disc">screened single-homed BH = questa topologia è caratterizzata dalla presenza di un PF con regole semplice che consentono che solamente il BH possa comunicare con l’esterno. Il BH implementa un ALG, interponendosi quindi tra internet e le macchine della rete privata. In questo contesto, per prendere il controllo di una macchina della rete interna, è necessario compromettere due sistemi, anche se per un accesso significativo basta compromettere PF (per connessione fisica tra le diverse macchine)<figure id="e81b63e3-7b65-4a5b-9408-cdb939a3aa08" class="image"><a href="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%205.png"><img style="width:384px" src="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%205.png"/></a></figure></li></ul><ul id="3473a091-c391-4ec4-ab4a-0150bb0e2906" class="bulleted-list"><li style="list-style-type:disc">screened dual-homed BH = questa topologia è simile a quella precedente, ma l’unica differenza è che è presente una divisione netta tra:<ul id="72e201f3-fae5-4dce-b949-8f82e06dc781" class="bulleted-list"><li style="list-style-type:circle">Rete esterna pubblica= internet </li></ul><ul id="249a578e-791f-4f53-b950-1fba09574b8f" class="bulleted-list"><li style="list-style-type:circle">Rete interna privata</li></ul><p id="d4188325-2bbf-4b87-9396-efde75f43e56" class="">Grazie alla presenza di una zona DMZ (demilitarizzata) delimitata dal PF e BH. Infatti, non è più presente una connessione fisica, ma il BH presenta due interfacce di rete. Questa fa si che se si riesce a compromettere il PF, è necessario violare anche il BH per compromettere la rete interna. Lo svantaggio di questa topologia è che tutto il traffico passa attraverso il BH, il quale potrebbe diventare un collo di bottiglia</p><figure id="7d400106-7777-49d3-a66d-08e954160245" class="image"><a href="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%206.png"><img style="width:384px" src="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%206.png"/></a></figure></li></ul><ul id="77f10b2c-e46b-440d-a1be-a7d26fc7084f" class="bulleted-list"><li style="list-style-type:disc">screened subnet = topologia caratterizzata dalla presenza di due packet filter, con una separazione più netta tra la rete interna e quella esterna.  <figure id="f313e4fb-a039-45c4-90c3-dd39141e5d93" class="image"><a href="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%207.png"><img style="width:384px" src="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%207.png"/></a></figure></li></ul><h2 id="c5d1150f-c830-4034-ac2c-c187237e17de" class=""><mark class="highlight-blue">IPTables</mark></h2><p id="d1055511-847c-4c42-8b1c-d2b6c54054a0" class="">iptables è il packet filter integrato nel kernel Linux. Esso si appoggia al framework netfilter il quale definisce degli hook nello stack di rete del kernel. Gli hook sono dei punti di aggancio che servono per definire delle catene di regole che vengono evocate dal SO quando un pacchetto attraversa determinati stati dello stack di rete. Gli hook di netfilter sono collocati in 5 punti strategici: </p><figure id="b6642c4b-7a7c-43aa-a348-9e7d28b3c598" class="image"><a href="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%208.png"><img style="width:672px" src="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%208.png"/></a></figure><p id="1832ed5f-bea9-4a7b-97f6-7ef4f36e7c22" class="">iptables serve per definire i comportamenti da registrare agli hook. I concetti fondamentali di iptables sono:</p><ul id="dd9260ec-c5b8-473c-b1b5-416cf23bb88c" class="bulleted-list"><li style="list-style-type:disc">Tabelle = le catene di controllo dell’accesso sono organizzate in tabelle, viste logiche che raggruppano le decisioni in base alla loro tipologia, per esempio filtraggio o modifica (la macro-tipologia di azione definisce la tabella in cui mi trovo). Le tabelle possono essere di diverse tipologie:<ul id="0296c6fb-a6a6-49b9-ab4d-aa63af0b55f4" class="bulleted-list"><li style="list-style-type:circle">raw = tutte le catene che vogliono agire sul pacchetto grezzo senza considerare l’aspetto stateful di iptables (ovvero i ragionamenti se un pacchetto è già transitato o meno) sono all’interno di questa tabella</li></ul><ul id="93d2312a-2798-445c-9be8-a0991f172330" class="bulleted-list"><li style="list-style-type:circle">conntrack = contrario rispetto a raw, contiene delle catene implicite sulle quali non posso agire che vengono automaticamente compilate da iptables per fare connession trackinng (si segna i pacchetti che potrebbero essere utili per decisioni future)</li></ul><ul id="fbd8bed8-2d73-42db-afe3-7d4f241c1de8" class="bulleted-list"><li style="list-style-type:circle">filter = tutte le catene di questa tabella permettono di fare il filtraggio dei pacchetti</li></ul><ul id="f2ef1aeb-7c54-4c1a-90e1-224bb050fac0" class="bulleted-list"><li style="list-style-type:circle">nat = le catene in questa tabella permettono la modifica del pacchetto se ce n’è bisogno, andando a cambiare indirizzo sorgente, destinazione e porte</li></ul><ul id="b280a3fb-dca6-427f-8df1-d82d0e28e6ee" class="bulleted-list"><li style="list-style-type:circle">mangle = le catene di questa tabella permettono la modifica di qualsiasi aspetto del pacchetto, non solo gli indirizzi e le porte (un altra funzionalità è il mark dei pacchetti)</li></ul><ul id="bf4115f1-8aa9-48d7-b1bc-2982a0725afc" class="bulleted-list"><li style="list-style-type:circle">security =  le catene di questa tabella permettono di integrare il concetto di controllo dell’accesso passa/non passa in rete con il concetto di questo utente può fare queste cose o no. </li></ul></li></ul><ul id="3546b1b2-7f18-4147-86e2-690ed32c81a4" class="bulleted-list"><li style="list-style-type:disc">Catene = la catena organizza i controlli in base a quali hook mi sono agganciato. Quindi corrispondono esattamente alle catene di netfilter:<figure id="fdb3faf9-bb63-4bc6-9bb0-cb7a6dba538a" class="image"><a href="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%209.png"><img style="width:384px" src="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%209.png"/></a></figure></li></ul><ul id="84f36523-da69-434f-a73f-ba77a1777c73" class="bulleted-list"><li style="list-style-type:disc">Regole = All’interno delle catene sono contenute le regole del tipo. Ogni regola può stabilire un elenco di condizioni (match), e un’azione (target) da eseguire su ogni pacchetto che rispetti tutte le condizioni. Il target potrebbe essere:<ul id="3d8f0cd9-6e0c-4347-8832-49d9b5689d98" class="bulleted-list"><li style="list-style-type:circle">terminating target = viene eseguito il target della regola e viene terminato il controllo delle regole della catena, per passare alle regole della tabella successiva. I tre principali target sono:<ul id="1454a168-7db1-4290-8ac7-d438af580b56" class="bulleted-list"><li style="list-style-type:square">ACCEPT = termina l’analisi delle regole della tabella e catena, passando alle regole della tabella successiva</li></ul><ul id="bfad2a78-b9e9-4918-88d6-1e1ca102310e" class="bulleted-list"><li style="list-style-type:square">DROP = termina la scansione della catena corrente e il pacchetto viene scartato (si utilizza solitamente all’interno della tabella filter)</li></ul><ul id="a4156e95-56f9-433c-94a5-f5bff3b871d2" class="bulleted-list"><li style="list-style-type:square">RETURN = termina la scansione della catena corrente e utilizza la default policy della catena</li></ul></li></ul><ul id="5c8a776a-7c12-4f52-a4e0-44f5c2955123" class="bulleted-list"><li style="list-style-type:circle">non-terminating = viene eseguito il target, ma continua l’esame  delle regole della stessa catena, ma tabella differente.  </li></ul></li></ul><figure id="7941a2e9-64b5-485a-a52e-db41637ad5cd" class="image"><a href="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%2010.png"><img style="width:432px" src="FIREWALL%20a46eff4046a04c4fb0e9520f45eaf506/Untitled%2010.png"/></a><figcaption>Appena il pacchetto entra all’interno dello stack di rete viene assoggettato all’hook di prerouting, dove passa attraverso le catena delle tabelle raw, conntrack, mangle e nat. Successivamente a seconda  della destinazione si avranno comportamenti differenti, ma indipendentemente l’hook postrouting è l’ultimo hook che viene analizzato. </figcaption></figure></details></li></ul><ul id="68f5d502-1fd1-461f-8fde-ab4bd29fc6f6" class="toggle"><li><details open=""><summary>Laboratorio</summary><p id="7ef80069-e9a8-4169-ad1d-b1ba2f439a0e" class="">Il comando che si utiizza per modificare le regole del PF di Linux è <code>iptables</code> . La struttura del comando è del tipo: </p><p id="6462f6a3-a91b-41a6-b98c-6a3857aeefba" class=""><code>iptables [-t &lt;tabella&gt;] CMD [catena] [match] [-j target]</code></p><ul id="3d6bacf6-aff2-484e-8e89-18c05321cecc" class="bulleted-list"><li style="list-style-type:disc">Tabella = se non viene specificata nessuna tabella, la regola viene inserita nella tabella filter</li></ul><ul id="8aeca7f5-c7df-476d-9758-1a05b37c4c02" class="bulleted-list"><li style="list-style-type:disc">CMD = I comandi principali per la gestione delle catene sono: <ul id="c664d597-f72c-450d-a4af-69cdc1cc5619" class="bulleted-list"><li style="list-style-type:circle"><code>-vnL [catena]</code> = elenca le regole della catena (se presente, o tutte)</li></ul><ul id="d3d61f8e-7aba-426e-aff4-9a1e7b7b342f" class="bulleted-list"><li style="list-style-type:circle"><code>-C</code> = ritorna true se la regola specificata esiste nella catena</li></ul><ul id="eab253bd-6097-461a-9e7d-a833cd5e0f36" class="bulleted-list"><li style="list-style-type:circle"><code>-A</code> = aggiunge una regola in fondo alla catena</li></ul><ul id="1794d240-4b8a-46a6-ba7e-92b2eaacdf91" class="bulleted-list"><li style="list-style-type:circle"><code>-I [N]</code> = inserisce una regola in N-esima posizione o in testa se manca N. In questo caso bisogna fare molta attenzione che la regola inserita sia più prioritaria rispetto alle precedenti</li></ul><ul id="2e4ca2f7-765e-44c9-8d44-aa8e81b2ce8d" class="bulleted-list"><li style="list-style-type:circle"><code>-D [N]</code> =  rimuove una regola in N-esima posizione o la regola che fa match con quella inserita</li></ul><ul id="36f302f1-1a29-4f9c-a68c-ab0d0d273e53" class="bulleted-list"><li style="list-style-type:circle"><code>-R n </code>=  sostituisce la regola in N-esima posizione</li></ul><ul id="9a76bd20-c2b3-4551-91a2-0626d76fb0d2" class="bulleted-list"><li style="list-style-type:circle"><code>-F</code> = svuota tutte le regole della catena</li></ul><ul id="b0ae0090-0cf6-4a49-b10e-4ca937d9705a" class="bulleted-list"><li style="list-style-type:circle"><code>-P</code> = imposta la policy di default della catena. Può assumere valore DROP o ACCEPT</li></ul></li></ul><ul id="41ddcfd0-075f-4e25-842b-3a6b0972bbdd" class="bulleted-list"><li style="list-style-type:disc">Match = condizione che deve essere soddifatta dal pacchetto per eseguire il target. Le opzioni sono:<ul id="ea04ba79-8d97-4dee-9711-3ffda52c9c3d" class="bulleted-list"><li style="list-style-type:circle">Caratteritiche di livello 1<ul id="b8c7335b-0706-4a60-a50d-d7397dfd292a" class="bulleted-list"><li style="list-style-type:square"><code>-i &lt;input interface&gt;</code> = utilizzabile solamente con la catena di INPUT </li></ul><ul id="c2eb189f-23bb-48db-b312-d7c9015e2c59" class="bulleted-list"><li style="list-style-type:square"><code>-o &lt;output interface&gt;</code> = utilizzabile solamente con la catena di OUTPUT</li></ul></li></ul><ul id="a4593932-65da-4ec1-a847-cbd27bbcc7aa" class="bulleted-list"><li style="list-style-type:circle">Caratteristiche di livello 3<ul id="3193464d-d405-49d3-a317-0026f0cac949" class="bulleted-list"><li style="list-style-type:square"><code>-s &lt;source address&gt;</code></li></ul><ul id="bb51d5a4-fa03-4832-b5cc-b5539cc66006" class="bulleted-list"><li style="list-style-type:square"><code>-d &lt;destination address&gt;</code></li></ul></li></ul><ul id="fa77786c-18ed-45aa-a7b8-d87b09a6102f" class="bulleted-list"><li style="list-style-type:circle">Caratteristiche di livello 4<ul id="230d049e-1017-4952-a824-4aaf9b28bc3d" class="bulleted-list"><li style="list-style-type:square"><code>-p &lt;tcp|udp|udplite|icmp|icmpv6|esp|ah|sctp|mh&gt;</code> = per specificare il protocollo. Se il protocollo supporta le porte si utilizzano i comandi:<ul id="0314f207-001b-47bd-bded-663154f3234e" class="bulleted-list"><li style="list-style-type:disc"><code>--dport port[:port]</code></li></ul><ul id="48d92f83-b7ed-4a88-a366-71a56f3892fc" class="bulleted-list"><li style="list-style-type:disc"><code>--sport port[:port]</code></li></ul></li></ul></li></ul><ul id="ba1674ea-17d4-40f0-9591-80dac5fa9057" class="bulleted-list"><li style="list-style-type:circle">Stato della connessione:<ul id="cf177de4-8115-4374-84e7-e0620dae5b89" class="bulleted-list"><li style="list-style-type:square"><code>-m state --state NEW,ESTABLISHED</code> = per accettare solo pacchetti validi come iniziatori di<br/>una connessione (nella direzione lecita da un client ad un server)<br/></li></ul><ul id="356712f3-a5fa-49ac-ba8e-fd227eafd74a" class="bulleted-list"><li style="list-style-type:square"><code>-m state --state ESTABLISHED</code> = per accettare solo pacchetti validi come risposte a una<br/>connessione già iniziata (nella direzione lecita da un server verso un client)<br/></li></ul></li></ul></li></ul><ul id="3519891e-50f4-4346-8330-9c4e75e73b0a" class="bulleted-list"><li style="list-style-type:disc">Target = azione che viene eseguita se il pacchetto fa match con la condizione. Sono presenti diversi target:<ul id="4bef66f8-03aa-4682-a7f3-8c7ce9aa3740" class="bulleted-list"><li style="list-style-type:circle"><code>ACCEPT</code> = il pacchetto viene accettato e la scansione della catena termina</li></ul><ul id="758005d3-8ad2-4a1e-a57e-33db365a0bd1" class="bulleted-list"><li style="list-style-type:circle"><code>DROP</code>= il pacchetto viene scartato e la scansione della catena termina</li></ul><ul id="bdc50ea5-39ef-4f5e-9b26-f7e7e29838f7" class="bulleted-list"><li style="list-style-type:circle"><code>RETURN</code> = viene attuata la default policy e la scansione della catena termina</li></ul><ul id="d6f9d1d3-1ce5-44b0-b954-edcb45e2636e" class="bulleted-list"><li style="list-style-type:circle"><code>DNAT</code> = utilizzabile solamente nella tabella di nat e nelle catene di PREROUTING e OUTPUT, si utilizza per specificare la modifica dell&#x27;indirizzo del destinatario con l’indirizzo specificato dall’opzione --to-destination [ipaddr[-ipaddr]][:port[-port]]. Questo comando serve per bucare il firewall e bypassare le regole precedentemente inserite.  </li></ul><ul id="f224682c-c390-4c3f-8c98-e40ef27ee3aa" class="bulleted-list"><li style="list-style-type:circle"><code>SNAT</code> = utilizzabile solamente nelle catene di POSTROUTING e INPUT, si utilizza per specificare la modifica dell&#x27;indirizzo del mittente con l’indirizzo specificato dall’opzione --to-source [ipaddr[-ipaddr]][:port[-port]]</li></ul><ul id="142e6018-a00d-4fde-9a35-be67a1eba03b" class="bulleted-list"><li style="list-style-type:circle"><code>LOG --log-prefix &quot;stringa&quot;</code> = serve per contrassegnare i pacchetti, che verranno trattati con la default policy, con la stringa inserita. Tale traffico è visibile osservando /var/log/kern.log<br/><br/></li></ul></li></ul><p id="34dd3e20-c009-4732-b040-48af456c2a38" class="">Un concetto molto importante è che il traffico è bidirezionale, quindi se abbiamo inserito una regola in INPUT è necessario aggiungere anche la regola parallela nella catena di OUTPUT. Quando si parla di connessioni si possono utilizzare due termini:</p><ul id="26fd9598-8104-4a7f-bc0d-c316334313fd" class="bulleted-list"><li style="list-style-type:disc">entranti → gli altri iniziano la connessione. Da questa ipotesi ne derivano due fattori:<ul id="1cf0a8fb-1b4d-438a-9e4c-15d6035d8036" class="bulleted-list"><li style="list-style-type:circle">ESTABLISHED nella catena di output</li></ul><ul id="5017ebf0-ba5d-4f51-a701-e2cb7c68badd" class="bulleted-list"><li style="list-style-type:circle">Per quanto riguarda le porte, dport nella regola di INPUT e sport nella regola di OUTPUT</li></ul></li></ul><ul id="ce19d5dd-6563-43f4-ae98-a999cbb2bcc9" class="bulleted-list"><li style="list-style-type:disc">uscenti → io inizio la connessione<ul id="8efdb105-f06f-4dd7-a972-2754a603a4a7" class="bulleted-list"><li style="list-style-type:circle">ESTABLISHED nella catena di input</li></ul><ul id="535e6dd2-36af-4022-b750-0d269036202b" class="bulleted-list"><li style="list-style-type:circle">Per quanto riguarda le porte, sport nella regola di INPUT e dport nella regola di OUTPUT</li></ul></li></ul><p id="8c55d5f9-bb01-4fc2-a565-74a13b8ba3e6" class=""><span style="border-bottom:0.05em solid">Connessione ssh con vagrant </span></p><p id="35d0f63b-47d3-49e1-90bd-06edd2c5ec50" class="">Per consentire connessioni ssh solamente dalla macchina host tramite vagrant ad una determinata macchina è necessario agire sulle catene di INPUT e OUTPUT consentendo solamente il traffico da s 10.0.2.2 a d 10.0.2.15 (nel caso dell’OUTPUT sorgente e destinazione si invertono). </p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="ef3cf5cc-6830-4d9a-943c-098884f85935" class="code"><code class="language-JavaScript">iptables -A INPUT -s 10.0.2.2 -d 10.0.2.15 -p tcp --dport 22 -j ACCEPT
+iptables -A OUTPUT -d 10.0.2.2 -s 10.0.2.15 -p tcp --sport 22 -j ACCEPT
+iptables -A INPUT -p tcp --sport 22 -j DROP
+iptables -A OUTPUT -p tcp --dport 22 -j DROP</code></pre><p id="d1f0350f-cdd4-46f3-b6bd-d27453f9d9ab" class=""><span style="border-bottom:0.05em solid">Ruolo router</span></p><p id="f5244747-e586-4834-ab63-af9b80edbcab" class="">Lo scopo dei router è quello di inoltrare il traffico da una rete ad un altra. In questo caso è quindi necessario agire sulle regole della catena di FORWARD mettendo una regole sia per il traffico in entrata che per il traffico in uscita. </p><p id="5543d42d-061f-4389-987b-dfff18fa990a" class=""><span style="border-bottom:0.05em solid">Server e client</span></p><p id="8680a593-2282-4ee9-8239-602678ee9b42" class="">Per quanto riguarda il rapporto tra un server e un cliente, il client inizia la connessione mentre il server può accettare una connessione già iniziata. Per questo motivo si utilizza la clausola <code>- m state</code>  agendo solitamente sulle catene di INPUT e OUTPU in maniera simmetrica. Per quanto riguarda i router impiegati nel percorso, essi devono presentare le stesse regole ma nella catena di FORWARD. </p><p id="12998cf4-7050-4ea5-9c81-6f7f0c076766" class="">Il client (10.1.1.1) avrà delle regole del tipo:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="6d2499ce-6451-4c99-b402-dec9f7434291" class="code"><code class="language-JavaScript">iptables -A OUTPUT -s 10.1.1.1 -d 10.3.3.1 -p tcp --dport 22 -j ACCEPT
+iptables -A INPUT -d 10.1.1.1 -s 10.3.3.1 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT</code></pre><p id="9f84b579-80f7-479b-be97-56c355d7c26f" class="">Il server (10.3.3.1) avrà delle regole del tipo:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="d725cdd6-6706-44a1-a8ed-8231634ebde4" class="code"><code class="language-JavaScript">iptables -A INPUT -s 10.1.1.1 -d 10.3.3.1 -p tcp --dport 22 -j ACCEPT
+iptables -A OUTPUT -d 10.1.1.1 -s 10.3.3.1 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT</code></pre><p id="02c84721-1223-457f-b9a2-edb1c19b50f9" class="">I router impiegati nel tragitto avranno:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="d6c77670-6aa6-4037-b175-787d41ad9563" class="code"><code class="language-JavaScript">iptables -A FORWARD  -s 10.1.1.1 -d 10.3.3.1 -p tcp --dport 22 -j ACCEPT
+iptables -A FORWARD -d 10.1.1.1 -s 10.3.3.1 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT</code></pre><p id="564f57d2-d815-40e8-bdea-55ca0d94fbda" class="">
+</p></details></li></ul></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

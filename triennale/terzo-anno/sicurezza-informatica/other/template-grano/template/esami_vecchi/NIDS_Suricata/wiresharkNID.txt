@@ -1,0 +1,50 @@
+## WIRESHARK
+## Tipiche anomalie di traffico
+
+Sfruttare le tendine per ordinare per "Protocol"
+se non fa ordinare (edit>preferences>appearence>layout>)
+
+#### TELNET #################
+TELNET è un protocollo che permette agli utenti di interagire con un server remoto attraverso una sessione di terminale testuale. TELNET trasmette i dati, inclusi nomi utente e password, in chiaro.
+
+>> Brute Force Login Attempts:
+Numerosi pacchetti con dati di login falliti
+Tipicamente contengono: "Password:" "Login Incorrect"
+
+// 
+	cliccare su un pacchetto ed espandere la sezione
+	TELNET DATA per vedere i dati trasmessi
+
+//
+
+#### TCP ################
+
+>> SYN Flood:
+Un attacco in cui vengono inviati molti pacchetti SYN per esaurire le risorse del server.
+Numerosi pacchetti SYN senza corrispondenti SYN-ACK.
+
+#### DHCP ###############
+
+>> DHCP Starvation Attack:
+Molte richieste DHCP con diversi MAC address per esaurire gli indirizzi IP disponibili. Numerose richieste DHCP DISCOVER senza corrispondenti OFFER/ACK.
+
+>> Unauthorized DHCP Server: Un server DHCP non autorizzato risponde alle richieste, potenzialmente per dirottare il traffico.
+Più risposte OFFER/ACK da diversi IP (uno dei quali potrebbe non essere legittimo).
+
+#### DNS ###############
+
+>> DoS:
+Un numero insolitamente alto di richieste DNS, che può indicare un attacco DDoS o attività malevola.
+
+>>> Informazioni da esfiltrare:
+Il servizio DNS non è tipicamente soggetto a FIREWALL può essere usato per esfiltrare informazioni.
+
+
+#### HTTP ###############
+
+>> Brute Force:
+Tante richieste a stessa destinazione con risposta 401.
+apriamo una get e notiamo che a 172.22.2.159 [Hypertext Transfer Protocol]
+NOTIAMO CHE IN GET SUCCESSIVE cambia un solo byte
+è un attacco di brute forcing!!!!!!!!
+notiamo che in user agent è specificato Hydra (usato per il brute forcing)

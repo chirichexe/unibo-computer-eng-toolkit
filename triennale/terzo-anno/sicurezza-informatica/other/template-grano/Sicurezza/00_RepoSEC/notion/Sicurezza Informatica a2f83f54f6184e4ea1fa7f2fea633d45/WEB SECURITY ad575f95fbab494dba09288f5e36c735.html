@@ -1,0 +1,679 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>WEB SECURITY</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="ad575f95-fbab-494d-ba09-288f5e36c735" class="page sans"><header><h1 class="page-title">WEB SECURITY</h1><p class="page-description"></p></header><div class="page-body"><ul id="1406e08e-5b08-43b4-8d8e-b3a85586d06c" class="toggle"><li><details open=""><summary>Teoria</summary><p id="ac5a2fad-e742-4398-90c0-1e63e9c5ee97" class="">Lo scenario web è uno scenario con diversi strati: il browser si interfaccia, attraverso il protocollo HTTP, con il server web che fornisce l’accesso ad applicazioni dinamiche che eseguono per generare la risorsa richiesta, elaborando sia le risorse fornite dal cliente che quelle conservate lato back-end (all’interno dei database). IN questo contesto le vulnerabilità possono essere diverse:</p><ul id="de7dba6f-9ee9-4197-a720-ecfe88c28552" class="bulleted-list"><li style="list-style-type:disc">Lato cliente = nell’interazione con il server e con l’esecuzione del codice sul client.</li></ul><ul id="3c4172a1-a480-447d-9687-ce3f0872ffc6" class="bulleted-list"><li style="list-style-type:disc">Protocollo = la sicurezza del canale di comunicazione, il trattamento dei dati errati di HTTP sugli endpoint, ovvero i dati che possono essere trattati in modo tale che client e server li interpretino in modo sbagliato.</li></ul><ul id="44750055-3af6-4a5f-aa49-f53c6827b750" class="bulleted-list"><li style="list-style-type:disc">Server = errore di gestione delle richieste HTTP da parte del server, errori sull’accesso o di interpretazione dei dati.</li></ul><p id="d1fb922b-d6fb-4fc7-896d-9c356af6952a" class="">Le principali tipologie di attacchi via web sono:</p><ol type="1" id="2bc7d9d1-4396-4c46-8550-34b67598a68c" class="numbered-list" start="1"><li><mark class="highlight-blue">Broken access control</mark></li></ol><p id="340876f9-7698-48e4-a759-2aa7451f28d6" class="">Raggruppa una varietà di problematiche di accesso non correttamente mediato dalle risorse (voglio che solo degli utenti accedano ad una determinata risorsa e per farlo è necessaria una catena di autenticazione, autorizzazione ecc). Questo problematiche si possono verificare attraverso l’esposizione di identificativi di oggetti (IDOR), lasciando l’accesso a tutti quelli che conoscono l’identificativo.</p><p id="937b003e-0eec-4cb0-bbb8-599cf5008920" class="">Un caso particolare IDOR è il file disclosure, dove viene lasciato il riferimento ad un file. Il caso classico è quello che viene chiamato path traversal che si verifica quando attraverso un path (che può essere inserito dall’utente), modificandolo adeguatamente, si accede ad un altro ramo non indicato come per esempio: /home/maybe/deep/username/../../../../etc/passwd (l’utente aveva inserito la prima parte del path, ma dalla radice scendo all’interno di un altro file).</p><ol type="1" id="4f1a6bb6-c1b2-4261-b39e-6adb62a292c4" class="numbered-list" start="2"><li><mark class="highlight-blue">Cryptographic failures</mark></li></ol><p id="79121b79-8c80-46ef-a0ae-a5a4b76b7c93" class="">Le applicazioni web manipolano grosse quantità di dati sensibili che devono essere protetti in ogni fase del ciclo di vita dell’applicazione web. I principali problemi che si possono verificare sono:</p><ul id="8a83b489-0716-4c96-8ef2-1d676eecbffa" class="bulleted-list"><li style="list-style-type:disc">Alcuni dati non vengono riconosciuti come sensibili.</li></ul><ul id="de778a47-c9d0-455b-b196-d4189c198139" class="bulleted-list"><li style="list-style-type:disc">Non si individuano tutte le copie del dato da proteggere (DNR con lo scaricamento lato browser di file multimediali/musicali, backup non protetti).</li></ul><ul id="8ce4b96e-d710-4f1c-846f-b6234f8260d9" class="bulleted-list"><li style="list-style-type:disc">Non si proteggono tutte le fasi di vita di un dato sensibile.</li></ul><ul id="307f0c63-ec92-44db-842b-ad9d850b3850" class="bulleted-list"><li style="list-style-type:disc">Non si utilizzano metodi di protezione adeguatamente robusti.</li></ul><p id="4d0ea185-93ce-4e2a-b6c9-a48fa727576a" class="">Un esempio di una copia del dato da proteggere che potrebbe causare problemi.</p><figure id="56ac87a5-95a6-45c6-a5da-90a3e5bd4aa9" class="image"><a href="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled.png"><img style="width:672px" src="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled.png"/></a></figure><p id="7ca2728b-a963-4690-bf61-d499e9c79a8f" class="">Il database è correttamente protetto e il canale di comunicazione sicuro. Il sistemista ha deciso di loggare tutti gli errori. Può succedere che quando si verifica un errore di comunicazione tra il server e la banca, venga loggato un errore contenente il numero di carta dell’utente.</p><ol type="1" id="0e84a635-cd69-4643-9e39-a3b683dae198" class="numbered-list" start="3"><li><mark class="highlight-blue">Injection</mark></li></ol><p id="26711638-8db1-4024-842b-c5b932e35f05" class="">L’iniezione si verifica con l’invio di input non fidati ad un interprete che provocano l’esecuzione di comandi che possono violare alcuni requisiti di sicurezza.</p><p id="c39ac2bc-f2ca-4c7c-9bf9-c0b9ce9bc1d6" class=""><span style="border-bottom:0.05em solid">-SQL injection</span></p><p id="04986919-becc-4320-9528-859264335c2f" class="">L’esempio più importante è la SQL injection. SQL è un linguaggio interpretato e di conseguenza contiene una serie di caratteri speciali. Il programmatore non sa a priori come verrà interpretato il carattere speciale, in quanto si può essere sicuri di questo solo quando il comando viene passato all’interprete. Per evitare questo, SQL permette di pre-compilare le query.</p><figure id="309342da-a7d3-4eee-8e5b-f21cfb727ae0" class="image"><a href="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%201.png"><img style="width:624px" src="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%201.png"/></a></figure><p id="6c38f527-8286-40db-8939-d597db8e93f8" class="">Un applicazione web chiede l’inserimento di username e password. Lato server viene costruito la query SQL con parti fisse e variabili (username e password). Inserendo alcuni username e password si possono avere alcuni effetti indesiderati.</p><p id="24af819c-8e1d-4e66-a0c2-5d74102d804f" class="">Nel primo caso la condizione WHERE è sempre vera e restituisce tutte le entry del database. Nel secondo caso si hanno due query: la prima fallisce, la seconda distrugge completamente il database.</p><p id="f0ba2d0e-92a1-4da0-95a6-b61c96e4610e" class=""><span style="border-bottom:0.05em solid">-Cross-site scripting</span></p><p id="bdbab1c2-f2e9-4356-b719-37672989f5e3" class="">Un’altra sotto-categoria dell’injection è il cross-site scripting, tipologia di iniezione di codice lato browser che può avvenire in diversi modi:</p><ul id="193feec3-d942-4746-ba4e-4e08987fd018" class="bulleted-list"><li style="list-style-type:disc">Resa possibili da applicazioni vulnerabili su siti in cui ti fidi.<ul id="699818c1-2abf-431c-830c-0eb19cbbc1d5" class="bulleted-list"><li style="list-style-type:circle">Reflected XSS = Un esempio è un una pagina reflected. Un malintenzionato identifica un XSS all’interno di un’applicazione web e crea un codice javascript che originariamente non era presente. Attraverso tecniche di phishing, diffonde la pagina modificata appena creata confondendo l’utente e facendogli inserire le sue credenziali, nonostante sia già autentificato.<figure id="2b784437-c2d4-4477-88f8-ac952108ae24" class="image"><a href="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%202.png"><img style="width:482px" src="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%202.png"/></a></figure></li></ul><ul id="863bd5cd-6ba4-4521-88f3-967765dac5e8" class="bulleted-list"><li style="list-style-type:circle">Stored XSS = Nella stored jnjection, l’attaccante inietta script sull’applicazione web conservate nel server, il quale le salva all’interno di un database. Quando la vittima fa una query al server, che comporta l’interrogazione del database, i dati vengono caricati dal database, inseriti come risultato di composizione della pagina e inviata all’utente.<figure id="54fd0007-cd4a-4719-9ee2-8251d09aea9e" class="image"><a href="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%203.png"><img style="width:482px" src="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%203.png"/></a></figure></li></ul></li></ul><ul id="a8c35427-d8b4-45cc-9831-6c365296039a" class="bulleted-list"><li style="list-style-type:disc">Resa possibile da un’applicazione vulnerabile in esecuzione sul browser.<ul id="40920528-ba94-4684-a62a-dd1c69877d91" class="bulleted-list"><li style="list-style-type:circle">DOM XSS = La DOM injection è molto simile alla reflected, ma il codice che processa i dati non è sul server, ma all’interno della pagina stessa.<figure id="b559c6a2-4a2b-4dd6-88aa-2959cffb667d" class="image"><a href="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%204.png"><img style="width:482px" src="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%204.png"/></a></figure></li></ul></li></ul><ol type="1" id="b66f1b66-2864-4925-905d-be61930697ac" class="numbered-list" start="4"><li><mark class="highlight-blue">Insecure design</mark></li></ol><p id="cba165cf-f019-475a-a7b0-63ef4e4f8466" class="">Finora tutte le insicurezze viste sono a livello implementativo. L’insecure design pone il punto di attenzione sulla security by design, dove la sicurezza deve essere presa in considerazione in ogni fase della modellazione del progetto. Nell’industria che fa uso di software si sta affermando il paradigma shift-left, dove i problemi di sicurezza vengono spostati verso sinistra nella catena di fasi di sviluppo software SDLC:</p><figure id="bd1e26a1-12cf-435a-a3d7-722f8da9f789" class="image"><a href="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%205.png"><img style="width:664px" src="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%205.png"/></a></figure><ol type="1" id="2389e764-d49c-45ca-bc60-6b8a3cf27bef" class="numbered-list" start="5"><li><mark class="highlight-blue">Security misconfiguration</mark></li></ol><p id="67e8d547-11bf-48f3-982d-4c87edc24a19" class="">Questa categoria comprende una serie di errori di configurazione come i seguenti:</p><figure id="4f6723d0-0ca9-4f40-a0f4-bc9c1b2fda47" class="image"><a href="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%206.png"><img style="width:481px" src="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%206.png"/></a></figure><p id="06f27e97-7672-4770-903d-6fc1ed8069e9" class="">L’esempio più comune è che molte applicazioni vengono installate con delle credenziali di default che poi non vengono modificate e rappresentano un punto di accesso per gli attaccanti.</p><p id="a249dafb-a1ba-4504-8223-0e1863802c0a" class=""><span style="border-bottom:0.05em solid">-Protocolli e header</span></p><p id="a234b268-654a-4680-a93e-2d0628724cd3" class="">La security misconfiguration può verificarsi anche a livello di protocollo crittografici. Lato client è possibile inserire una serie di righe di header HTTP per consigliare o far sì che il browser si comporti in un certo modo. Alcuni degli header sono:</p><ul id="9fd69d2c-6c16-42a1-b797-231c01b5dca8" class="bulleted-list"><li style="list-style-type:disc">X-Frame-Options = per controllare l’inserimento di frame, che permettono di includere delle pagine all’interno di altre pagine.</li></ul><ul id="cd1c315d-4736-428c-adf3-cb250a014d64" class="bulleted-list"><li style="list-style-type:disc">X-XSS-Protection = tenta di filtrare reflected Cross Site Scripting.</li></ul><ul id="c92be3a7-e61d-4f48-ae69-74d0dfd7eea2" class="bulleted-list"><li style="list-style-type:disc">Content-Security-Policy = può bloccare caricamento di risorse esterne rispetto alla pagina stessa.</li></ul><ul id="a19be8fd-93cd-46e8-b1b9-fdd1ceffe5d4" class="bulleted-list"><li style="list-style-type:disc">X-Content-Type-Options = un attaccante può modificare il content-type, imponendo al browser web un determinato rendering, ma iniettando un&#x27;altra tipologia di dati (come un file binario).</li></ul><ul id="dbbfbaff-75cf-4a8b-976a-607f768e546d" class="bulleted-list"><li style="list-style-type:disc">Cache-Control</li></ul><ul id="7c86d8da-a692-467d-a6c2-b35fb5b523f5" class="bulleted-list"><li style="list-style-type:disc">Strict-Transport-Security = impone ai browser di interagire col server solo con HTTPS.</li></ul><ul id="bdf7f735-ef95-45f6-9ce6-25975c3a2c44" class="bulleted-list"><li style="list-style-type:disc">Public-Key-Pins</li></ul><p id="18bf2ca8-26a9-42a6-81a4-b0b6ccb96529" class="">Una soluzione drastica contro questo approccio è il SOP (Same Origin Policy), che consente a pagine e script l’accesso a risorse provenienti dalla stessa origine. Il suo raffinamento è CORS dove si possono esprimere le diverse eccezioni per l’acceso a particolari risorse.</p><p id="dccfe341-7556-401f-919f-a5960ba8759c" class=""><span style="border-bottom:0.05em solid">-XML external entities</span></p><p id="b7e5f503-be6c-4a0e-9213-2864cf642b04" class="">XML permette di fare riferimento a entità esterne. Se è presente un parser XML vulnerabile, è possibile iniettare codice XML per lettura di file e attacchi di vario genere. Per mitigare questi effetti è necessario usare parser aggiornati e disattivare il supporto alle external entitity.</p><figure id="68233820-0f29-4211-b6a7-5541648012d3" class="image"><a href="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%207.png"><img style="width:672px" src="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%207.png"/></a></figure><ol type="1" id="95d6df42-7591-4bfb-acf4-a63ab9843403" class="numbered-list" start="6"><li><mark class="highlight-blue">Componenti software con vulnerabilità note</mark></li></ol><p id="90c1cbab-96fa-4d2e-95ef-1cf516f31f96" class="">Per esempi heartbleed.</p><ol type="1" id="6a7a61ea-820e-4015-a066-250064da6954" class="numbered-list" start="7"><li><mark class="highlight-blue">Problemi di identificazione e autenticazione</mark></li></ol><p id="9672b0bd-08b1-492e-a4be-a21d3aeeda52" class="">In forte calo grazie all’utilizzo di framework standardizzati. In generale le applicazioni web fanno utilizzo di sessioni. Quest’ultima viene identificata attraverso lo scambio trasparente tra l’utente e il server di un token che identifica la sessione, ricevuto al primo accesso sul sito (il funzionamento di questo token è uguale a quello dei cookie, elementi che consentono di avere dello stato all’interno di un protocollo stateless). I problemi che si possono verificare per quanto riguarda l’identificazione possono essere diversi:</p><ul id="6844d3c6-fabf-4cdc-b567-6fb42d054a5d" class="bulleted-list"><li style="list-style-type:disc">Anticipazione dell’attribuzione del token = l’attaccante in maniera proattiva avvia una sessione in modo tale da farsi consegnare un token dal server. Tramite tecniche di pishing convince l’utente a non autentificarsi, ma a lavorare sulla sessione da lui aperta. All’interno di questa di questa sessione fa inserire credenziali all’utente per poi rubarle e accedere al server con le credenziali rubate.<figure id="799c4027-1d5f-4181-a901-5dc833eb831c" class="image"><a href="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%208.png"><img style="width:293px" src="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%208.png"/></a></figure></li></ul><ul id="2264d209-83dc-4289-a972-e75b1cc598c6" class="bulleted-list"><li style="list-style-type:disc">Cross-site request forgery = una vittima si autentica in un sito e viene convinta dall’attaccante a visitare anche il suo sito. Il sito dell’attaccante, di nascosto, manda un form alla pagina del sito acceduto dall’utente.<figure id="c720fe0a-6aef-4bd5-ba00-888825ca8c1e" class="image"><a href="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%209.png"><img style="width:432px" src="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%209.png"/></a></figure></li></ul><ul id="820dcc5f-ac0b-4e26-a508-3ce8eed8e81a" class="bulleted-list"><li style="list-style-type:disc">L’id è prevedibile, intercettabile (viaggia in chiaro e non attraverso HTTPS), non viene fatto scadere o non viene invalidato al termine della sessione.</li></ul><p id="62535fa0-8ce0-45d2-b6c6-cea07083f466" class="">Per risolverlo è necessario non autentificare il cliente, ma ogni singola azione.</p><ol type="1" id="089d8a34-1a61-4fb6-91c3-982860360683" class="numbered-list" start="8"><li><mark class="highlight-blue">Problemi di integrità del software e dei dati</mark></li></ol><p id="90188cc1-2a6b-4928-8204-6ecc94351d6c" class="">Questa problema si verifica includendo codice, dati e pezzi di infrastruttura che non sono al livello dei miei standard di sicurezza. Per quanto riguarda i dati, il maggiore problema è dovuto alla serializzazione in quanto si possono inserire, violando l’integrità del flusso, oggetti che non facevano parte del flusso iniziale.</p><ol type="1" id="479cc524-7a82-4f2b-b68e-59ce0470cfd6" class="numbered-list" start="9"><li><mark class="highlight-blue">Log and monitoring failures</mark></li></ol><p id="9b6a4a75-cff1-4e55-9ce7-f8a0b83da28c" class="">Se vengono inserite troppe informazioni all’interno dei file di log, queste possono essere sfruttate da un attaccante.</p><ol type="1" id="827cc6dc-75b8-4c9a-a562-db07874dcafc" class="numbered-list" start="10"><li><mark class="highlight-blue">Server side request forgery</mark></li></ol><p id="7bb0b61f-53f6-42b3-a7e8-f387eea615fa" class="">Un utente inserisce una richiesta che comporta l’esecuzione da parte del server di una query con conseguente interrogazione di un database remoto che non era raggiungibile da parte del cliente dal browser.</p></details></li></ul><ul id="a4175e13-dc57-4b96-bbcd-dd8f56c9d144" class="toggle"><li><details open=""><summary>Laboratorio</summary><p id="7cfadab8-868f-4c0e-9978-1ceae470d5cb" class=""><code>cd  penstaslab</code></p><p id="c0d716a9-8484-4aff-868a-96a475792113" class=""><code>./penstaslab.sh --list</code>  per vedere lista applicazioni web vulnerabili attive</p><p id="87f4d003-846d-4ba0-af53-3f6d25333af2" class=""><code>./penstaslab.sh start dvwa</code> per avviare DVWA</p><p id="c29066bf-6ec1-43c2-a0a9-91016083187e" class="">DVWA è un’applicazione web vulnerabile che permette di testare in modo del tutto legale le principali vulnerabilità presenti sul web, andando anche a modificare il livello di sicurezza.</p><p id="ad0582fa-6bc7-45d1-af96-b56fc28141e0" class=""><span style="border-bottom:0.05em solid">-Brute force</span></p><p id="589efa6a-fdb6-4de2-97fb-b0dbea29a280" class="">La prima vulnerabilità che si vuole testare è quella del brute force con un form di inserimento di login. Spesso questi attacchi si verificano attraverso la predisposizione da parte dell’attaccante di wordlist note o fatte ad hoc (vedi laboratorio precedente). Per testare questa vulnerabilità sfruttiamo anche un web proxy, ovvero burp. Quest’ultima è un’applicazione che, funzionando da web proxy per le richieste HTTP, permette al pentester di avere una gestione avanzata degli attacchi su un determinato applicativo web. Burp è dotato di un browser integrato sul quale si può possono vedere le richieste HTTP se prima di eseguirle si attiva l’opzione intercept on. Il funzionamento di burp è il seguente:</p><figure id="d3d7684a-e2c2-4374-b6e4-705498fe1e0d" class="image"><a href="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%2010.png"><img style="width:499.3999938964844px" src="WEB%20SECURITY%20ad575f95fbab494dba09288f5e36c735/Untitled%2010.png"/></a></figure><p id="a40273aa-0bbb-426b-ac5b-8b4a45fcb7b1" class="">La richiesta HTTP può essere modificata mandandola (tasto destro) in due differenti sezioni:</p><ul id="7236a601-5798-416a-9249-5e3f5947c55b" class="bulleted-list"><li style="list-style-type:disc">Send to intruder = per vedere l’effetto di una serie di attacchi con l&#x27;inserimento di un particolare payload nella richiesta</li></ul><ul id="427691ca-7c0d-4794-92b6-d426008c0183" class="bulleted-list"><li style="list-style-type:disc">Send to repeater = guardando la risposta che produce la richiesta stessa.</li></ul><p id="1dea2814-b5d0-4927-86ed-ca67ad160926" class="">Intercettando la richiesta, sono in grado di accumulare delle informazioni che si possono sfruttare per eseguire attacchi di brute-force tramite hydra.</p><p id="e347fc07-fbf8-42ee-a902-cab44d4e1e15" class=""><span style="border-bottom:0.05em solid">-(Remote) File inclusion</span></p><p id="9d999964-37fe-4142-ab42-50d53d3b1e1f" class="">Il file inclusion è un altro tipo di vulnerabilità che permette, a partire da una richiesta HTTP, una risorsa locale che inizialmente non era resa visibile, semplicemente modificando l&#x27;URL della richiesta HTTP (anche attraverso tecniche di path traversal). Lo stesso concetto si può applicare anche su risorse remote ma visibili da un entità intermedia.</p><p id="857188d4-c345-495d-9bf7-4494018ca85c" class=""><span style="border-bottom:0.05em solid">-Command injection</span></p><p id="a6e9df83-3f30-466a-8d3b-80543c2db903" class="">Per testare la command injection è presente un form dove possiamo inserire un indirizzo IP su cui fare un <code>ping </code>(vedendo la configurazione il ping viene limitato a 4 secondi, ma nei sistemi unix andrebbe all&#x27;infinto). Intercettando la richiesta tramite burp e mandandola al repeater, posso inserire un <code>cat /etc/passwd</code> dopo l’indirizzo IP su cui viene fatto il <code>ping</code>. Visualizzando la risposta, si nota che la risposta contiene anche il contenuto del file specificato (il comando inserito però potrebbe causare problemi in quanto non è codificato in URL. All&#x27;interno di burp è presente un decoder/encoder per le conversioni. Se si converte il comando in URL e si inserisce nella richiesta HTTP precedente, si ottiene il medesimo risultato). Se si aumenta il livello di sicurezza, la configurazione della richiesta viene modificata in quanto vengono eseguite le seguenti sostituzioni:</p><p id="99889010-ee29-4b36-9c0d-17e19e857add" class="">$substitutions = array(</p><p id="36fd5ce8-e442-4aa6-9eec-d1643bde13be" class="">&#x27;&amp;&amp;&#x27; =&gt; &#x27;&#x27;,</p><p id="0396a6ac-8cb2-4694-865d-ba0f974f4171" class="">&#x27;;&#x27;  =&gt; &#x27;&#x27;,</p><p id="788e3d86-b00c-4a0e-91ef-946f306a8875" class="">);</p><p id="cd616059-1fca-4e28-8ffb-2ab9b2ab662f" class="">Per questo motivo se proviamo ad eseguire lo stesso comando di prima non otteniamo lo stesso risultato in quanto ; è stato convertito in spazio. Per evitare questo problema si può rimuovere l&#x27;indirizzo IP e inserire il comando di pipe <code>|| cat /etc/passwd</code>.</p><p id="07dc6baf-6060-45b2-8b90-f5f2375da1c3" class=""><span style="border-bottom:0.05em solid">-SQL injection</span></p><p id="ad03918f-c2ae-41ec-849a-3f2f10e7e1f1" class="">In questa sezione si trova un form per l’inserimento di ID che porta alla formazione di una query SQL. La query viene completata in questo modo:</p><p id="b952404c-de6e-4e6c-84ed-9636989bec03" class=""><code>$query  = &quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;$id&#x27;;&quot;;</code></p><p id="e1d0baa2-53d3-4e01-8684-0fa8e2fb2817" class="">inserendo come id= &#x27; OR &#x27;1&#x27;=&#x27;1, la clausola WHERE è sempre verificata e di conseguenza ci vengono restituiti tutti gli utenti appartenenti al database.</p><p id="c03cb0bc-dbba-4ce4-b520-5aefc65aa8c5" class="">Si possono eseguire delle query molto più complesse attraverso il comando UNION, il quale permette di unire più query a patto che le colonne risultanti siano dello stesso tipo e abbiano lo stesso numero di colonne. Per verificare il numero di colonne si può eseguire il comando:</p><ul id="003b5277-cd58-4078-ad89-e7affc839635" class="bulleted-list"><li style="list-style-type:disc"><code>‘ UNION SELECT NULL #</code> se non da errore è presente una sola colonna.</li></ul><ul id="e9276a08-9b00-4924-8e92-4c8e7d68fe64" class="bulleted-list"><li style="list-style-type:disc"><code>‘ UNION SELECT NULL,NULL;#</code> se non da errore sono presenti due colonne.</li></ul><p id="df5ab63e-3bb3-41a0-8eb7-ddf10eb9b916" class="">Una volta individuato il numero di colonne, se al posto di uno dei due NULL si inseriscono altri comandi, si possono estrarre informazioni di sistema, relative al database e altro:</p><ul id="8f567dd0-b7e8-4b75-8442-2900a3bd4134" class="bulleted-list"><li style="list-style-type:disc"><code>@@version</code> versione del database.</li></ul><ul id="430fba46-a51a-4546-bc4d-4a352420e7f5" class="bulleted-list"><li style="list-style-type:disc"><code>@@hostname</code> hostname della macchina.</li></ul><ul id="44179344-3366-4043-a099-a9535bf40ef4" class="bulleted-list"><li style="list-style-type:disc"><code>database()</code> il nome del database.</li></ul><ul id="1ff6142c-3ea0-4c9b-b857-ca54992a03c0" class="bulleted-list"><li style="list-style-type:disc"><code>schema_name from information_schema.schemata</code> per tutti gli schemi del db.</li></ul><ul id="7acf42f3-2b18-42dc-a8d3-87e4345dd463" class="bulleted-list"><li style="list-style-type:disc"><code>‘ union select null,table_name from information_schema.tables #</code> per tutte le tabelle del db.</li></ul><ul id="6a788995-fb7e-46e0-a174-78029a659df0" class="bulleted-list"><li style="list-style-type:disc"><code>‘ union select null,table_name from information_schema.tables where table_schema =’dvwa’ #</code>  per vedere le tabelle di un particolare schema</li></ul><ul id="104d23fa-3d94-4ddd-8666-7aec40efb4aa" class="bulleted-list"><li style="list-style-type:disc"><code>‘ union select null,column_name from information_schema.columns where table_name =’users’ #</code> colonne della tabella users.</li></ul><ul id="6fe696c0-0acb-44aa-86e9-1810b5e7cc63" class="bulleted-list"><li style="list-style-type:disc"><code>‘ union select user,password from users # </code>per avere username e password contenuti nella tabella.</li></ul><p id="e83de61c-3736-41b3-bc01-c8af12e75272" class=""><span style="border-bottom:0.05em solid">-XSS</span></p><p id="e0ff0bee-b95e-4348-ac9d-f7ab50e7dfaf" class="">Questa vulnerabilità permette di eseguire del codice javascript all’interno di applicazioni web. La configurazione del form è:</p><p id="f793d1c0-2eaa-435e-a43e-31a084552bc2" class=""><code>echo &#x27;&lt;pre&gt;Hello &#x27; . $_GET[ &#x27;name&#x27; ] . &#x27;&lt;/pre&gt;&#x27;;</code></p><p id="5e248072-319b-441f-a089-e5bde809b143" class="">Di conseguenza se inseriamo <code>&lt;script&gt; alert(&quot;hackerato&quot;) &lt;/script&gt;</code> viene eseguito il codice javascript.</p></details></li></ul><ul id="071d4676-7719-4ed8-b6f4-6792719eb182" class="toggle"><li><details open=""><summary>Esercizio: Altoro</summary><p id="045a03d2-944f-4cd1-905b-b5e3596fb5b0" class="">Alcune vulnerabilità presenti sono:</p><ul id="8f834717-fc75-44e4-b090-5270ba22245a" class="bulleted-list"><li style="list-style-type:disc">form di login = è possibile agire sul form di login attraverso diverse SQL injection:<ul id="5cf379ac-b2d7-4cb5-8fa8-c00c660acde3" class="bulleted-list"><li style="list-style-type:circle">‘ OR ‘1’=’1 Mettendo questo nello username o nellla password non cambia, in quanto la condizione WHERE di SQL sarà sempre verificata</li></ul><ul id="7e56d259-e002-41d7-b032-55911f73443d" class="bulleted-list"><li style="list-style-type:circle">‘ OR 1=1 - - (questi caratteri e # servono per rendere commentabile le stringhe successive). Se tale payload viene messo all’interno dello username, la password non viene considerata e la condizione where è sempre verificata. In questo payload si può omettere anche la condizione OR se si conosce un utente all’interno della piattaforma. </li></ul></li></ul><ul id="2304ea8a-337b-499e-8fe5-8f1559d6c2a0" class="bulleted-list"><li style="list-style-type:disc">Form di ricerca e form per contattare sono soggetti ad attacchi XSS, con l’iniezione di codice javascript che si può verificare con il payload  &lt;script&gt;alert(”hackerato”)&lt;/script&gt;. (più in generale si può iniettare anche del codice html, per esempio inserendo nel form di ricerca  &lt;a href=”https://google.com”&gt; &lt;p&gt;Google&lt;p&gt; &lt;/a&gt; )</li></ul><p id="ce3ebf39-1d30-46ec-934c-80235e5442d0" class="">Un’altra vulnerabilità è che si può accedere alla pagina di admin anche attraverso un semplice path traversal, mettendo come url http://altoro/admin/admin.jsp, senza l’autenticazione necessaria, solo dopo aver effettuato essersi utenticato come un utente —&gt; forse dovuto al cookie che non cambia</p><p id="6cc246da-47b8-4fb2-911a-34b7a49880ec" class="">
+</p></details></li></ul><p id="4d053f6e-23d2-487e-a21b-25f9c35d38a5" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

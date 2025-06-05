@@ -1,0 +1,2 @@
+
+L'operazione chmod u+s /bin/cp è un esempio di come impostare il bit SUID (Set User ID) su un binario eseguibile di Linux. Quando un binario ha il bit SUID impostato, viene eseguito con i privilegi dell'utente proprietario del file, anziché con i privilegi dell'utente che lo esegue. Nel contesto di un'escalation dei privilegi, questo significa che un utente normale potrebbe eseguire /bin/cp con i privilegi di root se il bit SUID è impostato e il file è di proprietà di root.

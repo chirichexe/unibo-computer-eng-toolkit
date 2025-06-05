@@ -1,0 +1,29 @@
+Ordinando i pacchetti per indirizzo sorgente si notano innanzitutto una grande quantità di pacchetti tutti provenienti da 10.10.10.10 e diretti a porte variabili: port scan
+
+Ordinando i pacchetti per protocollo si nota
+- una normale connessione ssh da 10.10.10.10
+- una connessione telnet con payload contenente una flag
+
+Ordinando i pacchetti per porta destinazione si notano una grande quantità di pacchetti destinati alla porta 80 provenienti da 
+sorgenti variabili: DDoS
+
+Configurando Suricata per catturare i pacchetti destinati alla porta 23 e abilitando l'esame del payload, 
+si possono estrarre quelli contenenti FLAG:
+
+#con un comando estraete la FLAG dal file eventi di Suricata:
+alert tcp 10.10.0.0/16 any -> 10.10.10.10 23 (msg:"Flag"; content:"FLAG"; sid:30202030; rev:1;)
+
+#passi successivi per testare
+scrivo la regola in un file "flag.pcap"
+
+sudo -i
+cat flag.rules >> /etc/suricata/rules/seclab.rules
+#oppure
+sudo suricata -c /etc/suricata/suricata.yaml -s flag.rules -r dump.pcap -k none
+
+sudo suricata -c /etc/suricata/suricata.yaml -r dump.pcap -k none
+cat eve.json | jq | grep "FLAG"
+
+  "payload_printable": "FLAG{this_port_is_dangerous}\n\n",
+  "payload_printable": "FLAG{this_port_is_dangerous}\n\n",
+

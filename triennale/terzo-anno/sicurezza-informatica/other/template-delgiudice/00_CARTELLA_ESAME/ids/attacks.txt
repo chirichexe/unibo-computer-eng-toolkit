@@ -1,0 +1,19 @@
+#Inserire regola Suricata
+#alert icmp any any -> $HOME_NET any (msg:"Ping detected"; sid:100001; rev:1;)
+
+in /etc/suricata/suricata.yaml deve essere modificata la variabile HOME_NET in
+HOME_NET: "[RETE/SUBNET]"
+#es-> HOME_NET: "[192.168.0.0/16]"
+
+Abilitando l'opzione paylaod-printable in /etc/suricata/suricata.yaml si ottiene in /var/log/suricata/eve.json il payload 
+dei pacchetti catturati. Questi eve log verranno esaminati per recuperare la flag.
+
+Scrivo la seguente regola nel file rule.rules
+
+Testiamo la regola suricata con il seguente comando
+sudo suricata -c /etc/suricata/suricata.yaml -s rule.rules -r FILE.PCAP -k none
+
+#TIPS se si usa WIRESHARK:
+    - se si notano una grande quantita di pacchetti tutti provenienti dallo stesso IP ma a porte diversi: port scan
+    - se si notano una grande quantita di pacchetti tutti proveniente da IP variabili ma alla stessa porta: DDoS
+    - in generale COMMENTARE ciò che si nota (risposte da server (es: Unauthorized ), tipologie di richeiste (http GET)...)

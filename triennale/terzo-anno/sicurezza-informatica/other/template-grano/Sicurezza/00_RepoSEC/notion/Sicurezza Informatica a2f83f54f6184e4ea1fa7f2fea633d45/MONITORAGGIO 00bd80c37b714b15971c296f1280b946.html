@@ -1,0 +1,677 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>MONITORAGGIO</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="00bd80c3-7b71-4b15-971c-296f1280b946" class="page sans"><header><h1 class="page-title">MONITORAGGIO</h1><p class="page-description"></p></header><div class="page-body"><p id="1e5aaddf-4d9a-4677-b3aa-74f56beddce9" class="">Le fasi di un attacco possono lasciare tracce e individuarle con accuratezza e tempestività è di fondamentale importanza per evitare o limitare danni. I termini del monitoraggio sono:</p><ul id="272eb640-0e64-4427-9936-2fa665638bb2" class="bulleted-list"><li style="list-style-type:disc">IDS (intrusion detection system) = è un sistema in grado di rilevare un attacco. Sono categorizzabili n due categorie:<ul id="89009f3f-702b-4321-8bf4-b5dad719f4eb" class="bulleted-list"><li style="list-style-type:circle">Signature based = riconosce degli attacchi noti</li></ul><ul id="9f2d676d-660d-4ae4-9ee0-b8960e131500" class="bulleted-list"><li style="list-style-type:circle">Anomaly detection = riconosce deviazioni rispetto al normale funzionamento di un sistema.  </li></ul></li></ul><ul id="e846ef24-9adc-4a9a-a5ec-eb9f76ada116" class="bulleted-list"><li style="list-style-type:disc">IPS (intrusion prevention system) = è un IDS con automatismi che permettono di intervenire in maniera attiva per bloccare l’attacco</li></ul><ul id="cb978d70-30de-47db-999d-09181642535a" class="bulleted-list"><li style="list-style-type:disc">SIEM (security information and event management) = piattaforma tutte le informazioni di un sistema, categorizzandole e analizzandole. Nel caso si riscontrino dei comportamenti anomali, vengono lanciati degli alert. </li></ul><p id="4137cb47-08ba-4a2e-b098-7519d30440c1" class="">Tutti questi sistemi sono caratterizzati da due parametri fondamentali:</p><ul id="607055a9-6774-4ae3-9993-7ca97f8a0cb4" class="bulleted-list"><li style="list-style-type:disc">Falso positivo = segnalazione di un attacco anche quando non sta succedendo niente di grave</li></ul><ul id="09d08df3-2f1b-4ab3-8ff1-cd04d6839d40" class="bulleted-list"><li style="list-style-type:disc">Falso negativo = omissione di un attacco anche se in realtà sta avvenendo</li></ul><p id="bfeeab50-d796-434b-b81b-b4204995aa7e" class="">Le rilevazioni possono essere di due tipologie:</p><ul id="54c670b0-2ae2-469a-86e8-3acd474a759b" class="bulleted-list"><li style="list-style-type:disc">NIDS (network IDS) che utilizza i dati intercettati nel canale di comunicazione. I vantaggi sono:<ul id="10e1448f-ed9b-4f99-a7dc-6f04483cb30e" class="bulleted-list"><li style="list-style-type:circle">Si può installare in un solo punto in maniera centralizzata per controllare, sia in entrata che in uscita, più sistemi attraverso l’utilizzo di sonde</li></ul><ul id="b0baf497-2339-402d-a032-710a93a1d297" class="bulleted-list"><li style="list-style-type:circle">Un malfunzionamento non incide sugli endpoint</li></ul><p id="e018c842-bba6-41b6-83eb-0c7388b47c46" class="">Svantaggi:</p><ul id="6d437fca-a7a0-436d-93d2-1fee74fad7a6" class="bulleted-list"><li style="list-style-type:circle">Maggior tasso di falsi positivi, in quanto la varietà di utilizzo di una rete che viene utilizzata da molti utenti è complesso</li></ul><ul id="b80484d7-93bd-4e06-9c48-a04a6eb4c8bb" class="bulleted-list"><li style="list-style-type:circle">Più soggetto a sovraccarico o evasione (per esempio nel caso di pacchetti frammentati)</li></ul><ul id="dfc48a9c-e80a-48a2-891a-500295cda308" class="bulleted-list"><li style="list-style-type:circle">Non può esaminare il payload del traffico se cifrato (ormai tutte le connessioni sono cifrate)</li></ul><ul id="bbc7077b-4718-42cd-8f11-d78c6c0f2d02" class="bulleted-list"><li style="list-style-type:circle">All’interno di una rete viene generato molto traffico e di conseguenza sono necessari molte sonde hardware. </li></ul></li></ul><ul id="87c7d085-0a6d-4c44-8fba-436cc3f968fc" class="bulleted-list"><li style="list-style-type:disc">Basate sull’endpoint. In questo caso si distinguono:<ul id="fd9483fd-fff5-4556-8570-56dce6c4e3c6" class="bulleted-list"><li style="list-style-type:circle">HIDS (host-based IDS) = tipicamente è un processo userland presente sul sistema da proteggere che si concentra sul traffico del sistema, monitorando il filesystem e esaminando i log in tempo reale. I vantaggi sono:<ul id="bf666e9a-467e-466e-84fd-cdbff4359cca" class="bulleted-list"><li style="list-style-type:square">Minor tasso di falsi positivi in quanto, essendo sul dispositivo, può analizzare il payload del traffico dopo la cifratura, correlando il traffico con la sua destinazione e il suo utilizzo. </li></ul><ul id="37082daf-3b0a-4f9b-8e9d-31d7a9e7fb08" class="bulleted-list"><li style="list-style-type:square">Economico poiché si installa solo nei sistemi e non sono necessari HW aggiuntivi</li></ul><p id="bd257495-1340-4f17-b9e2-4fe698ad26ad" class="">Svantaggi:</p><ul id="35aba4c1-997c-4c0d-8804-10717d8e2ef6" class="bulleted-list"><li style="list-style-type:square">Alcuni tipi di attacco non lasciano tracce nel sistema e inoltre non valuta il traffico uscente (egress) ma solo quello entrante (ingress), non individuando scansioni che non toccano servizi attivi</li></ul><ul id="1941f6f9-0e9f-4612-9659-1f56b500a280" class="bulleted-list"><li style="list-style-type:square">Essendo installato nel sistema, usufruisce di risorse del sistema stesso</li></ul><ul id="16930d64-34e0-428e-844e-6173408a0e57" class="bulleted-list"><li style="list-style-type:square">Se il sistema viene violato, il sistema HIDS viene facilmente neutralizzato (mentre invece per il sistema NIDS non ci sono punti di attacco, l’unico modo è creare traffico che lo mandi in confusione)</li></ul></li></ul><ul id="2dc60bd8-2a64-432b-afb1-b6b49aa0616e" class="bulleted-list"><li style="list-style-type:circle">EDR = può essere visto come un HIDS fortemente integrato col sistema operativo. I vantaggi sono:<ul id="c3beaa79-fe7d-426f-94c9-c056a1b84db4" class="bulleted-list"><li style="list-style-type:square">In grado di raccogliere eventi dai device driver di filesystem e di rete e comunicazioni interprocesso</li></ul><p id="b4252e23-6de5-4f31-b102-e7dbd9dca38e" class="">Svantaggi:</p><ul id="c0aff368-6948-4e8c-a150-e12623a38244" class="bulleted-list"><li style="list-style-type:square">Richiede interfacciamento stretto con OS (non è detto che sia facile da ottenere), con hook che però diventano punti di attacco significativi. </li></ul></li></ul></li></ul><h2 id="32b0903e-24a5-47d8-a1f0-0061ae435181" class=""><mark class="highlight-blue">AIDE</mark></h2><p id="f9e1708d-80b8-4f0f-830c-df2958f7cd68" class="">Una delle tecniche base per fare HIDS è l’integrity checking. Il principio di questa tecnica è quello di controllare se sono stati alterati dei file critici all’interno del filesystem, confrontando periodicamente lo stato del filesystem attuale con uno snapshot del sistema effettuato quando era pulito. Uno di questi sistemi è AIDE. Tale sistema presenta una serie di file di configurazione:</p><ul id="402dc1b0-ede8-4805-8977-be05f532c09c" class="bulleted-list"><li style="list-style-type:disc">/etc/default/aide = file per la configurazione di default</li></ul><ul id="3a98bafb-b171-4e7d-8011-56ab33db32ff" class="bulleted-list"><li style="list-style-type:disc">/etc/aide/aide.conf o /etc/aide/aide.conf.d/ = contiene le regole e la configurazione  che AIDE utilizza per valuta l’integrità di file all’interno del file-system. Il primo file integra anche le regole contenute all’interno della seconda cartella (regole di default gà installate con AIDE) </li></ul><ul id="e42e6d86-aebc-4468-b665-92e9cf2ba7e8" class="bulleted-list"><li style="list-style-type:disc">/var/lib/aide/ = cartella che presenta i permessi solamente per l’utente proprietario _aide. Essa contiene gli snapshot del sistema. All’interno di questo cartella sono contenuti due file:<ul id="89774ad6-2788-4449-9f97-21e8b3dcf44f" class="bulleted-list"><li style="list-style-type:circle">aide.db = snapshot che rappresenta la foto del sistema quando è pulito</li></ul><ul id="8d1c2d10-f763-4e9a-a9d2-14a431890de5" class="bulleted-list"><li style="list-style-type:circle">aide.db.new = snapshot del sistema che viene confrontato con il primo per verificare l’integrità dei file</li></ul></li></ul><p id="cc6f0953-0688-4360-a441-7addc5f90f43" class="">All’interno del file di definizione delle regole, si possono specificare i controlli da applicare a file o cartelle. I controlli che si possono eseguire sono diversi e si possono definire anche degli insieme di controlli. Le regular expression di AIDE sono ancorate all&#x27;inizio della RE, ma non alla fine, che deve essere esplicitamente dichiarata con il carattere $. Alcuni esempi: </p><ul id="4895e4f4-048e-4c3d-ae33-b70016332437" class="bulleted-list"><li style="list-style-type:disc"><code>/etc CONTROLLI</code> = tutti i file contenuti nella cartella vengono sottoposti ai controlli specificati</li></ul><ul id="f10d9169-411c-4a73-ba68-ddac9af19b43" class="bulleted-list"><li style="list-style-type:disc"><code>!/var/log/.*</code> = tutto ciò che è contenuto nella cartella !/var/log/ viene ignorato.</li></ul><ul id="3055c551-aa8b-41d9-ba9e-a00ba02d2ea2" class="bulleted-list"><li style="list-style-type:disc"><code>!/var/log/maillog$</code> = viene ignorato il file /var/log/maillog</li></ul><p id="de77796a-fb40-49a8-acdb-8621c5639b39" class="">I controlli che si possono eseguire sono diversi:</p><figure id="6fd33fb9-6eb3-4fc1-9d7f-fc5de3620fde" class="image"><a href="MONITORAGGIO%2000bd80c37b714b15971c296f1280b946/Untitled.png"><img style="width:336px" src="MONITORAGGIO%2000bd80c37b714b15971c296f1280b946/Untitled.png"/></a></figure><p id="bcdc3f0f-9741-4d6e-9b03-c3560c6e7c8c" class="">Ma si possono specificare anche degli insieme di controlli:</p><figure id="18ccb864-dafc-4581-a86d-90ddd380c73e" class="image"><a href="MONITORAGGIO%2000bd80c37b714b15971c296f1280b946/Untitled%201.png"><img style="width:432px" src="MONITORAGGIO%2000bd80c37b714b15971c296f1280b946/Untitled%201.png"/></a></figure><p id="650e9046-79d1-4254-b818-69387165cf73" class="">AIDE può essere programmato per segnalare regolarmente qualsiasi cambiamento interessante. Due problemi:</p><ul id="55704eff-3ebb-47f4-ad11-b4b5dfff1cc5" class="bulleted-list"><li style="list-style-type:disc">reimpostare periodicamente il database per interrompere la segnalazione di modifiche non dannose ai file</li></ul><ul id="6a0a01f0-8284-425e-9bfc-2e251f69443b" class="bulleted-list"><li style="list-style-type:disc">difendere l&#x27;integrità del binario e del database di AIDE. In questo caso si possono utilizzare le firme HMAC per il file di configurazione e il DB oppure eseguire il software da un sistema diverso e affidabile</li></ul><p id="14ea20cf-60d6-437b-b5b8-8d671bd9d3a7" class="">I comandi più importanti per utilizzare AIDE sono:</p><ul id="904c7f5b-3960-4f4e-ab53-f818c56ee032" class="bulleted-list"><li style="list-style-type:disc"><code>aide -v</code> = per vedere le opzioni con cui AIDE è stato compilato</li></ul><ul id="43d8a23e-ed06-453a-80de-0204d8783b86" class="bulleted-list"><li style="list-style-type:disc"><code>aideinit </code>= comando di inizializzazione che serve per creare lo snapshot del sistema. La prima volta che viene lanciato crea entrambi i db, ovvero aide.db e aide.db.new. La seconda volta richiede se è necessario sovrascrivere i db (il primo è da sovrascrivere solo quando si è certi che il sistema è pulito). </li></ul><ul id="5dd90ee5-2a96-4352-b7e1-f7d84299704e" class="bulleted-list"><li style="list-style-type:disc"><code>aide -c /etc/aide/aide.conf -C</code> = permette di osservare le differenze tra i due snapshot del filesystem. Tale operazione considera anche il backup dei file tenuti in precedenza che vengono indicati con il - alla fine del nome (questo permette anche di osservare le differenze tra i due file attraverso il comando <code>diff</code>). </li></ul><p id="0309da90-ee06-42df-bc34-d73dd5a49200" class="">Quindi attraverso l’utilizzo di AIDE è possibile scoprire esempi di misconfiguration, ma ovviamente non fornisce tutte le informazioni specifiche. Questi controlli devono essere approfonditi tramite i comandi specifici per il controllo delle misconfiguration visibili nella sezione laboratorio <a href="ATTACCHI%20AL%20PROCESSO%20DI%20AUTENTICAZIONE%20bf6d94bf97d74c4d84dc21a1bcd7e7e6.html">qui</a>. </p><h2 id="a5395d2d-801e-44b6-b57d-399e89d25cf4" class=""><mark class="highlight-blue">Log di sistema</mark></h2><p id="ab527e17-ae31-4e84-9a22-29f59a2e0df6" class="">I log sono un sistema importante anche per il securista per cercare tracce di intrusione sia da processi utente che da processi kernel. Anche i log devono essere protetti, attraverso integrity checking o copia su macchine remote (grande vantaggio della centralizzazione, posso andare su un’unica macchina contenente la collezione di tutti i log. Ovviamente questa macchina diventa appetibile per gli attacchi come DoS), in quanto l’attaccante potrebbe eliminarli per eliminare le tracce di un attacco. In Linux sono presenti diverse soluzioni di logging. Systemd offre anche un servizio di logging, attivo già dal boot, ovvero journal, che presenta un formato binario visibile attraverso il comando <code>journalctl</code>.</p><p id="9841a36f-8e2a-4dac-9c14-390fa9e7e289" class="">Linux offre anche un sistema di auditing per tracciare ogni evento legato a systemcall, con un demone user space che riceve messaggi dal kernel andando ad invocare azioni configurabili: </p><figure id="81b6f5ff-4018-41e7-b3ee-1fd6f575950d" class="image"><a href="MONITORAGGIO%2000bd80c37b714b15971c296f1280b946/Untitled%202.png"><img style="width:480px" src="MONITORAGGIO%2000bd80c37b714b15971c296f1280b946/Untitled%202.png"/></a></figure><p id="1224e4b9-7ca4-4d24-a3f4-486447c649eb" class="">Tutte le operazioni di maggiore rilevanza devono essere loggate, creando anche serie temporali dei file, correlate tra di loro e analizzate in modo tale da poter intervenire sul sistema in caso di malfunzionamento.</p><h2 id="e73084a9-079e-430f-9e85-49a287bb4f06" class=""><mark class="highlight-blue">SIEM</mark></h2><p id="b4ad7a2a-989a-49c5-8fa0-f7ad9fb306a7" class="">I SIEM sono dei sistemi di raccolta di tutti i log/eventi degni di nota che capitano nel sistema che, attraverso l’uso dell’intelligenza artificiale, specialmente del deep learning, normalizzano dati provenienti da fonti anche molto diverse, li classificano e li correlano tra di loro. Gli eventi raccolti che sono stati definiti come eventi sospetti vengono poi analizzati e nel caso di anomalie, vengono prodotti degli alert che dopo l’analisi di un esperto possono essere classificati come incidenti. Tale sistemi devono presentare anche una componente grafico abbastanza efficiente, che faccia vedere tutta la foresta e non ogni singolo albero (similitudine per dire che graficamente sarebbe impossibile osservare per un essere umano tutte le informazioni prodotte da un elaboratore, ma deve poter osservare delle macrocategorie, che avvisano di malfunzionamenti in modo efficace, come il cambio di colore di una spia). </p><p id="3254d131-dab7-4333-937a-327fd7b42c0b" class="">Sono presenti due esempi significativi di SIEM, ovvero:</p><ul id="4d25e5e3-743d-4cc9-bd37-6911b159f961" class="bulleted-list"><li style="list-style-type:disc">Stack Elastic = è costituito da tre diversi programmi che eseguono le varie operazioni di un sistema SIEM ovvero:<ul id="21c01d54-0245-42f9-a648-088eb6371ec8" class="bulleted-list"><li style="list-style-type:circle">Logstash = Pipeline di elaborazione dei log</li></ul><ul id="b47c8afd-c0b9-4f11-8db0-f99371511338" class="bulleted-list"><li style="list-style-type:circle">Elasticsearch = Database Nosql</li></ul><ul id="b82df33e-99dc-47b9-b5fd-58e45e3a43b1" class="bulleted-list"><li style="list-style-type:circle">Kibana = Visualizzatore web-based per documenti in Elasticsearch</li></ul><figure id="7df7535a-04a7-4895-8926-8365cdbbf781" class="image"><a href="MONITORAGGIO%2000bd80c37b714b15971c296f1280b946/Untitled%203.png"><img style="width:432px" src="MONITORAGGIO%2000bd80c37b714b15971c296f1280b946/Untitled%203.png"/></a></figure></li></ul><ul id="ddfe2225-d3d8-4be9-b235-2e90281782ef" class="bulleted-list"><li style="list-style-type:disc">Wazuh (open source fork di OSSEC), svolge una serie di funzionalità:<ul id="94e029d0-8596-47a0-b849-2fd614bf7e7b" class="bulleted-list"><li style="list-style-type:circle">Verifica della compliance a policy di sicurezza OpenSCAP</li></ul><ul id="cd2cc0f7-cdb6-43ed-80f1-314081ed1d56" class="bulleted-list"><li style="list-style-type:circle">Raccolta dei log, analisi e conservazione centralizzata</li></ul><ul id="c6cb74a5-b66f-466f-b459-00fdacb49245" class="bulleted-list"><li style="list-style-type:circle">Filesystem integrity checking</li></ul><ul id="ed40c157-58bf-476a-9ee3-d2ea871dca0e" class="bulleted-list"><li style="list-style-type:circle">é un sistema HIDS e di conseguenza non è necessario installare sonde in rete</li></ul><ul id="dc9f45ad-dfda-418f-ad7a-9833e3ace9df" class="bulleted-list"><li style="list-style-type:circle">Funge anche da IPS </li></ul><p id="846d5ffd-3ac5-4035-bc90-66c5e88382c0" class="">Presenta due modalità di funzionamento:</p><ul id="c3d83c3e-2a70-438d-9883-728c1277e984" class="bulleted-list"><li style="list-style-type:circle">Locale</li></ul><ul id="d713aac0-1f71-4afb-8ed8-ebb37e35578a" class="bulleted-list"><li style="list-style-type:circle">Client-server = il client è un agente, piccolo componete software che si occupa di installare sonde nel sistema e tutte le informazioni raccolte vengono inviate, tramite canale standard syslog, ad un server che fa storage, analisi ecc. Il server inoltre può iniettare la configurazione dell’agent all’interno della macchina (se devo modificare la configurazione di 100 macchine, posso farlo in maniera centralizzata)</li></ul><figure id="63859658-cd99-47d8-ae1a-2bd0a5277555" class="image"><a href="MONITORAGGIO%2000bd80c37b714b15971c296f1280b946/Untitled%204.png"><img style="width:480px" src="MONITORAGGIO%2000bd80c37b714b15971c296f1280b946/Untitled%204.png"/></a></figure><p id="e036b498-344f-4c75-b77f-b3562218c25e" class="">L’analisi delle informazioni raccolte avviene attraverso l’utilizzo di decoder che presentano regole di parsing scritte in XML e che si possono comporre in una gerarchia per controlli sempre più raffinati (in questo modo il controllo è più efficace un quanto non vengono controllate tutte le regole). </p></li></ul><h2 id="e4e6b354-97cc-4ba7-8cbb-565d6599f118" class=""><mark class="highlight-blue">Suricata</mark></h2><p id="9747926b-709b-4051-ba1c-8cd8db5fc783" class="">Suricata è un sistema efficiente (in una rete adesso passano molti dati, di conseguenza una delle caratteristiche principali di questi sistemi è quella di esaminare il traffico senza rallentarlo) di NIDS, forkato da SNORT, che viene utilizzato in tempo reale per sniffare il traffico attraverso l’utilizzo di regole molto più complesse rispetto a quelle di iptables, la cui differenza principale è quella di poter osservare il payload del traffico con un sistema modulare di ricostruzione, decodifica ed estrazione dei dati dai pacchetti (con l&#x27;azione reject, viene mandata anche un errore, più amichevole in quant l&#x27;utente non attende la risposta ma nota la connessione rifiutata). Tale tool può anche fungere da IPS, in quanto è equipaggiato di hook che permettono di attivare delle contromisure e può interagire con sistemi SIEM e la suit Elastic, con la pipeline di elaborazione delle informazioni.  Suricata può lavorare anche in modalità offline attraverso l’utilizzo dei file pcap e in modalità signature based, controllando se sono stati effettuati degli attacchi noti. </p><h3 id="6f31010f-fd3c-4111-9b01-da0b95b7f903" class=""><mark class="highlight-teal">File di configurazione</mark></h3><p id="59b2a5be-ffbf-41f9-a6a7-41a169b2202f" class="">Il file di configurazione è /etc/suricata/suricata.yaml mentre all’interno di /etc/suricata/rules/ sono contenute le regole di default di suricata. Gli alert prodotti dalle regole si possono osservare in due file distinti (controllare però sempre nel file di configurazione se sono effettivamente questi):</p><ul id="9f77f17d-7c1a-4379-9369-2fb2d5aa793d" class="bulleted-list"><li style="list-style-type:disc">/var/log/suricata/fast.log = in quanto retro-compatibile con SNORT</li></ul><ul id="a6919dc0-af68-40f7-be99-85676275520a" class="bulleted-list"><li style="list-style-type:disc">var/log/suricata/eve.json = log più espressivi in formato json. In questo caso sono molto utili da utilizzare dei tool per eseguire il parsing dei file json come <code>jq</code>. Il comando per andare i log prodotti da un alert è il seguente:<p id="40633ad4-1866-42d9-a350-e10a46f74ad0" class=""><code>tail -f /var/log/suricata/eve.json | jq &#x27;select(.event_type=&quot;alert&quot;)’</code></p></li></ul><h3 id="a950c512-7487-4671-b12b-8150ac7fd565" class=""><mark class="highlight-teal">Regole Suricata</mark></h3><p id="d4a36be9-86fa-48e5-a250-5a11808bf7dc" class="">Le regole suricata presenta una struttura del tipo: </p><p id="722f619d-66ba-409c-a742-2082e56b9141" class=""><code>AZIONE PROTOCOLLO SORGENTE(IP PORTA) dir DESTINAZIONE(IP PORTA) (meta-settings)</code></p><p id="890c271b-9485-4bb8-938a-b54ac464193b" class="">Tra cui:</p><ul id="33777cbf-6657-4469-981c-9003ce8988ed" class="bulleted-list"><li style="list-style-type:disc">AZIONE = tra le varie azioni che si possono avere, quelle di maggiore rilievo sono: drop, alert, pass, reject (comando più amichevole rispetto al drop, in quanto avvisa l’utente con un messaggio, senza l’attesa interminabile di un pacchetto che è stato scartato), log</li></ul><ul id="7244fe87-362e-4116-ba10-9f64bd498b26" class="bulleted-list"><li style="list-style-type:disc">PROTOCOL = ip(all/any), tcp, udp, icmp</li></ul><ul id="d24430cf-aa59-48a1-b39a-3712ee240cd6" class="bulleted-list"><li style="list-style-type:disc">SORGENTE/DESTINAZIONE = indirizzi IPv4 e IPv6, $HOME_NET, $EXTERNAL_NET</li></ul><ul id="f8d59f51-b03e-4d04-b7c0-903eede8f9a9" class="bulleted-list"><li style="list-style-type:disc">dir = →(from to) or &lt;&gt; (bidirectional)</li></ul><ul id="8577d170-73c4-4163-8f38-cb905db95a58" class="bulleted-list"><li style="list-style-type:disc">meta-settings = tra i vari meta-dati sono presenti:<ul id="e43431e3-6d7f-40f3-ae66-e55411461537" class="bulleted-list"><li style="list-style-type:circle">Msg: “hello”</li></ul><ul id="73a0d70d-332e-4016-901a-9c80d24fc3dd" class="bulleted-list"><li style="list-style-type:circle">Sid: (signature id number)</li></ul><ul id="c9b1ae08-3073-448d-ad47-defbbd713ddd" class="bulleted-list"><li style="list-style-type:circle">Rev: (revision of signature)</li></ul><ul id="9355c012-5340-4497-b0af-99a8627b4538" class="bulleted-list"><li style="list-style-type:circle">Gid: (group type id)</li></ul><ul id="418cc5ea-123b-4c36-bdd0-cd176d664eaf" class="bulleted-list"><li style="list-style-type:circle">Classtype: trojan-activity</li></ul><ul id="ce84d561-c900-4274-9610-8b954daff3f8" class="bulleted-list"><li style="list-style-type:circle">Reference : &lt;type&gt;, &lt;value&gt;</li></ul><ul id="cffb3012-bcaf-426c-9ced-6e43399fc831" class="bulleted-list"><li style="list-style-type:circle">Priority: 1-255 (normally 1-4, smaller = higher)</li></ul><ul id="c98c84bc-e344-4471-a947-79a36e8d96a8" class="bulleted-list"><li style="list-style-type:circle">Metadata: “faniofarnogirai”</li></ul><ul id="977f1c43-d51a-4a20-bfa7-45d7d65ce617" class="bulleted-list"><li style="list-style-type:circle">content : “abc”</li></ul></li></ul><h3 id="72293760-85df-4363-be52-c5caa2ebf9a0" class=""><mark class="highlight-teal">Comandi</mark></h3><p id="01a97334-9c02-4fd2-a0e2-89f44c849d39" class="">Il comando suricata presenta alcune opzioni importanti:</p><ul id="f7d8db1d-eec4-493d-a568-4a840984881b" class="bulleted-list"><li style="list-style-type:disc"><code>-c &lt;yaml configuration file location&gt;</code> = per specificare il file di configurazione utilizzato</li></ul><ul id="076b049a-36f8-4ea3-8cec-936ead5d7b0a" class="bulleted-list"><li style="list-style-type:disc"><code>-i &lt;interface to sniff&gt;</code> = per specificare l’interfaccia da sniffare</li></ul><ul id="c88b7bef-1a61-488d-88d0-3d7b01fbe22e" class="bulleted-list"><li style="list-style-type:disc"><code>-s &lt;signatures file&gt;</code> (runs in addition to -c)</li></ul><ul id="fba258fa-81d0-42a3-8b7e-406269b86032" class="bulleted-list"><li style="list-style-type:disc"><code>-r &lt;pcap recording file location&gt;</code> = per specificare il file pcap da utilizzare</li></ul><ul id="069f5edd-f5d1-4675-98fc-6f7209654632" class="bulleted-list"><li style="list-style-type:disc"><code>-l &lt;default log directory location&gt;</code> = per specificare la directory dove verranno posti i file di log. </li></ul></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

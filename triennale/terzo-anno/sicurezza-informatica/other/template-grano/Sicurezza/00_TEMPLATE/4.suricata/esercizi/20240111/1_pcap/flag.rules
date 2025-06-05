@@ -1,0 +1,2 @@
+alert tcp 10.10.0.0/16 any -> 10.10.10.10 23 (msg:"Flag"; content:"FLAG"; sid:30202030; rev:1;)
+

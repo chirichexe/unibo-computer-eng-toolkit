@@ -1,0 +1,113 @@
+################ CLIENT ################ 
+iptables -F INPUT 
+iptables -F OUTPUT 
+iptables -F FORWARD 
+
+iptables -I INPUT -i lo -j ACCEPT 
+iptables -I OUTPUT -o lo -j ACCEPT 
+
+-> 1) i Client sulla rete privata 192.168.0.0/24 # devono poter interrogare DNS e servizi di sincronizzazione NTP in Internet (porte UDP 53 e 123): 
+iptables -A INPUT -p udp -i eth1 --sport 53 -m state --state ESTABLISHED -j ACCEPT 
+
+Questo comando consente al firewall di accettare (ACCEPT) il traffico UDP in arrivo sulla porta 53 (-sport 53) dall'interfaccia eth1 e nello stato ESTABLISHED (connessioni già stabilite). Questa regola permette le risposte DNS provenienti da Internet.
+
+iptables -A OUTPUT -p udp -o eth1 --dport 53 -j ACCEPT 
+
+Questo comando consente al firewall di accettare (ACCEPT) il traffico UDP in uscita sulla porta 53 (-dport 53) sull'interfaccia eth1. Questa regola permette ai client di inviare richieste DNS verso i server DNS su Internet.
+
+iptables -A INPUT -p udp -i eth1 --sport 1233 -m state --state ESTABLISHED -j ACCEPT
+
+Questo comando consente al firewall di accettare (ACCEPT) il traffico UDP in arrivo sulla porta 123 (-sport 123) dall'interfaccia eth1 e nello stato ESTABLISHED (connessioni già stabilite). Questa regola permette le risposte NTP provenienti da Internet.
+
+iptables -A OUTPUT -p udp -o eth1 --dport 1233 -j ACCEPT 
+
+Questo comando consente al firewall di accettare (ACCEPT) il traffico UDP in uscita sulla porta 123 (-dport 123) sull'interfaccia eth1. Questa regola permette ai client di inviare richieste di sincronizzazione NTP verso i server NTP su Internet.
+
+-> nulla da configurare per i punti (2) e (3) 
+
+iptables -P INPUT DROP 
+iptables -P OUTPUT DROP 
+iptables -P FORWARD DROP
+
+
+
+
+################ SERVER ################
+
+iptables -F INPUT
+iptables -F OUTPUT
+iptables -F FORWARD
+
+iptables -I INPUT -i lo -j ACCEPT
+iptables -I OUTPUT -o lo -j ACCEPT
+
+
+-> nulla da configurare per il punto (1)
+
+-> 2) il servizio SMTP (porta 25 tcp) del Server collocato sulla rete privata 172.16.0.0/20 deve essere raggiungibile da qualsiasi host di Internet (per semplicità accettiamo tutte le sorgenti ma a rigore andrebbero escluse le reti private):
+
+iptables -A INPUT -p tcp -i eth1 -d 172.16.0.1 --dport 25 -j ACCEPT
+iptables -A OUTPUT -p tcp -o eth1 -s 172.16.0.1 --sport 25 -m state --state ESTABLISHED -j ACCEPT
+
+-> 3) il servizio LDAP (porta 389 tcp) del Router deve essere raggiungibile dal Server:
+iptables -A OUTPUT -p tcp -o eth1 -s 172.16.0.1 -d 172.16.15.254 --dport 389 -j ACCEPT
+iptables -A INPUT -p tcp -i eth1 -s 172.16.15.254 -d 172.16.0.1 --sport 389 -m state --state ESTABLISHED -j ACCEPT
+
+iptables -P INPUT DROP
+iptables -P OUTPUT DROP
+iptables -P FORWARD DROP
+
+
+
+
+################ ROUTER ################
+
+iptables -t nat -F
+iptables -F INPUT
+iptables -F OUTPUT
+iptables -F FORWARD
+
+iptables -I INPUT -i lo -j ACCEPT
+iptables -I OUTPUT -o lo -j ACCEPT
+
+->1) i Client sulla rete privata 192.168.0.0/24 devono poter interrogare DNS e servizi di sincronizzazione NTP in Internet (porte UDP 53 e 123):
+iptables -A FORWARD -p udp -i eth1 -o eth3 -s 192.168.0.0/16 --dport 53 -j ACCEPT
+iptables -A FORWARD -p udp -i eth3 -o eth1 -d 192.168.0.0/16 --sport 53 -m state --state ESTABLISHED -j ACCEPT
+iptables -A FORWARD -p udp -i eth1 -o eth3 -s 192.168.0.0/16 --dport 1233 -j ACCEPT
+iptables -A FORWARD -p udp -i eth3 -o eth1 -d 192.168.0.0/16 --sport 1233 -m state --state ESTABLISHED -j ACCEPT
+iptables -t nat -A POSTROUTING -p tcp -i eth1 -s 192.168.0.0/24 -o eth3 -j SNAT --to-source 130.136.5.15
+
+----------------------------spiegazione dell'ultimo comando:--------------------
+Il quinto comando utilizza iptables per configurare una regola nella tabella NAT. Ecco una spiegazione più dettagliata dei suoi componenti:
+
+- `t nat`: Specifica che la regola verrà aggiunta alla tabella NAT di iptables. La tabella NAT (Network Address Translation) viene utilizzata per modificare gli indirizzi IP e le porte nei pacchetti.
+
+- `A POSTROUTING`: Indica che la regola verrà aggiunta alla catena POSTROUTING. Questa catena è utilizzata per modificare i pacchetti in uscita dopo che sono stati instradati.
+
+- `p tcp`: Specifica che la regola si applica solo ai pacchetti TCP.
+
+- `i eth1`: Specifica l'interfaccia di rete da cui proviene il traffico. In questo caso, `eth1` è l'interfaccia associata alla rete privata (`192.168.0.0/24`).
+
+- `s 192.168.0.0/24`: Specifica che il traffico deve provenire dalla rete privata (`192.168.0.0/24`).
+
+- `o eth3`: Specifica l'interfaccia di uscita attraverso cui verrà instradato il traffico. In questo caso, `eth3` è l'interfaccia connessa a Internet.
+
+- `j SNAT --to-source 130.136.5.15`: Indica che il traffico deve subire una modifica dell'indirizzo sorgente (SNAT). L'opzione `-to-source` specifica l'indirizzo IP al quale verrà modificato l'indirizzo sorgente. In questo caso, `130.136.5.15` è l'indirizzo IP specificato come nuovo indirizzo sorgente per i pacchetti TCP in uscita dalla rete privata.
+
+In sintesi, questo comando modifica l'indirizzo sorgente dei pacchetti TCP in uscita dalla rete privata (`192.168.0.0/24`) in modo che sembrino provenire dall'indirizzo IP specificato (`130.136.5.15`). Questo tipo di operazione è conosciuta come Source Network Address Translation (SNAT) ed è spesso utilizzata per mascherare l'origine del traffico e migliorare la sicurezza o il routing dei pacchetti attraverso la rete.
+-----------------------------------------------------------------------------
+
+-> 2) il servizio SMTP (porta 25 tcp ) del Server collocato sulla rete privata 172.16.0.0/20 deve essere raggiungibile da qualsiasi host di Internet:
+iptables -t nat -A PREROUTING -i eth3 -o eth1 -s 130.136.5.15 -p tcp --dport 25 -j SNAT --to-destination 172.16.0.1
+iptables -A FORWARD -p tcp -i eth3 -o eth2 -d 172.16.0.1 --dport 25 -j ACCEPT
+iptables -A FORWARD -p tcp -i eth2 -o eth3 -s 172.16.0.1 --sport 25 -m state --state ESTABLISHED -j ACCEPT
+
+-> 3) il servizio LDAP (porta 389 tcp) del Router deve essere raggiungibile dal Server:
+iptables -A INPUT -p tcp -i eth2 -s 172.16.0.1 -d 172.16.15.254 --dport 389 -j ACCEPT
+iptables -A OUTPUT -p tcp -o eth2 -s 172.16.15.254 -d 172.16.0.1 --sport 389 -m state --state ESTABLISHED -j ACCEPT
+
+iptables -P INPUT DROP
+iptables -P OUTPUT DROP
+iptables -P FORWARD DROP
+
+

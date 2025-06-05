@@ -1,0 +1,265 @@
+NIDS: è un sistema di rilevamento delle intrusioni che rileva e avvisa gli amministratori quando viene rilevata un'attività dannosa. NIDS si concentra principalmente sul monitoraggio e l'analisi del traffico di rete, sia real-time che offline.
+
+ANOMALY BASED: 
+	- monitora il traffico di rete
+	- tiene traccia dei modelli di traffico e delle informazioni per ottenere dati di riferimento
+	- se viene rilevata una deviazione nel comportamento della rete, l'IDS rileverà un attacco
+	- elevato rischio di falsi positivi
+
+SIGNATURE BASED:
+	- il database delle firme degli attacchi viene mantenuto localmente
+	- confronta il traffico con il database
+	- se viene trovata una corrispondenza, viene inviato un avviso
+	- richiede aggiornamenti costanti
+	
+NIDS: monitora tutto il traffico sulla rete, è utile per monitorare sistemi non critici
+HIDS: IDS personalizzato per un server specifico, essere più vicini all'host consente maggiori possibilità di rilevamento. Impedisce l'installazione all'interno della rete di minacce quali Trojan e Backdoor.
+
+SURICATA: è un motore di rilevamento delle minacce di rete gratuito e open source, veloce e robusto.
+È in grado di eseguire rilevamento delle intrusioni in tempo reale (IDS), prevenzione delle intrusioni (IPS), monitoraggio edlla sicurezza di rete (NSM) e elaborazione dei pcap offline.
+Suricata ispeziona il traffico di rete utilizzando regole potenti ed estese e dispone di un potente supporto di scriptiing LUA per il rilevamento di minacce complesse
+Suricata è abilitato a interagire con formati di input e output standard come YAML e JSON, interagisce con strumenti come Splunk, Logstash / Elasticsearch, Kibana e altri database.
+
+-------------------
+Suricata è configurato tramite file di configurazione "suricata.yaml"
+
+REGOLE:
+Una regola suricata è una dichiarazione scritta in un linguaggio specifico che dice al motore di Suricata quale traffico di rete analizzare e come comportarsi quando trova un pattern sospetto o interessante.ù
+ESEMPIO:
+
+alert http $HOME_NET any -> $EXTERNAL_NET any 
+(msg:"DetoxCrypto Ransomware CnC Activity";
+flow:established,to_server; content:"POST"; http_method;
+content:"/generate.php"; http_uri; isdataat:!1,relative;
+content:”DetoxCrypto”; fast_pattern; http_user_agent;
+content:"publickey="; depth:10; http_client_body;
+http_header_names; content:!”Referer”; sid:1; rev:1;)
+
+1) INTESTAZIONE: 
+alert http $HOME_NET any -> $EXTERNAL_NET any 
+Suricata genera un avviso se la regola viene attivata (alert) e si applica solo al traffico HTTP.
+L'origine del traffico è una macchina interna, qualsiasi porta ($HOME_NET any) e la direzione è dall'interno all'esterno. La destinazione è la rete esterna, qualsiasi porta ($EXTERNAL_NET any)
+
+2)CORPO DELLA REGOLA
+
+2.1) flow:established,to_server; 
+Controlla solo il traffico TCP con connessione stabilita, verso server
+
+2.2) content:"POST"; http_method;
+Cerca il metodo HTTP POST
+
+2.3) content:"/generate.php"; http_uri; 
+L'URL della richiesta HTTP deve contenere /generate.php
+
+2.4) isdataat:!1,relative;
+Verifica che non ci sia altro contenuto dopo quella posizione nel payload, in particolare "!1" significa: nessun byte dopo questo punto, mentre "relative" si riferisce alla posizione attuale nel pacchetto
+
+2.5) content:"DetoxCrypto"; fast_pattern; http_user_agent;
+Cerca la stringa "DetoxCrypto" nell'header User-Agent
+
+2.6) content:"publickey="; depth:10; http_client_body;
+Cerca "publickey=" entro i primi 10 byte del corpo POST (payload HTTP inviato dal client)
+
+2.7) http_header_names; content:!"Referer";
+Controlla i nomi degli header HTTP 
+
+3) IDENTIFICATORI
+sid:1; rev:1; 
+Il primo è l'ID della regola, il secondo è di revisione (per versioni future della regola)
+
+---------------------
+STRUTTURA DI UNA REGOLA:
+1) ACTION (azione) -> definisce cosa deve fare Suricata quando una regola viene attivata
+- alert -> genera un avviso nel log ma non blocca il traffico
+- drop  -> blocca il pacchetto e genera un alert
+- pass  -> ignora il pacchetto, non genera alert, utile per escludere falsi positivi
+- reject-> blocca il traffico e invia un messaggio di rifiuto
+- log   -> registra il pacchetto, ma non lo segnala come anomalia
+
+2) INTESTAZIONI -> descrive il traffico da intercettare, indicando protocollo, indirizzi, porte e direzione
+< azione protocollo sorgente porta_sorgente direzione destinazione porta_destinazione >
+Protocolli:
+- tcp
+- udp
+- icmp
+- ip
+- http
+
+Indirizzi:
+- 192.168.x.x
+- $HOME_NET oppure $EXTERNAL_NET (definiti in suricata.yaml)
+
+Porte:
+- numeri delle porte
+- any
+
+Direzione:
+- "->" traffico da sorgente a destinazione
+- "<>" traffico bidirezionale
+
+3) OPZIONI: sono racchiuse tra parentesi tonde e specificano le condizioni che devono essere soddisfatte per attivare la regola.
+
+3.1) META-SETTINGS: informazioni descrittive che non influenzano il traffico e servono a documentare la regola
+
+- msg:"testo"               -> messaggio dell'alert
+- sid:12345                 -> ID univoco della regola
+- rev:1                     -> numero di revisione
+- classtype:trojan-activity -> 
+- priority:1                ->
+
+3.2) PAYLOAD KEYWORDS: analizzano il contenuto del pacchetto
+
+- content:"GET /index.php" 
+- nocase                    -> ignora maiuscole/minuscole
+- offset, depth, distance, within -> controllano dove cercare il contenuto
+- pcre                      -> usa espressioni regolari
+
+3.3) HTTP KEYWORDS: analizzano richieste / risposte HTTP
+
+3.4) DNS KEYWORDS: per il traffico DNS
+
+3.5) FLOW KEYWORDS: specificano lo stato della connessione
+- flow:established,to_server;
+- flowbits:set, flowbits:isset -> per tracciare lo stato tra più pacchetti
+
+3.6) FILE KEYWORDS: usate per analizzare i file trasferiti 
+
+3.7) IP REPUTATION KEYWORDS: consentono il controllo contro liste di IP noti
+- iprep:name_of_list; -> suricata può usare file ".iprep" per tracciare IP malevoli o sospetti
+
+-----------------------
+SURICATA COMMAND LINE
+
+- VEDERE LE OPZIONI DEL COMANDO 
+< suricata -h >
+
+- Specifica il file di configurazione YAML da usare per l’avvio di Suricata.
+< suricata -c /etc/suricata/suricata.yaml> (bisogna inserire la posizione del yaml)
+
+- Indica l’interfaccia di rete da monitorare in tempo reale. È necessaria per l’analisi live del traffico in modalità IDS.
+< suricata -i eth0 > 
+
+- Specifica un file aggiuntivo contenente regole personalizzate da usare insieme a quelle già definite nel file YAML
+< suricata -s percorso_file_yaml >
+
+- Analizza un file di traffico di rete registrato in formato .pcap, utile per test o analisi offline
+< suricata -r percorso_file_pcap >
+
+Definisce la directory predefinita in cui Suricata salverà i file di log
+< suricata -l /var/log/suricata >
+
+Esegue suricata in modalità demone (in background), utile per esecuzioni prolungate su server
+< suricata -D >
+
+
+FA PARTITE SURICATA IN MODALITÀ IDS MONITORANDO IL TRAFFICO DI RETE IN TEMPO REALE SULL'INTERFACCIA SPECIFICATA, UTILIZZANDO IL FILE DI CONFIGURAZIONE "suricata.yaml" E MOSTRANDO UN OUTPUT DETTAGLIATO (vvv)
+< suricata -c suricata.yaml -i INTERFACE -vvv >
+
+-------------------------
+Esercitazione LAB:
+1) PING
+Creo un nuovo file .rules dove includo tutte le regole necessarie
+< touch /etc/suricata/rules/seclab.rules >
+
+Aggiungo la regola nel file
+< cat ping.rules >> /etc/suricata/rules/seclab.rules >
+
+Faccio partire suricata, rimane attivo sul traffico sull'interfaccia "eth1" 
+< suricata -c /etc/suricata/suricata.yaml -i eth1 -vvv >
+
+Controlliamo gli alert nel file di log in un altro terminale
+< tail -f /var/log/suricata/fast.log >
+
+Per visualizzare qualcosa è necessario generare traffico, allora dalla macchina host eseguiamo un ping
+< ping 192.168.56.101 >
+
+2) TRAFFICO HTTP (facebook)
+L'obbiettivo adesso è di monitorare l'accesso ad un particolare sito da "dentro" la macchina virtuale, questo significa che vogliamo monitorare un preciso traffico HTTP, con una richiesta ad una particolare pagina. (In questo caso accesso al sito facebook.com).
+
+Installo la regola data 
+< cat facebook.rules >> /etc/suricata/rules/seclab.rules >
+
+Riavvio di suricata ma sull'interfaccia NAT in eth0
+< suricata -c /etc/suricata/suricata.yaml -i eth0 -vvv >
+
+Eseguiamo facebook
+< wget facebook.com >
+
+eth0 è la scheda NAT, collegata ad internet tramite la macchina host
+eth1 è invece la rete interna, host-only
+Se suricata fosse in ascolto su eth1 non vedrebbe il traffico HTTP diretto verso internet perché quel traffico passa per eth0
+
+3) TEST SHELLSHOCK
+Adesso vorremmo inserire delle regole per monitorare un plausibile attacco. 
+
+Inseriamo le regole
+< cat shellshock.rules >> /etc/suricata/rules/seclab.rules >
+
+Assicuriamoci che il web server sulla macchina virtuale del laboratorio sia attivo 
+< systamctl status nginx >
+
+Avviamo sicurata su eth1
+< suricata -c /etc/suricata/suricata.yaml -i eth1 -vvv >
+-----------------
+LOG JSON: oltre ai fast log suricata offre anche dei log più sofisticati ed espressivi in formato JSON.
+Questi log sono nel file /var/log/suricata/eve.json
+-----------------
+SURICATA OFFLINE: permette di analizzare delle tracce di traffico precedentemente catturate.
+< suricata -c /etc/suricata/suricata.yaml -r FILE_PCAP_TRACCIATO >
+
+Apro wireshark (digito il comando < wireshark > da root e vado su "eth1") 
+Lancio un ping sulla macchina host
+< ping 192.168.56.101 >
+Dopo un pò di catture stoppiamo e possiamo quindi controllare post-attacco l'invio dei pacchetti tramite suricata offline
+
+Salvo il file del tracciato nella home -> "File -> Salva con nome -> tracciato_ping.pcapng"
+
+< suricata -c /etc/suricata/suricata.yaml -r tracciato_ping.pcapng >
+
+Adesso posso vedere i fast logs...
+
+---------------------------------
+ESERCIZIO 1: bloccare il traffico verso "netflix.com"
+Lo studente deve costruire ( e validare ) una regola suricata che blocchi il traffico in uscita per il portale netflix.com
+Nota bene:
+La regola va generata con un certo criterio. Che significa? Significa che una richiesta a netflix.com comporta più richieste a più domini! Analizzare quindi con wireshark, o altro tool tutti domini coinvolti.
+
+- Apro Wireshark su eth0 e cerco tramite browser "netflix.com" per registrare il traffico
+- Metto come filtro "dns" e vedo i domini di netflix.
+- Creo la regola suricata
+alert tls any any -> any any (msg:"SURICATA TRAFFIC-ID: facebook"; tls_sni; content:"facebook.com"; sid:1000001; rev:1;)  -> questa è quella per facebook, la riscrivo per netflix
+
+alert tls any any -> any any (msg:"SURICATA TRAFFIC-ID: netflix1"; tls_sni; content:"netflix.com"; sid:1000010; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TRAFFIC-ID: netflix2"; tls_sni; content:"nflximg.net"; sid:1000011; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TRAFFIC-ID: netflix3"; tls_sni; content:"nflximg.com";
+sid:1000012; rev:1;)
+
+In questo modo non blocchiamo ma vediamo un messaggio di alert
+
+drop tls any any -> any any (msg:"SURICATA TRAFFIC-ID: netflix1"; tls_sni; content:"netflix.com"; sid:1000010; rev:1;)
+drop tls any any -> any any (msg:"SURICATA TRAFFIC-ID: netflix2"; tls_sni; content:"nflximg.net"; sid:1000011; rev:1;)
+drop tls any any -> any any (msg:"SURICATA TRAFFIC-ID: netflix3"; tls_sni; content:"nflximg.com";
+sid:1000012; rev:1;)
+-------------------------------
+ESERCIZIO 2: alert con un file .pcapng
+
+Il file è un tracciato di un traffico mqtt tra un sub e un pub sul broker mosquitto.
+L'obbiettivo è di creare una regola suricata che scateni un alert ogni volta che nel contenuto del pacchetto MQTT ci sia il contenuto "flag". Se fatto bene nei log di suricata dovrebbero spuntare i contenuti dei pacchetti. Nel contenuto dei pacchetti è possibile trovare "pezzi" di una flag nel formato SEC{qualcosa}.
+
+Il protocollo MQTT di solito viaggia su TCP (porta 1883) 
+alert tcp any any -> any 1883 (msg:"MQTT FLAG DETECTED"; content:"flag"; nocase; sid:1000100; rev:1;)
+
+Inserisco la regola nel file della cartella "rules"
+
+Vado nel file di configurazione suricata.yaml e abilito in "eve.json" payload e payload-printable (sotto type)
+
+Eseguo suricata sul file .pcapng
+< suricata -c /etc/suricata/suricata.yaml -r /home/kali/Downloads/mqtt_suricata_exercise.pcapng >
+
+Leggo i log 
+<  tail -f /var/log/suricata/eve.json >
+Oppure per vederli più facilmente
+< grep -o 'SEC{[^}]*}' eve.json >
+
+
+

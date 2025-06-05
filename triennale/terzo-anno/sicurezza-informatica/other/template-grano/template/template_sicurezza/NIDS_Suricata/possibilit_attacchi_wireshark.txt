@@ -1,0 +1,75 @@
+#########LISTA 1##################
+## attacchi riconoscibili da wireshark
+
+Ecco una lista di possibili attacchi che possono essere individuati utilizzando Wireshark:
+
+1. SYN FLOOD (attacco SYN):
+    - Un attacco SYN flood coinvolge l'invio di un grande numero di pacchetti SYN ad un server con l'intento di esaurire le sue risorse di memoria o di connessione. Può essere individuato osservando un alto volume di pacchetti SYN in arrivo.
+
+2. SMURF ATTACK:
+    - In un attacco Smurf, un attaccante invia pacchetti ICMP echo request (ping) ad un'intera rete utilizzando l'indirizzo IP del bersaglio. La rete risponde inviando pacchetti di risposta a tutti i dispositivi sulla rete, sovraccaricandoli. Può essere individuato osservando un grande volume di pacchetti ICMP echo request provenienti da indirizzi IP diversi.
+
+3. DNS AMPLIFICATION ATTACKS:
+    - Questo attacco sfrutta i server DNS aperti per amplificare il traffico verso il bersaglio. Può essere individuato osservando un grande volume di pacchetti DNS con una dimensione di risposta molto maggiore rispetto alla richiesta originale.
+
+4. HTTP FLOOD (attacco HTTP):
+    - In un attacco HTTP flood, un grande numero di richieste HTTP viene inviato al server web, cercando di sovraccaricarlo. Può essere individuato osservando un aumento del traffico HTTP verso il server.
+
+5. DDOS (Distributed Denial of Service):
+    - Un attacco DDoS coinvolge il coordinamento di molteplici dispositivi (spesso bot infetti) per sovraccaricare il bersaglio con un volume massiccio di traffico. Può essere individuato osservando un aumento del traffico (magari verso la stessa porta) proveniente da molteplici indirizzi IP.
+
+6. Attacchi di scansione di porte (PORT SCANNING):
+    - Gli attacchi di scansione di porte coinvolgono l'analisi delle porte di un host per individuare vulnerabilità o punti di ingresso potenziali. Può essere individuato osservando pacchetti che tentano di connettersi a numerose porte diverse su un host (si notano ordinando i pacchetti per indirizzo sorgente).
+
+7. ATTACCHI DI SPOOFING:
+    - Gli attacchi di spoofing coinvolgono la falsificazione degli indirizzi IP sorgente dei pacchetti per nascondere l'identità dell'attaccante. Può essere individuato osservando discrepanze tra gli indirizzi IP sorgente e altri dati nei pacchetti.
+
+8. ATTACCHI DI FLOODING UDP:
+    - Gli attacchi di flooding UDP coinvolgono l'invio di un grande volume di pacchetti UDP ad un server con l'intento di sovraccaricarlo. Può essere individuato osservando un aumento del traffico UDP verso il server.
+
+9. DHCP STARVATION ATTACKS:
+    - Questo attacco coinvolge la saturazione del pool di indirizzi IP disponibili in un server DHCP, impedendo ad altri dispositivi di ottenere un indirizzo IP valido. Puoi individuare questo attacco osservando un grande numero di richieste DHCP Discover provenienti da un singolo indirizzo MAC o da diversi indirizzi MAC. Questo indica che un dispositivo sta inviando un gran numero di richieste DHCP per esaurire le risorse del server DHCP.
+
+10. BRUTE FORCE LOGIN ATTEMPTS:
+    - Gli attacchi di forza bruta si verificano quando un attaccante tenta di indovinare le credenziali di accesso (come nome utente e password) per accedere ad un sistema o un'applicazione. Puoi individuare questi tentativi analizzando i pacchetti di autenticazione (ad esempio, pacchetti SSH, Telnet, FTP, HTTP) e cercando sequenze di tentativi di accesso ripetuti o anormali. Ad esempio, potresti vedere molteplici tentativi di accesso con nomi utente comuni o password deboli.
+
+11. UNAUTHORIZED DHCP SERVER:
+    - Un server DHCP non autorizzato può essere utilizzato per distribuire indirizzi IP falsificati o configurazioni di rete dannose. Puoi individuare questo attacco osservando i pacchetti DHCP Offer provenienti da un server DHCP diverso da quello autorizzato nella tua rete. Inoltre, potresti notare discrepanze tra le informazioni di configurazione di rete offerte da questo server DHCP non autorizzato e quelle configurate nel tuo ambiente di rete.
+
+
+
+######LISTA 2#####################
+Ecco una lista di possibili attacchi che possono essere individuati utilizzando Wireshark:
+
+	1 SYN Flood (attacco SYN): ---------------------
+Un attacco SYN flood coinvolge l'invio di un grande numero di pacchetti SYN ad un server con l'intento di esaurire le sue risorse di memoria o di connessione. Può essere individuato osservando un alto volume di pacchetti SYN in arrivo.
+
+	2 Smurf Attack:---------------------------------
+In un attacco Smurf, un attaccante invia pacchetti ICMP echo request (ping) ad un'intera rete utilizzando l'indirizzo IP del bersaglio. La rete risponde inviando pacchetti di risposta a tutti i dispositivi sulla rete, sovraccaricandoli. Può essere individuato osservando un grande volume di pacchetti ICMP echo request provenienti da indirizzi IP diversi.
+
+	3 DNS Amplification Attack: ----------------------
+Questo attacco sfrutta i server DNS aperti per amplificare il traffico verso il bersaglio. Può essere individuato osservando un grande volume di pacchetti DNS con una dimensione di risposta molto maggiore rispetto alla richiesta originale.
+
+	4 HTTP Flood (attacco HTTP):-----------------------
+In un attacco HTTP flood, un grande numero di richieste HTTP viene inviato al server web, cercando di sovraccaricarlo. Può essere individuato osservando un aumento del traffico HTTP verso il server.
+
+	5 DDoS (Distributed Denial of Service):------------
+Un attacco DDoS coinvolge il coordinamento di molteplici dispositivi (spesso bot infetti) per sovraccaricare il bersaglio con un volume massiccio di traffico. Può essere individuato osservando un aumento del traffico (magari verso la stessa porta) proveniente da molteplici indirizzi IP.
+
+	6 Attacchi di scansione di porte (Port Scanning):-----
+Gli attacchi di scansione di porte coinvolgono l'analisi delle porte di un host per individuare vulnerabilità o punti di ingresso potenziali. Può essere individuato osservando pacchetti che tentano di connettersi a numerose porte diverse su un host (si notano ordinando i pacchetti per indirizzo sorgente).
+
+	7 Attacchi di spoofing:--------------------------
+Gli attacchi di spoofing coinvolgono la falsificazione degli indirizzi IP sorgente dei pacchetti per nascondere l'identità dell'attaccante. Può essere individuato osservando discrepanze tra gli indirizzi IP sorgente e altri dati nei pacchetti.
+
+	8 Attacchi di flooding UDP: --------------------
+Gli attacchi di flooding UDP coinvolgono l'invio di un grande volume di pacchetti UDP ad un server con l'intento di sovraccaricarlo. Può essere individuato osservando un aumento del traffico UDP verso il server.
+
+	9 DHCP Starvation Attack:----------------------
+Questo attacco coinvolge la saturazione del pool di indirizzi IP disponibili in un server DHCP, impedendo ad altri dispositivi di ottenere un indirizzo IP valido. Puoi individuare questo attacco osservando un grande numero di richieste DHCP Discover provenienti da un singolo indirizzo MAC o da diversi indirizzi MAC. Questo indica che un dispositivo sta inviando un gran numero di richieste DHCP per esaurire le risorse del server DHCP.
+
+	10 Brute Force Login Attempts:------------------
+Gli attacchi di forza bruta si verificano quando un attaccante tenta di indovinare le credenziali di accesso (come nome utente e password) per accedere ad un sistema o un'applicazione. Puoi individuare questi tentativi analizzando i pacchetti di autenticazione (ad esempio, pacchetti SSH, Telnet, FTP, HTTP) e cercando sequenze di tentativi di accesso ripetuti o anormali. Ad esempio, potresti vedere molteplici tentativi di accesso con nomi utente comuni o password deboli.
+
+	11 Unauthorized DHCP Server:---------------------
+Un server DHCP non autorizzato può essere utilizzato per distribuire indirizzi IP falsificati o configurazioni di rete dannose. Puoi individuare questo attacco osservando i pacchetti DHCP Offer provenienti da un server DHCP diverso da quello autorizzato nella tua rete. Inoltre, potresti notare discrepanze tra le informazioni di configurazione di rete offerte da questo server DHCP non autorizzato e quelle configurate nel tuo ambiente di rete.

@@ -1,0 +1,45 @@
+#regola per passaggio dei pacchetti dall'attaccante al bersaglio
+alert tcp 172.21.1.118 any -> 172.22.2.159 80 (msg:"Pacchetto dall'attaccante al bersaglio!"; content:"/api/index.html"; sid:10000001; rev:1;)
+
+#passaggio dei pacchetti di risposta dal bersaglio all'attaccante
+alert tcp 172.22.2.159 80 -> 172.21.1.118 any (msg:"Pacchetto di risposta all'attaccante dal bersaglio!"; sid:10000002; rev:1;)
+
+#regole iptables per consentire gli altri tipi di traffico
+iptables -F INPUT
+iptables -F OUTPUT 
+iptables -F FORWARD
+
+#Router come server dhcp per le tre reti
+iptables -I INPUT -p udp --sport 68 --dport 67 -j ACCEPT
+iptables -I OUTPUT -p udp --sport 67 --dport 68 -m state --state ESTABLISHED -j ACCEPT
+
+#Router come server dns per la rete 3
+iptables -I INPUT -p udp -s 172.23.3.187 -d 172.23.3.1 --dport 53 -j ACCEPT
+iptables -I OUTPUT -p udp -d 172.23.3.187 -s 172.23.3.1 --sport 53 -m state --state ESTABLISHED -j ACCEPT
+
+#Host su rete 3 come server NTP per client su rete 2 ( si legge dalle info del pacchetto)
+iptables -I FORWARD -p udp -s 172.22.2.159 -d 172.23.3.186 --sport 123 --dport 123 -j ACCEPT
+iptables -I FORWARD -p udp -d 172.22.2.159 -s 172.23.3.186 --sport 123 --dport 123 -m state --state ESTABLISHED -j ACCEPT
+
+#Host su rete 2 come server POP per client su rete 1 ( C/S nelle info del pacchetto )
+iptables -I FORWARD -p tcp -s 172.21.1.118 -d 172.22.2.159 --dport 110 -j ACCEPT
+iptables -I FORWARD -p tcp -s 172.22.2.159 -d 172.21.1.118 --sport 110 -m state --state ESTABLISHED -j ACCEPT
+
+#Host su rete 3 come server SSH per client su rete 2
+iptables -I FORWARD -p tcp -s 172.22.2.159 -d 172.23.3.187 --dport 22 -j ACCEPT
+iptables -I FORWARD -p tcp -d 172.22.2.159 -s 172.23.3.187 --sport 22 -m state --state ESTABLISHED -j ACCEPT 
+
+#Host su rete 2 come server IMAPS per client su rete 1 (dal protocollo tls, osservo la porta e su etc/services vedo che imaps=993)
+iptables -I FORWARD -p tcp -s 172.21.1.118 -d 172.22.2.159 --dport 993 -j ACCEPT
+iptables -I FORWARD -p tcp -s 172.22.2.159 -d 172.21.1.118 --sport 993 -m state --state ESTABLISHED -j ACCEPT
+
+#DEFAULT DENY tranne loopback e eth0(per il contesto virtualbox)
+iptables -I INPUT -i lo -j ACCEPT
+iptables -I OUTPUT -o lo -j ACCEPT
+iptables -I INPUT -i eth0 -j ACCEPT
+iptables -I OUTPUT -o eth0 -j ACCEPT
+
+#Politiche di default
+iptables -P INPUT DROP
+iptables -P OUTPUT DROP
+iptables -P FORWARD DROP

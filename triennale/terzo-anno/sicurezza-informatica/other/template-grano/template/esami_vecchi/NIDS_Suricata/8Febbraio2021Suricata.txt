@@ -1,0 +1,35 @@
+## 8 febbraio 2024
+
+--Obbiettivo:
+analizzate il tracciato con Wireshark
+
+il tracciato è raccolto su di un router che ha indirizzo con byte finale = 1 su tre subnet diverse
+
+fate uso dell'ordinamento per aiutarvi a distinguere diversi tipi di traffico
+
+concentratevi unicamente sui protocolli applicativi, ignorando i (numerosissimi) pacchetti TCP degli handshake
+
+scrivete due regole per Suricata che permettano di registrare nel file degli eventi, rispettivamente
+
+il passaggio dei pacchetti dall'attaccante al bersaglio
+
+il passaggio dei pacchetti di risposta dal bersaglio all'attaccante
+----------------------------------------
+
+Per il protocollo HTTP notiamo un attacco brute force.
+Molteplice risposte 401 Unauthorized in risposta a un attacco a forza bruta.
+L'attacco si individua analizzando le molteplici get che in sequenza cambiano una dall'altra di pochi byte.
+É possibile inoltre notare come user agent Hydra, tool tipico di attacchi a forza bruta.
+
+Entità in gioco:
+Attaccante src Port -> Obbiettivo dst Port
+172.21.1.118 46730 -> 172.22.2.159 80
+
+--soluzione:
+
+alert tcp 172.21.1.118 46730 -> 172.22.2.159 80 (msg:"HTTP Brute Force"; content:"Hydra"; sid:1000001; rev:1;)
+
+alert tcp 172.22.2.159 80 -> 172.21.1.118 46730 (msg:"HTTP BF Server Response"; content:"401"; sid:1000002; rev:1;)
+
+
+------------------------

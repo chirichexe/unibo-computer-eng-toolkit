@@ -1,0 +1,198 @@
+Nell'architettura dell'esercitazione sono presenti 
+- 1 CLIENT
+- 2 ROUTER
+- 2 SERVER
+
+Con << vagrant ssh NOME >> possiamo entrare nella VM NOME
+L'obbiettivo è generare traffico tra CLIENT e S1 e con tcpdump sulla VM controllare il traffico su R1 e R2
+
+Avvio dall'host in due terminali il CLIENT e S1 tramite:
+<< vagrant ssh client >> e << vagrant ssh s1 >>
+Faccio un ping dal client al server
+<< ping 10.2.2.1 >>
+Controllo dai due router il traffico tramite
+<< sudo tcpdump -i eth1 >>
+
+Lo scopo dei router è inoltrare il traffico tra la rete dei client e quelle dei server.
+Bisogna restringere le regole di inoltro per filtrare la rete.
+
+
+ANALISI del codice iniziale:
+"flush chain filter FORWARD" -> Svuota la chain FORWARD nella tabella filter, cancella le regole precedenti
+"table ip filter" -> Crea o modifica una tabella chiamata filter per il protocollo IP
+"chain FORWARD { type filter hook forward priority filter; policy drop; " -> Crea una chain chiamata FORWARD che intercetta il traffico instradato attraverso la macchina (da client a server passando per i router) e imposta una policy predefinita DROP che blocca tutto di default
+"righe con gli ip" -> accetta i pacchetti dagli ip specificati (ip del client e dei due server)
+
+flush chain filter FORWARD
+table ip filter {
+  chain FORWARD {
+    type filter hook forward priority filter; policy drop;
+    ip saddr 10.1.1.0/24 ip daddr 10.2.2.0/24 accept
+    ip daddr 10.1.1.0/24 ip saddr 10.2.2.0/24 accept
+    ip saddr 10.1.1.0/24 ip daddr 10.3.3.0/24 accept
+    ip daddr 10.1.1.0/24 ip saddr 10.3.3.0/24 accept
+ }
+}
+
+
+Per caricarlo nel packet file vado nel router e creo un file con "nano" con le regole, inoltre
+Carico nel packet filter le regole 
+<< sudo nft -f FILENAME >>
+Per verificare l'effetto possiamo usare
+<< sudo nft list ruleset >>
+
+AGGIUNGERE UNA REGOLA IN CODA A QUELLE ESISTENTI:
+<< sudo nft add rule filter FORWARD tcp dport 2222 drop >> -> 
+blocca il traffico TCP in transito destinato alla porta 2222
+
+ELENCARE LE REGOLE 
+<< sudo nft list ruleset >> -> mostra l'intero set di regole
+
+<< sudo nft list table filter >>
+<< sudo nft list chain filter FORWARD >>
+
+MOSTRARE GLI HANDLE DELLE REGOLE (che servono per inserire le regole in punti precisi o per eliminarle)
+<< sudo nft -a list ruleset >>
+
+<< sudo nft add rule TABELLA CATENA position X >> -> aggiunge la regola dopo di quella con handle X
+<< sudo nft insert rule TABELLA CATENA position X >> -> inserisce la regola prima di quella con handle X
+
+ELIMINARE LA REGOLA APPENA INSERITA 
+<< sudo nft delete rule filter FORWARD handle 6 >>
+
+REPLACE DELLA REGOLA
+<< sudo nft replace rule filter FORWARD handle 6 tcp port 8080 drop >>
+
+Le regole di "nftables" vengono valutate dall'alto verso il basso, la prima regola che "combacia" vince
+Quindi le regole specifiche vengono inserite per prime e quelle generiche dopo.
+
+In questa parte di esercizio vogliamo che il traffico ssh avvenga unicamente fra client e server s2, aggiungiamo allora 4 regole con insert (che aggiunge la regola precedentemente all'ultima inserita)
+
+<< sudo nft insert rule filter FORWARD  tcp dport 22 drop >># precede le regole esistenti 
+<< sudo nft insert rule filter FORWARD  tcp sport 22 drop >>  # va a precedere quella appena inserita, ecc...
+<< sudo nft insert rule filter FORWARD ip daddr 10.1.1.1 ip saddr 10.3.3.1 tcp sport 22 ct state established accept >>
+<< sudo nft insert rule filter FORWARD  ip saddr 10.1.1.1 ip daddr 10.3.3.1 tcp dport 22 accept >>
+
+In questo caso le regole andrebbero lette quindi dall'ultima alla prima in ordine per come verrebbero inserite: 
+4) permette le nuove connessioni ssh dal client al s2 
+3) permette i pacchetti di risposta ssh dal s2 al client ma solo se sono parte di una connessione già stabilita
+2) blocca tutti i pacchetti in arrivo dalla porta 22, cioè le risposte di ssh da qualsiasi server a qualsiasi client, in assenza di una regola più specifica sopra
+1) blocca tutti i tentativi di connessione ssh in entrata su qualsiasi destinazione e da qualsiasi sorgente
+
+Per verificare che effettivamente il traffico verso s1 è bloccato scrivo dal client
+<< ssh vagrant@10.2.2.1 >> e non da nessun output (vengono bloccati i pacchetti)
+<< ssh vagrant@10.3.3.1 >> da output (non vengono bloccati i pacchetti)
+
+----------------------
+table ip filter_client {
+	chain OUTPUT {
+		type filter hook output priority filter; policy drop;
+		ip saddr 10.1.1.1 ip daddr 10.3.3.1 tcp dport 22 accept
+	}
+	chain INPUT {
+		type filter hook input priority filter; policy drop;
+		ip daddr 10.1.1.1 ip saddr 10.3.3.1 tcp sport 22 ct state established accept
+	}
+}
+	
+table ip filter_s2 {
+	chain INPUT {
+		type filter hook input priority filter; policy drop;
+		ip saddr 10.1.1.1 ip daddr 10.3.3.1 tcp dport 22 accept
+	}
+	chain OUTPUT {
+		type filter hook output priority filter; policy drop;
+		ip daddr 10.1.1.1 ip saddr 10.3.3.1 tcp sport 22 ct state established accept
+	}
+}
+
+table ip filter {
+	chain FORWARD {
+		type filter hook forward priority filter; policy drop;
+		ip saddr 10.1.1.1 ip daddr 10.3.3.1 tcp dport 22 accept
+		ip daddr 10.1.1.1 ip saddr 10.3.3.1 tcp sport 22 ct state established accept
+		}
+	}
+----------------------
+LOGGING: volendo vedere quali pacchetti non vengono accettati (vengono scartati) , subito prima che vengano scartati dalla default policy DROP, possiamo ad esempio usare 
+<< sudo nft add rule filter INPUT log prefix " input_end " >>
+<< sudo nft add rule filter OUTPUT log prefix " output_end " >>
+<< sudo nft add rule filter FORWARD log prefix " forward_end " >>
+
+Per vedere i log sui router eseguiamo
+<< journalctl -k -f >>
+
+--------
+NAT: facciamo in modo che R1 finga di accettare connessioni ssh da Client, ridirigendole su S1
+
+Salvare il seguente codice e caricare con << nft -f FILE >>
+table nat {
+        chain PREROUTING {
+                type nat hook prerouting priority dstnat
+                iif eth1 ip saddr 10.1.1.1 ip daddr 10.1.1.254 tcp dport 22 dnat to 10.2.2.1
+        }
+}
+--------------------------
+CATENE CUSTOM: COME FUNZIONANO LE JUMP E LE SOTTO-CATENE
+
+table ip filter { -> crea una nuova tabella filter 
+    chain forward { -> crea una nuova chain forward
+        type filter hook forward priority filter; policy drop; -> blocca tutto il traffico a meno che non venga accettato da una regola successiva
+
+        # Deviazione verso le sotto-chain personalizzate 
+        ip saddr 10.2.2.0/24 jump rules_from_LANS1 -> se il pacchetto proviene da S1 va nella sotto-catena "rules_from_LANS1"
+        ip daddr 10.2.2.0/24 jump rules_to_LANS1 -> se il pacchetto è destinato a S1 va nella sotto-catena "rules_to_LANS1"
+    }
+
+    # Chain per traffico in uscita dalla subnet (server)
+    chain rules_from_LANS1 {  -> sotto-catena 
+        tcp sport 22 ct state established accept -> accetta il pacchetto se è di risposta
+        tcp sport 80 ct state established accept 
+        tcp sport 443 ct state established accept
+        udp dport 53 accept -> permette al server di inviare richieste DNS (porta 53) udp
+        udp dport 123 accept -> permette al server di inviare richieste NTP (porta 123) udp
+
+        log prefix "outgoing packet not catched " drop -> se nessuna delle regole precedenti ha accettato il pacchetto allora lo logga e lo blocca
+    }
+
+    # Chain per traffico in entrata alla subnet (server)
+    chain rules_to_LANS1 { -> sotto-catena
+        tcp dport 22 accept -> permette al traffico in ingresso su porte SSH, HTTP, HTTPS (22, 80, 443)
+        tcp dport 80 accept 
+        tcp dport 443 accept
+        udp sport 53 ct state established accept -> permette le risposte DNS e NTP ai pacchetti già inizialmente inviati dal server
+        udp sport 123 ct state established accept
+
+        log prefix "incoming packet not catched " drop -> se nessuna regola ha accettato il pacchetto lo logga e lo blocca
+    }
+}
+-------------------------
+CONTATORI:
+
+# 1. Tabella principale con catena forward
+table ip filter {
+    chain forward {
+        type filter hook forward priority filter; policy drop;
+
+        # Salti alla chain per il conteggio (deve venire prima delle altre regole)
+        ip saddr 10.2.2.1 jump count_H20
+        ip daddr 10.2.2.1 jump count_H20
+
+        # Altre regole di forward se necessarie (esempio):
+        # ip protocol tcp ct state established,related accept
+    }
+
+    # 2. Chain di conteggio (non ha verdict)
+    chain count_H20 {
+        ip saddr 10.2.2.1 counter name counter_H20 ->incrementa il contatore se il pacchetto proviene da H20
+        ip daddr 10.2.2.1 counter name counter_H20 ->incrementa il contatore se il pacchetto è diretto a H20
+    }
+}
+
+# 3. Tabella separata per dichiarare il contatore nominato
+table ip monitor { -> tabella utilizzata per contenere i contenitori
+    counter counter_H20 {
+        packets 0 bytes 0 -> definisce un contatore inizializzato a zero
+    }
+}
+-------------------------

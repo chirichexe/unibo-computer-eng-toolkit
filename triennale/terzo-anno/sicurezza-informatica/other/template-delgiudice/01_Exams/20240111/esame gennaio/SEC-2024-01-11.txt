@@ -1,0 +1,11 @@
+
+Esercizio 2 - Intrusion detection
+
+Scaricate il tracciato di traffico dump.pcap 
+
+analizzate il tracciato con Wireshark
+suggerimento: fate uso dell'ordinamento per aiutarvi a distinguere diversi tipi di attacco
+identificate quattro tipi di interazione verso il server 10.10.10.10
+scrivete una regola per Suricata che permetta di registrare la FLAG nel file degli eventi
+Consegnate un file  attacks.txt  contenente la descrizione dei quattro tipi di interazione individuati (se sono o no attacchi, se lo sono di che tipo, che porte e indirizzi coinvolgono) e uno screenshot  suricata.png   che mostri il terminale della vostra Kali, in cui con un comando estraete la FLAG dal file eventi di Suricata.
+

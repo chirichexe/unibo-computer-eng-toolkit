@@ -1,0 +1,47 @@
+## 10 febbraio 2023 NetIntDet suricata
+
+#########
+1) Scrivere una regola suricata in modalità alert per TUTTO il traffico icmp SOLTANTO IN ENTRATA sulla rete 192.168.X.X
+Se pensate sia necessario cambiare la configurazione di suricata è bene specificarlo
+
+alert icmp any any -> $HOME_NET any (msg:"ICMP Echo Request Detected"; sid:1000001; rev:1;)
+
+> suricata.yaml
+  HOME_NET:"[192.168.0.0/16]"
+
+#########
+2) Scrivere una (o più) regola suricata in modalità alert per qualsiasi richiesta a evilcorp.com. Nota bene NON è possibile utilizzare il protocollo http o la porta 80 per creare questa regola.
+
+alert dns any any -> any any (msg:"DNS query evilcorp"; dns_query; content:"evilcorp.com";sid:1000002; rev:1;)
+alert ip any any -> evilcorp.com any (msg:"Request evilcorp";sid:1000003; rev:1;)
+
+// prima rileva il traffico associato a evilcorp
+// seconda traffico ip diretto verso evilcorp.com 
+//nota: per un uso corretto di suricata sarebbe opportuno specificare l'IP non il dominio
+
+########
+3) È stato rilasciato un file pcap esame_10_febbraio_2023.pcapng
+Il file rappresenta il tracciato di traffico di diversi tentativi di autenticazione su di un noto protocollo.
+
+Usare Wireshark per aprire il file
+
+TELNET >> Brute Force Login Attempts:
+Numerosi pacchetti con dati di login falliti, contengono: "Password:" "Login Incorrect"
+
+Partecipanti (attaccante->):
+	192.168.56.1 -> 192.168.56.8 
+	Src Port: 41852
+	Dst Port: 23
+
+Dati passati dall'attaccante: sec:sec
+
+Sappiamo che telnet usa TCP
+
+alert tcp 192.168.56.1 41852 -> 192.168.56.8 23 (msg:"Flag detected"; flow:from_client; flowbits:set,logged_in; content:"sec:sec"; sid: 100005; rev:1;)
+
+
+////
+> msg:"Flag detected": messaggio di avviso.
+> flow:from_client: analizza il flusso di pacchetti provenienti dal client.
+> flowbits:set,logged_in: imposta il bit logged_in se la regola corrisponde.
+> content:"sec:sec": cerca il contenuto specifico "sec" nei dati del pacchetto.

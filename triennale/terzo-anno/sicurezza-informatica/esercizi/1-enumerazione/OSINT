@@ -1,0 +1,37 @@
+ESERCIZIO OSINT:
+1.1) Trovare l'IP del dominio "ulis.se"
+1.2) Lista di tutti i Subdomains del dominio
+1.3) Altri hostnames associati
+
+1.1) "nslookup ulis.se" restituisce:
+Server:         10.0.2.3
+Address:        10.0.2.3#53
+
+Non-authoritative answer:
+Name:   ulis.se
+Address: 130.136.9.27
+
+1.2) Uso "shodan.io" e inserire l'indirizzo trovato nel punto precedente "130.136.9.27"
+Nella categoria "hostnames" vedo i subdomains:
+- trip.disi.unibo.it
+- ulisse.unibo.it
+
+1.3) Tramite "amass enum -passive -d uli.se" trovo altri hostnames associati.
+
+-------------------
+
+2.1) Dato il dominio "wildboar.it" trovare l'IP in cui è hostato il dominio e/o eventualmente il range IP associati
+2.2) Tutte le informazioni possibili sul dominio (proprietario, scadenza, provider)
+2.3) Enumerare tutti i record DNS del dominio
+
+
+2.1) "nslookup wildboar.it" restituisce l'IP: 89.46.105.48
+
+2.2) Scrivo nel terminale "whois wildboar.it" e ottengo le informazioni
+Proprietario nella sezione "Registrant": Luca Volpino
+Scadenza nella sezione "Expire Date": 2025-07-23
+Provider nella sezione "Registrar": Aruba s.p.a.
+
+2.3) Tramite "dnsrecon -d wildboar.it" ottengo tutti i record DNS del dominio
+
+

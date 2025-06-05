@@ -1,0 +1,87 @@
+Sicurezza - Parte II - esercizi - 2024-06-21
+ SVOLGERE A SCELTA TRE DEI QUATTRO ESERCIZI DESCRITTI NEL SEGUITO 
+
+ MODALITÀ DI CONSEGNA:  
+
+per ogni esercizio scelto (privesc, ids, web, pwn, iptables, ...) creare una cartella col nome corrispondente
+inserirvi i file richiesti esattamente coi nomi specificati nel testo - per semplicità gli screenshot sono indicati nel testo con estensione png, ma sono accettati anche con formato ed estensione jpg, mantenendo lo stesso nome di base
+creare un archivio in qualsiasi formato si preferisca (tar, tgz, zip, ...) e consegnare unicamente questo file.
+
+Esercizio 1 - privesc
+
+Leggete tutto il testo  prima di fare qualsiasi cosa!
+Per questo esercizio è consigliabile usare una VM Kali che non sia mai stata alterata da esercizi precedenti: se necessario createla come il primo giorno di laboratorio (e intanto fate gli altri esercizi)
+
+
+Scaricare sulla VM Kali il file change-2024-06-21e renderlo eseguibile
+
+$ chmod +x ./change-2024-06-21
+
+Il comando apporta modifiche a file dentro /usr/bin e /etc
+
+Prima parte:
+
+ideare un modo di identificare il file modificato e il tipo di modifica apportata.
+lanciare sudo ./change-2024-06-21
+attuare la strategia ideata al punto 1 per identificare il file modificato e il tipo di modifica apportata.
+Seconda parte:
+ 
+senza ricorrere al "potere sudo" dell'utente kali (gli altri usi derivanti dalle modifiche individuate nella prima parte sono consentiti), creare un utente toor senza password, che abbia privilegi di root
+diventare toor e lanciare id
+Documentate tutti i passi svolti in modo dettagliato nel file   integrity.txt 
+Catturate le schermate che mostrano il successo nel diventare root senza usare sudo in uno o più screenshot  privesc.png  se necessario numerandoli (privesc1.png, privesc2.png, ecc...)
+
+
+
+Esercizio 2 - iptables
+
+rete
+
+
+Le interazioni consentite nella rete raffigurata devono essere unicamente:
+accesso da parte dei client con IMAP/S a mail server su internet (porta TCP 993)
+accesso da parte di qualsiasi host su internet alla porta TCP 443 del server
+accesso da parte dei client alla porta UDP 53 del router
+accesso da parte del server agli agent SNMP dei client (porta UDP 161)
+Consegnate un file  ipt-router.sh  coi comandi che permettano di configurare il packet filter del router e un file    ipt-client.sh  coi comandi che permettano di configurare il packet filter del client.
+
+
+
+Esercizio 3 - pwn
+
+Unzippare il file con l'eseguibile compilato e dargli i permessi di esecuzione se necessario
+
+unzip secret_func1.zip
+chmod +x ./secret_func1
+
+L'obiettivo è sfruttare il buffer overflow ed eseguire la funzione che contiene il flag corretto.
+
+Ricordate di disabilitare l'ASLR per far si che l'esercizio riesca; da root lanciare
+
+echo 0 > /proc/sys/kernel/randomize_va_space
+
+Consegnare 3 file
+
+Un file  bof.txt  contenente:
+Il payload finale con il quale viene lanciato l'eseguibile
+Una descrizione il più possibile dettagliata dei passaggi eseguiti per ricavare l'overflow che permette di sovrascrivere l'indirizzo di ritorno. Questa descrizione può includere tutti i tentativi che sono stati fatti
+oppure soltanto il meccanismo che è stato eseguito. Il livello di dettaglio e precisione della descrizione sarà utilizzato come valutazione della prova.
+Uno screenshot  payload.png  che mostra il payload che esegue l'overflow che dimostra che siate in grado di controllare l'indirizzo di ritorno, es. AAAA..AA+BBBB
+Uno screenshot  exploit.png  che mostra il payload eseguito e la relativa funzione stampata
+
+
+Esercizio 4 - ids
+
+Il file traffic-2024-06-21.pcap contiene un elenco di pacchetti catturati da un router che connette un client con due server.
+
+Si analizzi il tracciato, ponendo attenzione al contenuto applicativo, per individuare un pacchetto che è chiaramente riconducibile a un attacco.
+
+Si configuri Suricata per creare un alert che intercetti i pacchetti con queste caratteristiche:
+provenienti dalla rete /24 su cui si trova il mittente del pacchetto individuato
+destinati alla rete /24 su cui si trova il destinatario del pacchetto individuato
+contenenti la stringa (o una sua parte rappresentativa) che permette di riconoscere l'intento malevolo
+File da consegnare:
+un resoconto  report.txt  che descriva sinteticamente i diversi tipi di traffico anche innocuo individuati nel tracciato, e il tipo di attacco individuato
+il file di configurazione  suricata.yaml
+il file  eve.json  in cui sia presente l'alert
+

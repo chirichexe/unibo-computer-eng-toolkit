@@ -1,0 +1,50 @@
+------------------------------------------------------------------------------------
+Date: 7/3/2024 -- 19:25:34 (uptime: 0d, 00h 00m 00s)
+------------------------------------------------------------------------------------
+Counter                                       | TM Name                   | Value
+------------------------------------------------------------------------------------
+decoder.pkts                                  | Total                     | 2234
+decoder.bytes                                 | Total                     | 166508
+decoder.ipv4                                  | Total                     | 2217
+decoder.ipv6                                  | Total                     | 1
+decoder.ethernet                              | Total                     | 2234
+decoder.arp                                   | Total                     | 16
+decoder.tcp                                   | Total                     | 2217
+tcp.syn                                       | Total                     | 1154
+tcp.synack                                    | Total                     | 6
+tcp.rst                                       | Total                     | 1000
+decoder.icmpv6                                | Total                     | 1
+decoder.avg_pkt_size                          | Total                     | 74
+decoder.max_pkt_size                          | Total                     | 1578
+flow.total                                    | Total                     | 1155
+flow.tcp                                      | Total                     | 1154
+flow.icmpv6                                   | Total                     | 1
+flow.wrk.spare_sync_avg                       | Total                     | 100
+flow.wrk.spare_sync                           | Total                     | 13
+flow.wrk.flows_evicted_needs_work             | Total                     | 5
+flow.wrk.flows_evicted_pkt_inject             | Total                     | 5
+flow.wrk.flows_injected                       | Total                     | 5
+tcp.sessions                                  | Total                     | 1154
+tcp.ssn_from_pool                             | Total                     | 1154
+tcp.segment_from_cache                        | Total                     | 8
+tcp.segment_from_pool                         | Total                     | 10
+detect.alert                                  | Total                     | 2
+app_layer.flow.ssh                            | Total                     | 2
+app_layer.flow.telnet                         | Total                     | 2
+flow.end.state.new                            | Total                     | 151
+flow.end.state.closed                         | Total                     | 1004
+flow.end.tcp_state.syn_sent                   | Total                     | 150
+flow.end.tcp_state.closed                     | Total                     | 1004
+flow.mgr.rows_per_sec                         | Total                     | 6553
+flow.spare                                    | Total                     | 9800
+flow.mgr.rows_maxlen                          | Total                     | 1
+flow.mgr.flows_checked                        | Total                     | 1
+flow.mgr.flows_notimeout                      | Total                     | 1
+memcap_pressure                               | Total                     | 5
+memcap_pressure_max                           | Total                     | 5
+flow.recycler.recycled                        | Total                     | 1150
+flow.recycler.queue_avg                       | Total                     | 35
+flow.recycler.queue_max                       | Total                     | 750
+tcp.memuse                                    | Total                     | 1212416
+tcp.reassembly_memuse                         | Total                     | 229376
+flow.memuse                                   | Total                     | 7154304

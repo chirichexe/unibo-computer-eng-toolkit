@@ -1,0 +1,12 @@
+Lo scopo è sfruttare la vulnerabilità XSS per eseguire del codice javascript (in questo caso un alert)
+per prima cosa ho inserito un input "ciao" nel form, allo scopo di analizzare la pagina e vedere come sarebbe avvenuta la reflection
+
+noto che il mio input viene utilizzato nel campo src di un tag <img>, quindi decido di sfruttare onerror per eseguire un alert. 
+
+inserisco nel campo di input x" onerror="alert(1) e noto che il sistema filtra la keyword onerror
+
+la mia nuova idea è quindi quella di chiudere il tag img e inserire un altro tag che mi permetta di lanciare un alert. La scelta ricade sul payload x"></img><svg onload=alert(1)/> ma noto che il sistema filtra anche '<' e '>'
+
+l'ultimo tentativo è quello di inserire il payload x" oneonerrorrror="alert(1) in maniera che dopo la sostituzione di "onerror" con '' il tag risulterà <img src="x" onerror="alert(1)">
+
+Dal punto di vista dell'amministratore di sistema, una idea semplice per limitare la vulnerabilità potrebbe essere quella di filtrare anche il '"' per rendere più difficile uscire fuori da src=""

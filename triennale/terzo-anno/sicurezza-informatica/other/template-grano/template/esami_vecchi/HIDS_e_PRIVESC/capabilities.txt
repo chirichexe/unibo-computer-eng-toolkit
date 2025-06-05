@@ -1,0 +1,88 @@
+### Capabilities per privesc:
+
+-----------------------------------
+Verifichiamo le capability:
+
+--#	getcap /usr/bin/chmod
+	/usr/bin/chmod cap_fowner=ep
+ 
+Per chmod qualcosa è cambiato... cosa?
+
+--#	man capabilities
+--#	/CAP_FOWNER
+-----------------------------------
+
+
+
+
+### Capabilities per Privilege Escalation: 
+
+
+1. CAP_DAC_OVERRIDE:
+	
+	- Permette di ignorare i controlli di accesso ai file (Discretionary Access Control). 
+	Consente l'accesso a qualsiasi file nel sistema, indipendentemente dalle autorizzazioni.
+   	- Uso comune: Accesso ai file senza riguardo per le autorizzazioni.
+
+	AD ESEMPIO: posso usare cp ignorando i permessi sui file
+	
+	cp /etc/shadow
+
+
+2. CAP_DAC_READ_SEARCH:
+   
+	- Simile a CAP_DAC_OVERRIDE, ma limita il bypass ai permessi di lettura 
+	e ricerca nei directory. Può essere utilizzato per leggere file che 
+	altrimenti sarebbero inaccessibili.
+   	- Uso comune: Lettura di file protetti.
+
+
+3. CAP_NET_ADMIN :
+
+	- Consente varie operazioni di amministrazione della rete, 
+	come la modifica della configurazione di rete, la gestione delle interfacce e dei firewall.
+	Può essere utilizzata per manipolare il traffico di rete e intercettare comunicazioni.
+   	- Uso comune: Configurazione e gestione della rete.
+
+4. CAP_MKNOD :
+	
+   	- Permette di creare file speciali usando mknod, 
+	che potrebbe essere usato per creare dispositivi di blocco e di carattere arbitrari,
+	 potenzialmente consentendo accesso non autorizzato ai dati.
+   	- Uso comune: Creazione di file di dispositivi.
+
+5. CAP_CHOWN :
+
+    	- Consente di cambiare il proprietario di file, 
+	permettendo a un processo di assumere la proprietà di file critici.
+    	- Uso comune: Cambio del proprietario dei file.
+
+6. CAP_SETUID e CAP_SETGID:
+
+    	- Permettono di cambiare l'UID (User ID) e il GID (Group ID) del processo. 
+	Utilizzando queste capabilities, un processo potrebbe assumere l'identità di un altro utente, 
+	inclusi gli utenti con più privilegi.
+    	- Uso comune: Cambiamento dell'UID e del GID dei processi.
+
+7. CAP_SETPCAP :
+
+    - Consente di modificare le capabilities dei processi, 
+	permettendo di aggiungere o rimuovere capabilities da un processo esistente.
+    - Uso comune: Gestione delle capabilities dei processi.
+
+8. CAP_FOWNER :
+
+	- Ignorare le restrizioni di proprietà sui file, 
+	permettendo di cambiare i permessi di file non di proprietà.
+
+	AD ESEMPIO: se su chmod posso aggiungere SUID a un comando 
+	
+	chmod +s /usr/bin/cp
+
+9. CAP_FSETID :
+
+	- Modificare il comportamento del setuid/setgid dei file. 
+	Questa capability può impedire a un file di mantenere i bit setuid 
+	o setgid quando viene modificato, influenzando potenzialmente la sicurezza del sistema.
+
+

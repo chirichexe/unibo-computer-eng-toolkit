@@ -1,0 +1,7 @@
+Nel tracciato di traffico noto, ordinando per protocollo, che sono presenti moltissime richieste HTTP GET dalla macchina 172.21.1.118 alla macchina 172.22.2.159. La macchina client sta cercando di accedere a una risorsa a cui non avrebbe accesso (/api/index.html), infatti la risposta HTTP ha sempre stato 401 Unauthorized. 
+
+Per identificare i pacchetti dell'attacante posso scrivere la regola:
+alert tcp 172.21.1.118 any -> 172.22.2.159 80 (msg:"Attacco";content:"/api/index.html";sid:10000001;rev:1;)
+
+Mentre per i pacchetti di risposta scrivo la regola:
+alert tcp 172.22.2.159 any -> 172.21.1.118 80 (msg:"Risposta";content:"401";sid:10000002;rev:1;)

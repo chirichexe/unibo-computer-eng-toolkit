@@ -1,0 +1,52 @@
+---CLIENT
+iptables -F INPUT
+iptables -F OUTPUT
+iptables -F FORWARD
+iptables -I INPUT -i lo -j ACCEPT
+iptables -I OUTPUT -o lo -j ACCEPT
+iptables -P INPUT DROP
+iptables -P OUTPUT DROP
+iptables -P FORWARD DROP
+1)
+iptables -A OUTPUT -p tcp -o eth1 -s 10.1.0.0/20 --dport 443 -j ACCEPT
+iptables -A INPUT -p tcp -i eth1 -d 10.1.0.0/20 --sport 443 -m state --state ESTABLISHED -j ACCEPT
+3)
+iptables -A OUTPUT -p tcp -o eth1 -s 10.1.1.0/24 -d 192.168.1.2 --dport 22 -j ACCEPT
+iptables -A INPUT -p tcp -i eth1 -s 192.168.1.2 -d 10.1.1.0/24 -sport 22 -m state --state ESTABLISHED -j ACCEPT
+
+---SERVER
+iptables -F INPUT
+iptables -F OUTPUT
+iptables -F FORWARD
+iptables -I INPUT -i lo -j ACCEPT
+iptables -I OUTPUT -o lo -j ACCEPT
+iptables -P INPUT DROP
+iptables -P OUTPUT DROP
+iptables -P FORWARD DROP
+2)
+iptables -A INPUT -p tcp -i eth1 -d 192.168.1.2 --dport 25 -j ACCEPT
+iptables -A OUTPUT -p tcp -o eth1 -s 192.168.1.2 --sport 25 -j ACCEPT
+3)
+iptables -A INPUT -p tcp -i eth1 -s 10.1.1.0/24 -d 192.168.1.2 --dport 22 -j ACCEPT
+iptables -A OUTPUT -p tcp -o eth1 -s 192.168.1.2 -d 10.1.1.0/24 --sport 22 -m state --state ESTABLISHED -j ACCEPT
+
+---R
+iptables -F INPUT
+iptables -F OUTPUT
+iptables -F FORWARD
+iptables -I INPUT -i lo -j ACCEPT
+iptables -I OUTPUT -o lo -j ACCEPT
+iptables -P INPUT DROP
+iptables -P OUTPUT DROP
+iptables -P FORWARD DROP
+1)
+iptables -A FORWARD -p tcp -i eth1 -o eth3 -s 10.1.0.0/20 --dport 443 -j ACCEPT
+iptables -A FORWARD -p tcp -i eth3 -o eth1 -d 10.1.0.0/20 --sport 443 -m state --state ESTABLISHED -j ACCEPT
+iptables -t nat -A POSTROUTING -i eth1 -o eth3 -s 10.1.0.0/20 -j SNAT --to-source 137.204.1.15
+2)
+iptables -t nat -A PREROUTING -i eth3 -d 137.204.1.15 --dport 25 -j DNAT --to-destination 192.168.1.2
+iptables -A FORWARD -p tcp -i eth3 -o eth2 -d 192.168.1.2 --dport 25 -j ACCEPT
+iptables -A FORWARD -p tcp -o eth3 -i eth2 -s 192.168.1.2 --sport 25 -m state --state ESTABLISHED -j ACCEPT
+3)
+iptables -A FORWARD -p tcp -i eth1 -o eth2 -s 10.1.1.0/24 -d 192.168.1.2 --dport 22 -j ACCEPT
+iptables -A FORWARD -p tcp -i eth2 -o eth1 -s 192.168.1.2 -d 10.1.1.0/24 --sport 22 -m state --state ESTABLISHED -j ACCEPT

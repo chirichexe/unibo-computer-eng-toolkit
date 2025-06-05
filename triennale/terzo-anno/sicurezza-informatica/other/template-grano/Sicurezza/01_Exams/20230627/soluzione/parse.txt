@@ -1,0 +1,8 @@
+#scrivere anche gli strumenti da usare o scrivere qualcosa del genere:
+uso comandi di filtraggio del tsetso per ritagliare solo la parte significativa
+
+#comandi per fare il parsing della flag
+PRIMA=$(cat eve.json | jq 'select(.event_type="alert")' | grep payload_printable | grep SEC{ | grep -v 'SEC{_' | uniq | cut -f2 -d':'| replace , "" | replace \" "" | replace \\n "" | replace \\ "")
+SECONDA=$(cat eve.json | jq 'select(.event_type="alert")' | grep payload_printable | grep }SEC | grep 'FLAG}SEC' | uniq | cut -f2 -d':'| replace , "" | replace \" "" | replace \\n "" | replace \\ "")
+echo $PRIMA$SECONDA
+

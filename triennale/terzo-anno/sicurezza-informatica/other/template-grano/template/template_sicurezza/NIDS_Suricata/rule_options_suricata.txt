@@ -1,0 +1,149 @@
+RULE OPTIONS PER SURICATA -------------------------------------
+
+Ecco una lista di alcune delle principali opzioni delle regole (rule options) che puoi utilizzare in Suricata. Queste opzioni ti permettono di definire criteri specifici per rilevare e reagire a particolari tipi di traffico di rete.
+
+### 1. msg--------------
+
+- Descrizione: Specifica il messaggio che sarà mostrato quando la regola viene corrisposta.
+- Esempio: `msg:"Tentativo di accesso non autorizzato";`
+
+### 2. sid-------------
+
+- Descrizione: Identificatore univoco della regola. Deve essere un numero intero positivo unico per ogni regola.
+- Esempio: `sid:1000001;`
+
+### 3. rev------------
+
+- Descrizione: Numero di revisione della regola. Incrementa questo numero ogni volta che modifichi la regola.
+- Esempio: `rev:1;`
+
+### 4. content--------
+
+- Descrizione: Cerca una stringa specifica nel payload del pacchetto.
+- Esempio: `content:"GET";`
+
+### 5. http_host------
+
+- Descrizione: Specifica che il contenuto da cercare è nell'header HTTP `Host`.
+- Esempio: `content:"example.com"; http_host;`
+
+### 6. http_uri-------
+
+- Descrizione: Specifica che il contenuto da cercare è nell'URI HTTP.
+- Esempio: `content:"/login"; http_uri;`
+
+### 7. http_client_body----------
+
+- Descrizione: Specifica che il contenuto da cercare è nel corpo del client HTTP.
+- Esempio: `content:"password"; http_client_body;`
+
+### 8. http_method-------
+
+- Descrizione: Specifica che il contenuto da cercare è nel metodo HTTP.
+- Esempio: `content:"POST"; http_method;`
+
+### 9. flow--------
+
+- Descrizione: Specifica la direzione e lo stato del flusso del traffico.
+- Esempio: `flow:to_server,established;`
+
+### 10. pcre--------
+
+- Descrizione: Cerca un pattern utilizzando espressioni regolari Perl compatibili.
+- Esempio: `pcre:"/admin/i";`
+
+### 11. classtype----------
+
+- Descrizione: Assegna un tipo di classificazione alla regola.
+- Esempio: `classtype:web-application-attack;`
+
+### 12. priority---------
+
+- Descrizione: Assegna una priorità all'alert generato.
+- Esempio: `priority:1;`
+
+### 13. threshold------------
+
+- Descrizione: Configura il thresholding degli alert per ridurre il rumore.
+- Esempio: `threshold:type both, track by_src, count 1, seconds 60;`
+
+### 14. reference-----------
+
+- Descrizione: Aggiunge un riferimento esterno come un CVE o un URL.
+- Esempio: `reference:cve,2003-0001;`
+
+### 15. metadata----------
+
+- Descrizione: Aggiunge informazioni aggiuntive alla regola, come autore, revisione, etc.
+- Esempio: `metadata:author john_doe, service http;`
+
+### 16. flowbits-----------
+
+- Descrizione: Setta, controlla o unsets bits per il tracciamento del flusso di traffico.
+- Esempio: `flowbits:set,http.authenticated;`
+
+-------------------------------------------------------------------//
+->Cosa sono i flowbits?
+I flowbits sono essenzialmente flag o bit che possono essere impostati, controllati o puliti nel contesto di un flusso di dati. Questi bit possono essere utilizzati per tracciare eventi specifici o condizioni che si verificano durante una connessione, consentendo di scrivere regole che dipendono dallo stato della connessione.
+
+->Sintassi delle opzioni flowbits
+Le opzioni flowbits in una regola di Suricata possono assumere diverse forme, ciascuna con uno scopo specifico:
+
+- set: Imposta un bit specifico.
+
+- unset: Pulisce (disattiva) un bit specifico.
+
+- isset: Controlla se un bit specifico è impostato.
+
+- isnotset: Controlla se un bit specifico non è impostato.
+
+- toggle: Inverte lo stato di un bit specifico.
+
+- noalert: Utilizzato per evitare che una regola generi un alert, ma ancora esegua altre operazioni sui flowbits.
+----------------------------------------------------------------//
+
+### 17. dsize-----------
+
+- Descrizione: Controlla la dimensione del payload dei dati.
+- Esempio: `dsize:<100;`
+
+### 18. ttl-----------
+
+- Descrizione: Controlla il valore del Time-to-Live (TTL) nel pacchetto IP.
+- Esempio: `ttl:64;`
+
+### 19. ip_proto-----------
+
+- Descrizione: Specifica il protocollo IP.
+- Esempio: `ip_proto:tcp;`
+
+### 20. fragoffset---------
+
+- Descrizione: Specifica l'offset dei frammenti IP.
+- Esempio: `fragoffset:0;`
+
+
+
+### ESEMPIO DI REGOLA COMPLETA#####################
+
+alert tcp any any -> any 80 (msg:"Tentativo di accesso non autorizzato"; flow:to_server,established; content:"/admin"; http_uri; classtype:web-application-attack; sid:1000002; rev:1;)
+
+#Spiegazione
+
+- `alert tcp any any -> any 80`: L'azione è `alert`, il protocollo è `tcp`, e la regola si applica al traffico da qualsiasi IP sorgente e porta a qualsiasi IP di destinazione sulla porta 80.
+
+- `msg:"Tentativo di accesso non autorizzato"`: Messaggio di alert.
+
+- `flow:to_server,established`: Si applica a pacchetti diretti al server in una connessione stabilita.
+
+- `content:"/admin"`: Cerca la stringa `/admin` nell'URI HTTP.
+
+- `http_uri`: Specifica che la stringa è nell'URI HTTP.
+
+- `classtype:web-application-attack`: Tipo di classificazione.
+
+- `sid:1000002`: Identificatore univoco della regola.
+
+- `rev:1`: Numero di revisione della regola.
+
+Questa regola genera un alert quando viene rilevato un tentativo di accesso alla pagina `/admin` su un server HTTP.

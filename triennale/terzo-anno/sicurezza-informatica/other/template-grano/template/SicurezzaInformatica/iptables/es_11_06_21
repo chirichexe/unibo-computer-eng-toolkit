@@ -1,0 +1,44 @@
+#Consentire qualsiasi traffico sull'interfaccia di loopback
+#Consentire il traffico delle connessioni HTTP entranti
+#Consentire connessioni SSH uscenti verso la rete host-only 192.168.56.0/24
+#Bloccare l'inoltro del traffico proveniente dalla rete host-only verso altre destinazioni
+#Consentire la risoluzione dei nomi DNS
+#Infine bloccare tutto il traffico non elencato nei punti 2, 3, 5
+
+
+# Utilizzo l'opzione -A in tutte le regole per fare in modo che vengano inserite una in seguito all'altra in ordine
+
+iptables -F
+
+#loopback
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A OUTPUT -o lo -j ACCEPT
+
+#Consentire il traffico delle connessioni HTTP entranti
+#si comporta da CLIENT
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 80 -m state --state ESTABLISHED -j ACCEPT
+
+#Consentire connessioni SSH uscenti verso la rete host-only 192.168.56.0/24
+#si comporta da client
+iptables -A OUTPUT -d 192.168.56.0/24 -p tcp --dport 22 -j ACCEPT
+iptables -A INPUT -s 192.168.56.0/24 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+
+##Bloccare l'inoltro del traffico proveniente dalla rete host-only verso altre destinazioni
+iptables -A FORWARD -s 192.168.56.0/24 ! -d 192.168.56.0/24 -j DROP
+
+#Consentire la risoluzione dei nomi DNS porta 53
+#ATTENZIONE DNS è UDP!
+iptables -A OUTPUT -p udp --dport 53 -j ACCEPT
+iptables -A INPUT -p udp --sport 53 -m state --state ESTABLISHED -j ACCEPT
+
+#Infine bloccare tutto il traffico non elencato nei punti 2, 3, 5
+iptables -P FORWARD ACCEPT
+iptables -P INPUT DROP
+iptables -P OUTPUT DROP
+
+# notare che l'esclusione della regola 4 deve far dedurre  che per il forwarding
+# deve valere un principio di default accept, altrimenti non avrebbe senso la regola 
+# che applica a un caso specifico l'azione DROP
+
+#MORALE: quando in una regola si usa DROP stare attenti alla policy!

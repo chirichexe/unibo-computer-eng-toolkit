@@ -1,0 +1,41 @@
+#Le regole devono essere applicate nell'ordine in cui vengono proposte.
+#   USARE iptables -A
+
+#Si inizi garantendo che le catene siano tutte vuote, e si proceda per:
+#   SvuotO tutte le catene predefinite:
+iptables -F
+
+#1.Consentire qualsiasi traffico sull'interfaccia di loopback
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A OUTPUT -o lo -j ACCEPT
+
+#2.Consentire il traffico delle connessioni HTTP entranti
+#   Utilizzo porta destinazione in input per specificare la porta di destinazione 
+#     del traffico in arrivo verso il nostro sistema.
+#   Analogamente in output, utilizzo quella sorgente per specificare la porta sorgente
+#     del traffico in uscita dal nostro sistema.
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 80 -m state --state ESTABLISHED -j ACCEPT
+
+#3.Consentire connessioni SSH uscenti verso la rete host-only 192.168.56.0/24
+iptables -A OUTPUT -p tcp --dport 22 -d 192.168.56.0/24 -j ACCEPT
+iptables -A INPUT -p tcp --sport 22 -s 192.168.56.0/24 -m state --state ESTABLISHED -j ACCEPT
+
+#4.Bloccare l'inoltro del traffico proveniente dalla rete host-only verso altre destinazioni
+iptables -A FORWARD -s 192.168.56.0/24 ! -d 192.168.56.0/24 -j DROP
+
+#5.Consentire la risoluzione dei nomi DNS
+#   Doppie regole considerando che dns puà utilizzare tcp o udp(di solito)
+iptables -A INPUT --sport 53 -p tcp -m state --state ESTABLISHED -j ACCEPT
+iptables -A INPUT --sport 53 -p udp -m state --state ESTABLISHED -j ACCEPT
+iptables -A OUTPUT --dport 53 -p tcp -j ACCEPT
+iptables -A OUTPUT --dport 53 -p udp -j ACCEPT
+
+#6.Infine bloccare tutto il traffico non elencato nei punti 2, 3, 5
+iptables -P INPUT -j DROP
+iptables -P OUTPUT -j DROP
+iptables -P FORWARD -J ACCEPT
+
+#6.1 -> L'esclusione della regola 4 deve far dedurre che per il forwarding deve
+#  deve valere un principio di DEFAULT ACCEPT, altrimenti non avrebbe senso la 
+#  regola che applica ad un caso specifico l'azione DROP

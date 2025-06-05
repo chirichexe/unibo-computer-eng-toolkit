@@ -1,0 +1,119 @@
+## suricata
+
+--Teoria:
+Suricata è un motore di rilevamento delle minacce di rete gratuiti e open source. Rilevamento del tipo IDS IPS e monitoraggio della rete NSM.
+
+Interagisce con formati di input e output standard come YAML e JSON
+----------------------
+
+--Installazione e configurazione:
+Seguire le slide//
+sudo add-apt-repository ppa: oisf / suricata-stable
+Il file di configurazione è /etc/suricata/suricata.yaml
+-------------------------
+
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+--Regole suricata:
+
+Una regola suricata è composta da due parti principali:
+Intestazione e Opzioni
+
+	alert tcp $HOME_NET any -> $EXTERNAL_NET 80 (msg:"HTTP Traffic"; sid:1000001; rev:1;)
+
+#Intestazione: ####
+
+> azione:
+
+	alert	genera un allarme, notifica un evento sospetto
+	drop	scarta il pacchetto e genera allarme
+	reject	scarta il pacchetto, genera allarme, invia un pacchetto di risposta alla sorgente
+	pass	ignora il pacchetto e non genera allarme
+	log	registra il pacchetto, non genera allarme
+
+> protocollo:
+
+	tcp, udp, icmp, ip...
+
+> indirizzo sorgente PORTA -> indirizzo destinazione PORTA:
+
+	$HOME_NET	variabile di rete definita nel file di configurazione
+	$EXTERNAL_NET	// //
+        any 		una qualsiasi porta o indirizzo
+
+        #> suricata.yaml
+	vars:
+          address-groups:
+           HOME_NET: "[192.168.1.0/24]"
+           EXTERNAL_NET: "!$HOME_NET"
+        
+
+#Opzioni: ####
+
+- msg	messaggio che descrive la regola
+- sid	identificatore della regola
+- rev	numero di revisione della regola
+- gid	group type id
+
+##Opzioni di ricerca: ###
+
+- content:"abc"	cerca un particolare contenuto
+- nocase	case insensitive per il content
+- http_method	specifica di esaminare il metodo http - content:
+- dns_query	specifica di esaminare una query DNS - content:
+
+
+------------------------------
+
+
+////////////ESEMPI///////////////////////
+
+1) genera un allarme quando viene rilevato un pacchetto ICMP Echo Request (ping) --------
+
+alert icmp any any -> any any (msg:"ICMP Echo Request Detected"; sid:1000007; rev:1;)
+
+2) blocca il traffico diretto alla porta 445 (utilizzata da SMB) e genera un allarme -------
+
+drop tcp $HOME_NET any -> $EXTERNAL_NET 445 (msg:"Block SMB Traffic"; sid:1000008; rev:1;)
+
+3) rifiuta le query DNS in entrata, genera un allarme e notifica l'host sorgente --------
+
+reject udp $EXTERNAL_NET any -> $HOME_NET 53 (msg:"DNS Query Rejected"; sid:1000009; rev:1;)
+
+4) permette il traffico SSH e non genera alcun allarme -----------
+
+pass tcp $HOME_NET any -> $EXTERNAL_NET 22 (msg:"Allow SSH Traffic"; sid:1000010; rev:1;)
+
+5) registra il traffico FTP senza generare un allarme --------
+
+log tcp $EXTERNAL_NET any -> $HOME_NET 21 (msg:"Log FTP Traffic"; sid:1000011; rev:1;)
+
+///////////////////////////////////////////
+
+
+
+
+--Suricata utilizzo da terminale:
+
+Per tutte le opzioni:	suricata -h
+-c <yaml configuration file location>
+-i <interface to sniff>
+-s <signatures file> (runs in addition to -c)
+-r <pcap recording file location>
+-l <default log directory location>
+
+
+In lab utilizzeremo: suricata -c suricata.yaml -i INTERFACE -vvv
+Sulla VM Kali eth0 è usata per il traffico verso l’esterno
+
+
+Installare file di configurazione personalizzato //su virtuale!:
+cp suricata.yaml /etc/suricata/
+
+
+Guardare gli alert suricata:
+tail -f /var/log/suricata/fast.log
+
+-----------

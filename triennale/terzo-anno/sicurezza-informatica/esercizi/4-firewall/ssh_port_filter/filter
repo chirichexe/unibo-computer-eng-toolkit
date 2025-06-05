@@ -1,0 +1,7 @@
+table ip filter {
+    chain FORWARD {
+        type filter hook forward priority filter; policy drop;
+        ip saddr 10.1.1.1 ip daddr 10.3.3.1 tcp dport 22 accept
+        ip daddr 10.1.1.1 ip saddr 10.3.3.1 tcp sport 22 ct state established accept
+    }
+}

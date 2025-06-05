@@ -1,0 +1,66 @@
+1. i Client devono poter accedere via HTTPS (porta TCP  443) a qualunque server; il reale indirizzo dei client deve essere nascosto sia a R2 che ai server
+
+Client
+iptables -A OUTPUT -d 192.168.99.0/24 -o eth1 -p tcp --dport 443 -j ACCEPT
+iptables -A INPUT -s 192.168.99.0/24 -i eth1 -p tcp --sport 443 -m state ESTABLISHED -j ACCEPT
+
+(I Router usano solo catene di Forward)
+R1
+iptables -A FORWARD  -i eth1 -s 172.16.0.0/16 -o eth2 -d 192.168.99.0/24 -p tcp --dport 443 -j ACCEPT
+iptables -A FORWARD -o eth1 -s 192.168.99.0/24 -i eth2 -d 172.16.0.0/16 -p tcp --sport 443 -m state --state ESTABLISHED -j ACCEPT
+#Cambiamo l'indirizo sorgernte così da nascondere gli indirizzi dei client a R2 e servers sostituendolo con quello di R1 visibile su eth2
+iptables -t nat -I POSTROUTING -s  172.16.0.0/16 -d 192.168.99.0/24 -p tcp --dport 443 -j SNAT --to-source 10.5.5.1	
+
+R2   (R2 vede arrivare i pacchetti da R1, idem per il ritorno: destinate a 10.5.5.1)
+iptables -A FORWARD  -i eth2  -s 10.5.5.1 -o eth1 -d 192.168.99.0/24 -p tcp --dport 443 -j ACCEPT
+iptables -A FORWARD -o eth2 -s 192.168.99.0/24 -i eth1 -d 10.5.5.1  -p tcp --sport 443 -m state --state ESTABLISHED -j ACCEPT
+
+Server
+iptables -A INPUT -s 10.5.5.1 -i eth1 -p tcp --dport 443 -j ACCEPT
+iptables -A OUTPUT -d 10.5.5.1 -i eth1 -p tcp --sport 443 -m state ESTABLISHED -j ACCEPT
+
+
+2. il Server 192.168.99.2 deve poter accedere via SSH (porta TCP 22) ai due Router
+
+anche se la macchina si chiama Server, si comporta da client SSH, in quanto deve poter accedere ai due router
+
+qui faccio uscire le connnessioni ssh verso i due router...
+iptables -A OUTPUT -d 192.168.99.1 -o eth1 -p tcp --dport 22 -j ACCEPT				; in uscita devo poter accedere a 10.5.5.2 che è il primo router
+iptables -A OUTPUT -d 10.5.5.1 -o eth1 -p tcp --dport 22 -j ACCEPT					; e devo poter accedere a 10.5.5.1
+...qui devo controllare che possano entrare
+iptables -A INPUT -s 192.168.99.1 -i eth1 -p tcp --dport 22 -m state --state ESTABLISHED -j ACCEPT
+iptables -A INPUT -s 10.5.5.1 -i eth1 -p tcp --dport 22 -m state --state ESTABLISHED -j ACCEPT
+
+(R2 è un server SSH e quindi se vedo arrivare in ingresso un pacchetto da 192.168.99.2 prot tcp, lo accetto e produco la risposta)
+R2:
+iptables -A INPUT -s 192.168.99.2 -i eth1 -p tcp --dport 22 -j ACCEPT
+iptables -A OUTPUT -d 192.168.99.2 -o eth1 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+
+(per arrivare a R1, bisogna fare prima di tutto un FORWARD su R2 destinato a 10.5.5.1)
+iptables -A FORWARD -s 192.168.99.2 -p tcp -i eth1 -o eth2 --dport 22 -d 10.5.5.1 -j ACCEPT
+iptables -A FORWARD -d 192.168.99.2 -p tcp -i eth2 -o eth1 --sport 22 -s 10.5.5.1 -m state –state ESTABLISHED -j ACCEPT
+
+R1:
+iptables -A INPUT -s 192.168.99.2 -p tcp -i eth2 --dport 22 -j ACCEPT					; in input accetto le connessioni che arrivano dal server
+iptables -A OUTPUT -d 192.168.99.2 -p tcp -o eth2 --sport 22 -m state –state ESTABLISHED -j ACCEPT
+
+
+3. il Client 172.16.0.2 deve poter accedere via SSH al server 192.168.99.2 utilizzando R1 e R2 come "Jump Host" nel modello SSH Tunneling
+(facoltativa)
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

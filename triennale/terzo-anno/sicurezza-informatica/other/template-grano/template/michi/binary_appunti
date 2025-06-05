@@ -1,0 +1,29 @@
+---------------------SIMPLE OVERFLOW--------------------
+FUNZIONI IMPORTANTI SU GDB:
+
+- disas *nome funzione*: mostra assembly della funzione
+
+- info functions: mostra le funzioni presenti nel programma
+se viene chiamato dopo aver fatto un buffer overflow vengono mostrati gli indirizzi delle funzioni
+
+- run $(perl -e 'print "A"x20, "\x..."') oppure run $(python3 -c 'print("A"*20+"\x...")')
+
+DECODIFICA DA BASE64: echo string== | base64 -d
+
+Per trovare il numero di caratteri per sovrascrivere indirizzo di ritorno usa gdb con comando run passando un numero preciso di caratteri "A" (codificato in \x41).
+Quando inizia ad andare in overflow, diminuisci i caratteri fino a quando vedi che non compaiono più "41" nell'indirizzo mostrato nell'errore
+
+---------------------SHELLCODE--------------------------
+1) trova il numero di caratteri per iniziare a sovrascrivere l'indirizzo di ritorno
+2) scrivi 'print "\x90"xN', con N = 1 carattere prima di sovrascrivere l'indirizzo
+3) trova lunghezza shellcode: copialo in un file da aprire con nano, fai ls -l e prendi numero di byte X. shellcode lungo (X-3/4).
+4) riscrivi 'print "\x90"x(N-M)', M = numero byte shellcode. dopo aggiungi shellcode
+5) trova indirizzo valido dei NOP sled: comando 'x/200xw $esp' e prendi un indirizzo dove sono solo 90.
+6) riscrivi 'print "\x90"x(N-M), "shellcode", "indirizzo"'
+
+---------------------CHIAMATA A FUNZIONE NASCOSTA--------------------------
+1) trova il numero di caratteri per iniziare a sovrascrivere l'indirizzo di ritorno
+2) con "info functions" trova gli indirizzi delle funzioni nascoste dopo che c'è stato un overflow
+3) usando il numero di caratteri trovato al punto 1, aggiungici alla fine l'indirizzo scritto al contrario e a coppie di caratteri.
+Esempio: se indirizzo 0x56556442  secret_function_not, allora dentro run $(perl...) scrivi "\x42\x64\x55\x56"
+Prova con tutte le funzioni finchè non trovi la FLAG

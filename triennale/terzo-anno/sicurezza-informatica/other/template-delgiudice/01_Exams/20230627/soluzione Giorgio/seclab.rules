@@ -1,0 +1,6 @@
+#REGOLE SURICATA
+# Notare il traffico da 192.168.56.1 a 192.168.56.12 sia TCP che UDP (quello rilevante ai fini di individuazione della flag).
+# In particolare il traffico TCP avviene sulle porte 52048 (in uscita) e 777 (in entrata), quello UDP su 49267 (in uscita) e 777 (in entrata)
+alert tcp 192.168.56.1 52048 -> 192.168.56.12 777 (msg:"SURICATA-TRAFFIC ID: flag_sec"; Flags:PA; content:"SEC"; sid:5000001; rev:1;)
+alert udp 192.168.56.1 49267 -> 192.168.56.12 777 (msg:"SURICATA-TRAFFIC ID: flag_sec"; content:"SEC"; sid:5000002; rev:1;)
+

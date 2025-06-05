@@ -1,0 +1,20 @@
+Un Attacco Command Injection è un metodo in cui l’hacker altera un contenuto generato dinamicamente su una pagina web, inserendo del codice HTML in meccanismo di input
+
+per prima cosa ho provato ad inserire "; cat /tmp/flag_seclab"
+
+noto che il carattere ";" è stato filtrato e provo con una pipe "|", e va bene
+
+a questo punto noto che anche il comando "cat" è stato filtrato per cui provo prima con "less", ma viene filtrato anche quello, in fine provo con "head" e questo va bene
+
+alla fine noto che vengono filtrate anche le ultime lettere del file, e quindi il file non può terminare con "lab". Provo prima a riscrivere il path del file come "/tmp/flag_secl*" questo perche il carattere "*" indica di poter prendere tutti i caratteri piu volte, ma in questo modo viene trovato un file chiamato "/tmp/flag_secla+" che è sbagliato.
+
+Quindi provo a mettere il carattere "?" che indica di poter prendere qualsiasi carattere solo una volta pero e lo sostituisco al posto della letta "a"
+
+
+alla fine quindi la mia richiesta risulta essere:
+
+http://137.204.57.184:8000/?domain=www.ulisse.unibo.it%20|%20head%20/tmp/flag_secl?b
+
+da cui otterrò la flag:
+
+SEC{Life_isn't_something_you_possess._It's_something_you_take_part_in,_and_you_witness.}

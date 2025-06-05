@@ -1,0 +1,26 @@
+### riferimento al LAB firewall-iptables
+
+# 1) scrivere il procedimento per riuscire a inserire, in FORWARD di R1 e R2, una regola di log nella posizione specifica subito prima delle regole DROP del traffico sulla porta 22, in modo da registrare i pacchetti che non vengono accettati dalle regole iniziali (che consentono le connessioni ssh da client a server) 
+
+----------------------------
+//usando il comando
+
+	 iptables --line-numbers -vnL FORWARD
+
+//vediamo come sono disposte le regole
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+1        0     0 ACCEPT     tcp  --  *      *       192.168.20.20        192.168.10.10        tcp spt:22 state ESTABLISHED
+2        0     0 ACCEPT     tcp  --  *      *       192.168.10.10        192.168.20.20        tcp dpt:22
+3        0     0 DROP       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0
+
+//è richiesto che log sia prima delle regole drop, va inserita in posizione 3
+--------------------------------
+
+
+##R1
+	iptables -I FORWARD 3 -j LOG
+
+##R2
+	iptables -I FORWARD 3 -j LOG

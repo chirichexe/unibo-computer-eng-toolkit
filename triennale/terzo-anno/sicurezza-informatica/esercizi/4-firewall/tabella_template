@@ -1,0 +1,45 @@
+# Creazione di una tabella IPv4 per il filtering dei pacchetti
+table ip nome_tabella {
+    
+    # Catena INPUT (pacchetti in ingresso destinati al sistema locale)
+    chain input {
+        type filter hook input priority 0; policy drop;
+
+        # Esempio: accetta pacchetti loopback
+        iif "lo" accept                     # iif: interfaccia di input
+        
+        # Esempio: accetta SSH in ingresso da un IP specifico
+        ip saddr 192.168.1.100 tcp dport 22 ct state new,established accept
+
+        # Esempio: accetta risposte a connessioni già aperte
+        ct state established,related accept
+
+        # Esempio: logga e droppa tutto il resto
+        log prefix "INPUT DROP: " flags all
+        drop
+    }
+
+    # Catena OUTPUT (pacchetti generati localmente in uscita)
+    chain output {
+        type filter hook output priority 0; policy accept;
+
+        # Esempio: permette tutto il traffico DNS in uscita
+        udp dport 53 accept
+
+        # Esempio: accetta tutto verso IP specifico
+        ip daddr 8.8.8.8 accept
+    }
+
+    # Catena FORWARD (pacchetti che attraversano il sistema, tipico nei router)
+    chain forward {
+        type filter hook forward priority 0; policy drop;
+
+        # Esempio: permette traffico forwarding tra due interfacce
+        iif "eth1" oif "eth2" accept
+        iif "eth2" oif "eth1" accept
+
+        # Esempio: log e drop
+        log prefix "FORWARD DROP: " flags all
+        drop
+    }
+}

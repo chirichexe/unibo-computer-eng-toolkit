@@ -1,0 +1,89 @@
+## Es 11 giugno 2021 - IpTables
+
+--obbiettivo:
+creare una serie di regole per un singolo host che potrebbe avere più interfacce e funzionare come router
+
+Le regole devono essere applicate nell'ordine in cui vengono proposte.
+
+Si inizi garantendo che le catene siano tutte vuote, e si proceda per:
+
+    Consentire qualsiasi traffico sull'interfaccia di loopback
+    Consentire il traffico delle connessioni HTTP entranti
+    Consentire connessioni SSH uscenti verso la rete host-only 192.168.56.0/24
+    Bloccare l'inoltro del traffico proveniente dalla rete host-only verso altre destinazioni
+    Consentire la risoluzione dei nomi DNS
+    Infine bloccare tutto il traffico non elencato nei punti 2, 3, 5
+
+---------------------
+
+//note 
+#interfaccia di loopback:
+
+L'interfaccia di loopback in Linux, comunemente nota come `lo`, consente a un sistema operativo di comunicare con se stesso utilizzando protocolli di rete come TCP/IP. 
+
+Indirizzo IP Riservato: L'indirizzo IP predefinito per l'interfaccia di loopback è `127.0.0.1`, spesso chiamato "localhost". Questo indirizzo è riservato e non viene utilizzato per la comunicazione con altre macchine sulla rete.
+
+#traffico HTTP:
+Sappiamo che HTTP usa protocollo TCP e porta 80
+Dobbiamo accettare il traffico destinato al sistema locale INPUT
+Se il pacchetto è parte di connessioni già stabilite (ESTABLISHED) può uscire dal sistema locale OUTPUT
+
+#connessioni SSH:
+Le connessioni ssh usano protocollo TCP e porta 22
+
+#rete host-only
+Una rete host-only è una rete che comunica con il sistema host (INPUT-OUTPUT), non verso l'esterno
+
+
+#DNS:
+DNS usa protocollo UDP e solitamente come porta predefinita 53
+
+///////////////////////////////////
+
+
+
+--soluzione:
+
+iptables -F  PREROUTING
+iptables -F  FORWARD
+iptables -F  INPUT
+iptables -F  OUTPUT
+iptables -F  POSTROUTING 
+
+#1/ Consentire qualsiasi traffico sull'interfaccia di loopback
+
+	iptables -A INPUT -i lo -o lo -j ACCEPT
+	
+	//in alternativa
+	iptables -A INPUT -s 127.0.0.1/8 -d 127.0.0.1/8 -j ACCEPT
+
+
+#2/  Consentire il traffico delle connessioni HTTP entranti
+
+	iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+        iptables -A OUTPUT -p tcp --sport 80 -m state --state ESTABLISHED -j ACCEPT
+
+#3/  Consentire connessioni SSH uscenti verso la rete host-only 192.168.56.0/24
+
+	iptables -A OUTPUT -p tcp --dport 22 -d 192.168.56.0/24 -j ACCEPT 
+	iptables -A INPUT -p tcp --dport 22 -s 192.168.56.0/24 -m state --state ESTABLISHED -j ACCEPT
+
+#4/ Bloccare l'inoltro del traffico proveniente dalla rete host-only verso altre destinazioni  
+	
+	iptables -A FORWARD -s 192.168.56.0/24 ! -d 192.168.56.0/24 -j DROP
+	iptables -P FORWARD ACCEPT
+        
+	//NOTA L'USO DI !: tutte le destinazioni che non sono quella specificata
+
+#5/ Consentire la risoluzione dei nomi DNS
+
+	iptables -A OUTPUT -p udp --dport 53 -j ACCEPT
+	iptables -A INPUT -p udp --sport 53 -m -state --state ESTABLISHED -j ACCEPT
+
+#6/ Infine bloccare tutto il traffico non elencato nei punti 2, 3, 5
+
+	iptables -P INPUT DROP
+        iptables -P OUTPUT DROP
+
+-----------------------------------------------
+	

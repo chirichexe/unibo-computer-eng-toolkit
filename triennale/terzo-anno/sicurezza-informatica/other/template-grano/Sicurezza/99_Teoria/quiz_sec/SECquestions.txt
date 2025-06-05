@@ -1,0 +1,160 @@
+#verificate
+"In Unix il comando passwd si usa per verificare la robustezza della password",0
+"Nell'autenticazione passiva Prover e Verifier confrontano la conoscenza di un segreto",1
+"Una password che utilizza tutti i tipi di caratteri è sempre più robusta di una che utilizza solo una categoria (es. lettere minuscole)",0
+"I sistemi a sfida e risposta sono tipicamente implementati condividendo un segreto come ad esempio una chiave simmetrica.",1
+"Tra i fattori di autenticazione c'è qualcosa che si possiede materialmente come un Pin o una Password",1
+"Tra i fattori di autenticazione c'è qualcosa che si possiede fisicamente come un Pin o una Password",0
+"I due paradigmi fondamentali per il controllo dell'accesso sono DAC (Discretionary access control) e TAC (Tertiary access control)",0
+"Ogni file del filesystem Unix è protetto da un set di permessi codificati in 12 bit",1
+"Le ACL sono liste associate ad ogni soggetto del sistema",0
+"Le Capability list sono liste associate ad ogni soggetto del sistema",1
+"Nel modello RBAC (Role-based access control) i permessi sono assegnati ai ruoli",1
+"Le ACL e le Capabilities sono la stessa cosa",0
+"Nel test di Kasiski si impiega la fattorizzazione delle distanze e la scelta di quelle con un fattore comune",1
+"Nell'attacco dei cifrari a sostiuzioni il fatto che alcune lettere siano più frequenti di altri nel linguaggio naturale non ha nessuna importanza",0
+"Nei cifrari a sostituzione polialfabetica le frequenze di un carattere cifrato derivano da contributi di diversi caratteri in chiaro",1
+"La crittografia permette di proteggere le quattro proprietà di sicurezza dell'informazione: riservatezza, integrità, autenticità e disponibilità",0
+"Nei cifrari a trasposizione le statistiche dei digrammi e trigrammi permettono di dedurre la dimensione della tabella di cifratura",1
+"DH e RSA hanno scopi differenti: quello di RSA é di essere molto più veloce nella fase di cifratura/decifrazione",0
+"DH e RSA hanno scopi differenti: quello di DH è scambiare una chiave condivisa tra due parti",1
+"Data chiave pubblica (e, n) e chiave privata (d, n) la cifratura consiste nel calcolare: c = m^e mod n",1
+"Diffie-Hellmann è uno schema di cifratura a chiave simmetrica",0
+"Gli algoritmi di cifratura a blocchi sono così definiti perchè si arrestano non appena la cifrazione è considerata sicura",0
+"La cifratura dei dischi protegge da qualsiasi tentativo di esfiltrazione dei dati",0
+"La collocazione di sistemi in cloud ha unicamente effetti positivi sulla sicurezza",0
+"Esistono tre tipi fondamentali di firewall Packet filter, Application-level gateway, Circuit-level gateway",1
+"È possibile danneggiare fisicamente un sistema attraverso una porta USB",1
+"Un Intrusion Detection System può bloccare un attacco in corso",0
+"Un vantaggio degli Host-based IDS è che possono classificare più accuratamente il rischio associato a un pacchetto di rete",1
+"Suricata può funzionare sia da IDS che da IPS",1
+"Il kernel di Linux permette di porre sotto monitoraggio l'invocazione di ogni system call",1
+"802.1x è uno standard di autenticazione utilizzato nelle connessioni fisiche",1
+"X.509 è la versione di SSL più utilizzata",0
+"Appropriarsi dell'indirizzo di un host può permettere di attaccarlo di riflesso",1
+"Con una Remote File Inclusion possiamo recuperare file interni al web server",1
+"Il registro EIP in x86 salva il valore dell'indirizzo di ritorno da una funzione",0
+"Code Injection si verifica quando dell'input non sanitizzato viene interpretato come codice",1
+"La strcpy in linguaggio C non è una funzione a rischio di generare vulnerabilità di buffer overflow",0
+"I canarini sono un meccanismo di protezione del kernel linux per segnalare un overflow in memoria",0
+"FIDO alliance è un sistema di generazione degli OTP",0
+"Lo scopo del TOTP è quello di forzare l'utente a cambiare periodicamente la password",0
+"Tra i fattori di autenticazione c'è qualcosa che si conosce (Password, PIN)",1
+"Il SUID è il bit che permette di lanciare con sudo il programma su cui è settato",0
+"I bit di autorizzazione standard nel filesystem Unix sono di 3 tipi R,W,X (read,write,execute)",1
+"Il controllo dell’accesso è decidere se un soggetto può eseguire una specifica operazione su di un oggetto",1
+"Nel cifrario con sostituzione monoalfabetica sull'alfabeto inglese lo spazio delle chiavi è grande 26!",1
+"I cifrari classici possono essere impiegati per proteggere riservatezza e autenticità",0
+"La proprietà di diffusione misura il grado in cui le proprietà statistiche degli elementi del testo cifrato vengono sparse sugli elementi del testo in chiaro",0
+"La proprietà collision-free degli hash significa che non si può trovare una coppia di documenti con lo stesso hash",1
+"Gli algoritmi di cifratura a blocchi cifrano in sequenza i frammenti in cui viene suddiviso il testo in chiaro",1
+"Il miglior attacco a RSA è la ricerca dei fattori del modulo",1
+"Nel modello Infrastrutturale della certificazione delle chiavi pubbliche l'autenticità della chiave pubblica è data da un soggetto terzo fidato che emette la certificazione",1
+"CBC sta per Cipher Block Chaining e consiste nel Cifrare un blocco modificandolo col contributo del blocco cifrato precedente",1
+"L'approccio default deny su firewall significa che tutto il traffico viene bloccato",0
+"La collocazione di sistemi in cloud migliora (generalmente) la disponibilità dei servizi",1
+"Measured Boot si riferisce a un processo generale, che tipicamente usa un TPM come hardware root of trust",1
+"Il controllo dell'integrità dei file è uno dei metodi usati dagli HIDS",1
+"Il tasso di 'falsi positivi' non è un parametro importante per la qualità di un IDS",0
+"I sistemi SIEM raccolgono dati che devono essere nativamente omogenei per poter essere confrontati e aggregati",0
+"Il Command and Control è il computer incaricato di gestire le comunicazioni con gli elementi di una botnet",1
+"HTTPS è HTTP su di un canale di comunicazione cifrato",1
+"Gli attacchi passivi non modificano i dati in transito",1
+"Lo sniffing può compromettere la riservatezza dei dati",1
+"ASLR è un meccanismo di protezione del kernel linux per randomizzare gli spazi di memoria",1
+"Inserire un ritardo di pochi secondi tra due login errate non è una misura efficace per mitigare gli attacchi brute force",0
+"Nelle time based sql-injection è importante il tempo di computazione della query sql",1
+"Se un sito è protetto da TLS non è possibile eseguire una SQL Injection",0
+"Nella tecnica di enumerazione delle colonne, se una UNION SELECT NULL,NULL non da errore, mentre una ORDER BY 4 si, la query finale sarà SICURAMENTE di 3 colonne,0
+"La Certificate Transparency sfrutta un bug nella gestione delle certificazione dei siti",0
+"Nell'enumerare i servizi di un server, entrambe le porte TCP  e UDP sono importanti",1
+"La strcpy in linguaggio C non è una funzione pericolosa nel generare vulnerabilità di BOF",0
+"L'ARP poisoning consiste nel convincere un host che l'IP di una vittima è associato al MAC dell'attaccante",1
+"2FA e 2 step authentication sono esattamente la stessa cosa.",0
+"I log sono utili solo a fini forensi (cioè per comprendere un attacco dopo che si è compiuto)",0
+"Nelle SQL Injection di tipo union select, il numero di colonne da usare per la query è un dato fondamentale per la riuscita dell'attacco",1
+
+#bonus
+“Il salt è una variazione random inserita dal sistema all’atto della memorizzazione della password scelta”,1
+“Tra i fattori di autenticazione c’è qualcosa che si conosce (Password, PIN)”,1
+“FIDO alliance è un sistema di generazione degli OTP”,0
+“Il controllo dell’accesso è decidere se un soggetto può eseguire una specifica operazione su di un oggetto”,1
+“Il comando find / -type f -perm /6000 permette di trovare i file coi bit SUID e SGID impostati a 1.”,0
+“Il SUID è il bit che permette di lanciare con sudo il programma su cui è settato”,0
+“I due paradigmi fondamentali per il controllo dell’accesso sono DAC (Discretionary access control) e TAC (Tertiary access control)”,0
+“Le capability list sono delle liste associate a ogni soggetto del sistema”,1
+“Nei cifrari a trasposizione le statistiche dei digrammi e trigrammi permettono di dedurre la dimensione della tabella di cifratura”,1
+“Nell’attacco dei cifrari a sostiuzioni il fatto che alcune lettere siano più frequenti di altri nel linguaggio naturale non ha nessuna importanza”,0
+“Nel cifrario con sostituzione monoalfabetica sull’alfabeto inglese lo spazio delle chiavi è grande 26!”,1
+“Il miglior attacco a RSA è la ricerca dei fattori del modulo”,1
+“Le chiavi di autenticazione usate da Secure Boot sono aggiornabili senza interruzioni di servizio”,0
+“È possibile danneggiare fisicamente un sistema attraverso una porta USB”,1
+“La collocazione di sistemi in cloud migliora (generalmente) la disponibilità dei servizi”,1
+“La cifratura dei dischi protegge da qualsiasi tentativo di esfiltrazione dei dati”,0
+“Un vantaggio degli Host-based IDS è che possono classificare più accuratamente il rischio associato a un pacchetto di rete”,1
+“Un vantaggio dei Network-based IDS è che non interferiscono col funzionamento dei sistemi monitorati”,1
+“L’IP spoofing consiste nel cercare di scoprire l’IP di una macchina vittima”,0
+“Lo sniffing può compromettere la riservatezza dei dati”,1
+“Lo sniffing NON richiede accesso fisico alla rete”,0
+“I canarini sono un meccanismo di protezione del kernel linux per segnalare un overflow in memoria.”,0
+“ASLR è un meccanismo di protezione del kernel linux per randomizzare gli spazi di memoria”,1
+“Il comando con codice esadecimale 0x90 dell’assembler x86 è del tutto inutile ai fini della realizzazione di payload”,0
+“Inserire un ritardo di pochi secondi tra due login errate non è una misura efficace per mitigare gli attacchi brute force”,0
+“La strcpy in linguaggio C non è una funzione a rischio di generare vulnerabilità di buffer overflow”,0
+“Nell’autenticazione attiva Prover e Verifier si scambiano ogni volta un dato diverso”,1
+“Lo scopo del TOTP è quello di forzare l’utente a cambiare periodicamente la password”,0
+“Le ACL e le Capabilities sono la stessa cosa”,0
+“I bit di autorizzazione standard nel filesystem Unix sono di 3 tipi R,W,X (read,write,execute)”,1
+“Ogni permesso su di un file in NTFS può assumere due soli valori (concesso o negato)”,0
+“Nei cifrari a sostituzione polialfabetica conoscere il contenuto di una parte del messaggio non aiuta la decifrazione dell’intero testo”,0
+“L’Indice di Coincidenza è la probabilità che due lettere scelte a caso in un testo siano diverse”,0
+“Nei cifrari a sostituzione polialfabetica le frequenze di un carattere cifrato derivano da contributi di diversi caratteri in chiaro”,1
+“La crittografia permette di proteggere le quattro proprietà di sicurezza dell’informazione: riservatezza, integrità, autenticità e disponibilità”,0
+“Nel modello Infrastrutturale della certificazione delle chiavi pubbliche l’autenticità della chiave pubblica è data da un soggetto terzo fidato che emette la certificazione”,1
+“Nel modello web of trust della certificazione delle chiavi pubbliche l’autenticità della chiave pubblica è attestata dagli altri utenti”,1
+“Uno dei presupposti per la robustezza degli algoritmi a chiave asimmetrica è che non esistono modi efficenti di fattorizzare il modulo”,1
+“Secure Boot è il nome specifico dato all’implementazione di trusted boot basata su UEFI”,1
+“Il controllo dell’integrità dei file è uno dei metodi usati dagli HIDS”,1
+“802.1x è uno standard di autenticazione utilizzato nelle connessioni fisiche”,1
+“Le botnet sono reti di computer infetti chiamati zombie”,1
+“È possibile esfiltrare dati attraverso richieste DNS”,1
+“Con una Local File Inclusion possiamo recuperare file interni al web server”,1
+“Data chiave pubblica (e, n) e chiave privata (d, n) la cifratura consiste nel calcolare: c = m^e mod n”,1
+“Il salt è una password aggiuntiva di secondo livello”,0
+“La fiducia nell’autenticità di una Root Certification Authority è perfettamente verificabile dal corrispondente certificato”,0
+“Measured Boot si riferisce a un processo generale, che tipicamente usa un TPM come hardware root of trust”,1
+“L’IP spoofing consiste nell’assumere un indirizzo IP diverso da quello regolarmente assegnato al proprio sistema”,1
+“Nelle SQL Injection di tipo union select, il numero di colonne da usare per la query è un dato fondamentale per la riuscita dell’attacco”,1
+“Tra i fattori di autenticazione c’è qualcosa che si possiede fisicamente, come un Pin o una Password”,0
+“2FA e 2 step authentication sono esattamente la stessa cosa”,0
+“L’ARP poisoning consiste nel convincere un host che l’IP di una vittima è associato al MAC dell’attaccante”,1
+“Nel modello RBAC (Role-based access control) i permessi sono assegnati ai ruoli”,1
+“I cifrari classici possono essere impiegati per proteggere riservatezza e autenticità”,0
+“Gli algoritmi di cifratura a blocchi sono così definiti perchè si arrestano non appena la cifrazione è considerata sicura”,0
+“DH e RSA hanno scopi differenti: quello di RSA é di scambiarsi la chiave simmetrica di cifratura”,0
+“Un EDR può essere definito come una variante evoluta di Network-based IDS",0
+
+#non verificate
+x"Le chiavi di autenticazione usate da Secure Boot sono aggiornabili senza interruzioni di servizio",0
+x"La crittografia simmetrica utilizza chiavi pubbliche e private per cifrare e decifrare i dati.",0
+x"La crittografia asimmetrica utilizza la stessa chiave per cifrare e decifrare i dati.",0
+x"Gli algoritmi di cifratura a chiave pubblica utilizzano una chiave pubblica per cifrare i dati e una chiave privata per decifrarli.",1
+x"Gli algoritmi di cifratura a chiave privata utilizzano una chiave privata per cifrare i dati e una chiave pubblica per decifrarli.",0
+x"La crittografia end-to-end protegge solo il contenuto di un messaggio durante il trasferimento tra due parti.",1
+x"La crittografia a chiave pubblica è meno sicura della crittografia a chiave privata perché la chiave pubblica è generalmente condivisa con più persone.",0
+x"La crittografia a chiave simmetrica è più veloce della crittografia a chiave asimmetrica.",1
+x"La crittografia a chiave asimmetrica è meno sicura della crittografia a chiave simmetrica perché le chiavi sono generalmente più corte.",0
+x"Gli algoritmi di cifratura a blocchi dividono il testo in blocchi di lunghezza fissa e cifrano ogni blocco separatamente.",1
+x"Il sistema operativo Windows ha un firewall integrato per proteggere il computer da attacchi esterni",1
+x"L'algoritmo di cifratura AES è stato sviluppato dalla NSA",0
+x"La crittografia asimmetrica è più lenta della crittografia simmetrica",1
+x"Il controllo dell'accesso basato su ruoli è un modello di sicurezza in cui i permessi vengono assegnati direttamente agli utenti",0
+x"Il modello di sicurezza DAC (Discretionary Access Control) consente agli utenti di esercitare il controllo discrezionale sui loro file e risorse",1
+x"Il malware può essere installato sul computer senza il consenso dell'utente",1
+x"Gli hacker professionali non utilizzano mai virus o malware per compiere attacchi",0
+x"I firewall possono proteggere il computer da tutti gli attacchi",0
+x"L'intrusione di un utente non autorizzato in un sistema informatico è sempre il risultato di una vulnerabilità del sistema",0
+x"I sistemi di rilevamento delle intrusioni possono solo rilevare attacchi in corso, ma non possono prevenirli",0
+x"Si possono esfiltrare dati personali anche soltanto con un XSS, senza una command Injection",1
+x"Un attacco XSS non può ottenere gli stessi effetti di una SQLinjection fatta in js",1
+x"Con un XSS non posso modificare i file personali della vittima",1

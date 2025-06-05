@@ -1,0 +1,169 @@
+Domanda: “Il comando find / -type f -perm /6000 permette di trovare i file coi bit SUID e SGID impostati a 1.”
+Nota: è falsa perchè trova file con almeno un bit speciale e non entrambi
+
+Domanda: “I due paradigmi fondamentali per il controllo dell’accesso sono DAC (Discretionary access control) e TAC (Tertiary access control)”
+Nota: I due paradigmi fondamentali sono: 
+		-DAC (Discretionary access control): Ogni oggetto ha un proprietario e Il proprietario decide i permessi;
+		-MAC (Mandatory access control):  La proprietà di un oggetto non consente di modificarne i permessi e  c’è una policy centralizzata decisa da un security manager;
+
+Domanda: "Con un XSS non posso modificare i file personali della vittima"
+Nota: possiamo dire che sarebbe possibile farlo ma in modo indiretto, con l'attacco XSS potresti rubare delle credenziali con cui modificare successivamente i file personali della vittima
+
+Domanda: "Gli algoritmi di cifratura a chiave privata utilizzano una chiave privata per cifrare i dati e una chiave pubblica per decifrarli."
+Nota: Gli algoritmi di cifratura a chiave privata (o simmetrica) utilizzano la stessa chiave sia per cifrare che per decifrare i dati. Non esiste una separazione tra chiave privata e chiave pubblica come avviene con la crittografia a chiave pubblica (o asimmetrica).
+
+Domanda: “Tra i fattori di autenticazione c’è qualcosa che si possiede fisicamente, come un Pin o una Password”
+Nota: Un pin/password sono classificati come “qualcosa che si sa”, e non qualcosa che si ha fisicamente.
+
+Domanda: "I sistemi SIEM raccolgono dati che devono essere nativamente omogenei per poter essere confrontati e aggregati"
+Nota: I dati non sono omogenei, ma derivano da più fonti. Il SIEM poi rileva le correlazioni, e collega gli attributi comuni.
+
+Domanda: "Gli attacchi passivi non modificano i dati in transito"
+Nota: gli attacchi passivi sono sniffing, scanning e recupero di una chiave per impersonare la.
+
+Domanda: “I cifrari classici possono essere impiegati per proteggere riservatezza e autenticità”
+Nota: I cifrari classici non permettono di proteggere l’autenticità, siccome non fanno uso di chiave asimmetrica.
+
+Domanda: "L'approccio default deny su firewall significa che tutto il traffico viene bloccato"
+Nota: il pacchetto viene bloccato se non c'è nessuna regola a riguardo, altrimenti no.
+
+Domanda: "L'algoritmo di cifratura AES è stato sviluppato dalla NSA"
+Nota: È stato selezionato e standardizzato dal NIST (National Institute of Standards and Technology) degli Stati Uniti tramite un processo pubblico e aperto.
+
+Domanda: “I canarini sono un meccanismo di protezione del kernel linux per segnalare un overflow in memoria.”
+Nota: Non sono inseriti dal kernel linux, ma dal compilatore di tali programmi.
+
+Domanda: "Le Capability list sono liste associate ad ogni soggetto del sistema"
+
+Domanda: “Le ACL sono liste associate ad ogni soggetto del sistema”
+Nota: Le ACL sono associate ad ogni risorsa, mentre le capability list sono associate ad ogni soggetto.
+
+Domanda: "La crittografia a chiave pubblica è meno sicura della crittografia a chiave privata perché la chiave pubblica è generalmente condivisa con più persone."
+Nota: La sicurezza della crittografia a chiave pubblica non dipende dal fatto che la chiave pubblica sia condivisa con più persone.
+
+Domanda: “Il salt è una password aggiuntiva di secondo livello”
+Nota: Il salt è variazione random inserita alla scelta della password.
+
+Domanda: "Il controllo dell'accesso basato su ruoli è un modello di sicurezza in cui i permessi vengono assegnati direttamente agli utenti"
+Nota: Vengono assegnati direttamente ai ruoli
+
+Domanda: "Le ACL sono liste associate ad ogni soggetto del sistema"
+Nota: sono associate ad ogni oggetto del sistema
+Domanda: "La crittografia end-to-end protegge solo il contenuto di un messaggio durante il trasferimento tra due parti."
+
+Domanda: "Diffie-Hellmann è uno schema di cifratura a chiave simmetrica"
+Nota: Diffie-Hellmann rappresenta uno “strategia” di scambio di un segreto.
+
+Domanda: "Gli algoritmi di cifratura a chiave privata utilizzano una chiave privata per cifrare i dati e una chiave pubblica per decifrarli."
+Nota: quelli sono a chiave pubblica
+
+Domanda: "I cifrari classici possono essere impiegati per proteggere riservatezza e autenticità"
+Nota: solo riservatezza
+
+Domanda: "La proprietà di diffusione misura il grado in cui le proprietà statistiche degli elementi del testo cifrato vengono sparse sugli elementi del testo in chiaro"
+
+Domanda: “Il registro EIP in x86 salva il valore dell’indirizzo di ritorno da una funzione”
+Nota: EIP contiene il puntatore all’ultima istruzione, EDI invece contiene l’indirizzo di ritorno.
+
+Domanda: “I sistemi a sfida e risposta sono tipicamente implementati condividendo un segreto come ad esempio una chiave simmetrica.”
+Nota: Un esempio di challenge & response sono i sistemi a chiave asimmetrica, dove la challenge è la public key e la response è la private key.
+
+Domanda: "Con un XSS non posso modificare i file personali della vittima"
+Nota: posso
+
+Domanda: “Tra i fattori di autenticazione c’è qualcosa che si possiede fisicamente, come un Pin o una Password”
+Nota: materialmente
+
+Domanda: "802.1x è uno standard di autenticazione utilizzato nelle connessioni fisiche"
+
+Domanda: “Il salt è una password aggiuntiva di secondo livello”
+Nota: non è una password
+
+
+
+Domanda: "Tra i fattori di autenticazione c'è qualcosa che si possiede materialmente come un Pin o una Password"
+
+Domanda: "Il registro EIP in x86 salva il valore dell'indirizzo di ritorno da una funzione"
+
+Domanda: "Nelle SQL Injection di tipo union select, il numero di colonne da usare per la query è un dato fondamentale per la riuscita dell'attacco"
+
+Domanda: “Nell’autenticazione attiva Prover e Verifier si scambiano ogni volta un dato diverso”
+
+Domanda: "Il malware può essere installato sul computer senza il consenso dell'utente"
+
+Domanda: "La crittografia end-to-end protegge solo il contenuto di un messaggio durante il trasferimento tra due parti."
+
+Domanda: "Un attacco XSS non può ottenere gli stessi effetti di una SQLinjection fatta in js"
+
+Domanda: "I sistemi a sfida e risposta sono tipicamente implementati condividendo un segreto come ad esempio una chiave simmetrica."
+
+Domanda: "Con un XSS non posso modificare i file personali della vittima"
+Nota:  
+
+Domanda: "Il malware può essere installato sul computer senza il consenso dell'utente"
+
+Domanda: “802.1x è uno standard di autenticazione utilizzato nelle connessioni fisiche”
+
+Domanda: "La crittografia end-to-end protegge solo il contenuto di un messaggio durante il trasferimento tra due parti."
+
+Domanda: "La crittografia end-to-end protegge solo il contenuto di un messaggio durante il trasferimento tra due parti."
+
+Domanda: "Il malware può essere installato sul computer senza il consenso dell'utente"
+
+Domanda: "Nella tecnica di enumerazione delle colonne, se una UNION SELECT NULL,NULL non da errore, mentre una ORDER BY 4 si, la query finale sarà SICURAMENTE di 3 colonne
+Nota: potrebbe non dare errore neanche con 2 null e quindi potrebbero esserci 2 o 3 colonne
+
+Domanda: "Tra i fattori di autenticazione c'è qualcosa che si possiede materialmente come un Pin o una Password"
+
+Domanda: “L’IP spoofing consiste nel cercare di scoprire l’IP di una macchina vittima”
+
+Domanda: "I sistemi a sfida e risposta sono tipicamente implementati condividendo un segreto come ad esempio una chiave simmetrica."
+
+Domanda: “Un EDR può essere definito come una variante evoluta di Network-based IDS"
+Nota: di hids
+
+Domanda: “Un vantaggio degli Host-based IDS è che possono classificare più accuratamente il rischio associato a un pacchetto di rete”
+Nota: v
+
+Domanda: “Nei cifrari a trasposizione le statistiche dei digrammi e trigrammi permettono di dedurre la dimensione della tabella di cifratura”
+
+Domanda: “Il controllo dell’accesso è decidere se un soggetto può eseguire una specifica operazione su di un oggetto”
+
+Domanda: “Nei cifrari a sostituzione polialfabetica le frequenze di un carattere cifrato derivano da contributi di diversi caratteri in chiaro”
+
+Domanda: “La fiducia nell’autenticità di una Root Certification Authority è perfettamente verificabile dal corrispondente certificato”
+
+Domanda: "FIDO alliance è un sistema di generazione degli OTP"
+
+Domanda: "Tra i fattori di autenticazione c'è qualcosa che si possiede materialmente come un Pin o una Password"
+
+Domanda: "Nelle time based sql-injection è importante il tempo di computazione della query sql"
+
+Domanda: "Un vantaggio degli Host-based IDS è che possono classificare più accuratamente il rischio associato a un pacchetto di rete"
+
+Domanda: "Il controllo dell'integrità dei file è uno dei metodi usati dagli HIDS"
+
+Domanda: “Data chiave pubblica (e, n) e chiave privata (d, n) la cifratura consiste nel calcolare: c = m^e mod n”
+
+Domanda: “L’IP spoofing consiste nell’assumere un indirizzo IP diverso da quello regolarmente assegnato al proprio sistema”
+
+Domanda: "I sistemi SIEM raccolgono dati che devono essere nativamente omogenei per poter essere confrontati e aggregati"
+
+Domanda: "Diffie-Hellmann è uno schema di cifratura a chiave simmetrica"
+
+Domanda: “I cifrari classici possono essere impiegati per proteggere riservatezza e autenticità”
+
+Domanda: "L'intrusione di un utente non autorizzato in un sistema informatico è sempre il risultato di una vulnerabilità del sistema"
+
+Domanda: "Una password che utilizza tutti i tipi di caratteri è sempre più robusta di una che utilizza solo una categoria (es. lettere minuscole)"
+
+Domanda: “La collocazione di sistemi in cloud migliora (generalmente) la disponibilità dei servizi”
+
+Domanda: "Il registro EIP in x86 salva il valore dell'indirizzo di ritorno da una funzione"
+
+Domanda: “Measured Boot si riferisce a un processo generale, che tipicamente usa un TPM come hardware root of trust”
+
+Domanda: "Le chiavi di autenticazione usate da Secure Boot sono aggiornabili senza interruzioni di servizio"
+
+Domanda: "Tra i fattori di autenticazione c'è qualcosa che si possiede fisicamente come un Pin o una Password"
+

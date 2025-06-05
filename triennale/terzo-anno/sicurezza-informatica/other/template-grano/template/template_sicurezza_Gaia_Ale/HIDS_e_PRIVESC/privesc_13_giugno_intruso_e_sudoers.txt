@@ -1,0 +1,131 @@
+PRIVESC CON I FILE /ETC/SUDOERS E /ETC/PASSWD 
+
+1. scaricare aide con: sudo apt install aide (prima fare sudo apt update)
+
+2. fare i seguenti passaggi:
+mkdir aide
+cd aide
+nano aide.conf
+
+3. nel file aide.conf scrivere:
+	# Databases Path
+
+	database_in=file:/home/kali/aide/aide.db
+	database_out=file:/home/kali/aide/aide.db.new
+	database_new=file:/home/kali/aide/aide.db.new
+
+	# Set your own AIDE rule
+
+	SecLabRule=p+n+u+g+s+m+c+xattrs+md5+sha512
+
+	# Direc/files to monitor with rules
+
+	/etc SecLabRule
+	/usr/bin SecLabRule
+
+4. fare i seguenti passaggi:
+sudo aide -c /home/kali/aide/aide.conf -i 
+sudo cp /home/kali/aide/aide.db{.new,}
+
+sudo ./change_2024_06_13 
+sudo aide -c /home/kali/aide/aide.conf -C
+
+5. notiamo che sono stati cambiati i seguenti file:
+Start timestamp: 2024-06-13 05:05:43 -0400 (AIDE 0.18.8)
+AIDE found differences between database and filesystem!!
+
+Summary:
+  Total number of entries:      7220
+  Added entries:                0
+  Removed entries:              0
+  Changed entries:              5
+
+---------------------------------------------------
+Changed entries:
+---------------------------------------------------
+
+f = p.. .c .. .   : /etc/crontab
+f > ... mc .H .   : /etc/passwd
+f = p.. .c .. .   : /etc/sudoers
+f = ... .c .. X   : /usr/bin/tee
+f = ... .c .. .   : /usr/bin/vim.basic
+
+---------------------------------------------------
+Detailed information about changes:
+---------------------------------------------------
+
+File: /etc/crontab
+ Perm      : -rw-r--r--                       | -rw-rw----
+ Ctime     : 2023-11-30 05:55:08 -0500        | 2024-06-13 05:05:37 -0400
+
+File: /etc/passwd
+ Size      : 3574                             | 3608
+ Mtime     : 2024-06-13 04:06:36 -0400        | 2024-06-13 05:05:37 -0400
+ Ctime     : 2024-06-13 04:06:36 -0400        | 2024-06-13 05:05:37 -0400
+ MD5       : FT4tQajpuyQ6Nf73KAeIew==         | AEoWnPZRaV//Sizd+fLd8w==
+ SHA512    : 3zDiH2eOQuE7idYZ+m1Z3SlErnHpzUe2 | QJwXOsGMw56GnmEE4BdxhioZhizWUn5e
+             Ri5OVkIFOrRaZE8iQ8a0GGPtrLrmhEHV | AxZzsFlDDnrZnpJJkN0IfGmCVf5lRF76
+             ObfUXnydQWEGGZoPSNHVVg==         | ZAxX/Y6/jE5uq86o1KZGhQ==
+
+File: /etc/sudoers
+ Perm      : -r--r-----                       | -r--rw----
+ Ctime     : 2024-02-19 11:21:24 -0500        | 2024-06-13 05:05:37 -0400
+
+File: /usr/bin/tee
+ Ctime     : 2024-02-19 10:58:19 -0500        | 2024-06-13 05:05:37 -0400
+ XAttrs    : num=0                            | num=1
+                                              | [1] security.capability <=> AAAA
+                                              | AgAAAAAAAAAAAAAAAAAAAAA=
+
+File: /usr/bin/vim.basic
+ Ctime     : 2024-02-19 11:02:29 -0500        | 2024-06-13 05:05:37 -0400
+ 
+ 6. a questo punto notiamo che:
+ -le modifiche a /etc/crontab non ci interessano
+ -le modifiche a vim.basic si limitano al timestamp
+ -le modifiche a vee sono un falso positivo in quanto non e settata nessuna capability
+ 
+ -facendo 'cat /etc/passwd' si nota che e stato inserito un nuovo utente che non ha password:
+ intruso::1202:1000::/tmp:/bin/bash
+ 
+ -infine si nota, facendo 'getfacl /etc/sudoers' che:
+ getfacl: Removing leading '/' from absolute path names
+# file: etc/sudoers
+# owner: root
+# group: root
+user::r--
+user:intruso:rw-
+group::r--
+mask::rw-
+other::---
+
+quindi e stato modificato /etc/sudoers per poter consentire la scrittura all'utente intruso.
+
+=> pertanto concludiamo che dobbiamo assumere l'identita' dell'utente intruso per poter manipolare il file /etc/sudoers:
+
+1. si assume l'identita di intruso con 'su intruso'
+
+2. si modifica il file /etc/sudoers:
+echo 'intruso    ALL=(ALL:ALL) ALL' | tee -a /etc/sudoers
+
+///////
+
+   - Il comando echo stampa la stringa specificata. In questo caso, stai definendo una nuova regola per l'utente `intruso`.
+
+   - Il simbolo pipe (`|`) reindirizza l'output del comando `echo` come input per il comando successivo.
+
+   - `tee` è un comando che legge dall'input e scrive sia nell'output standard che in un file. L'opzione `-a` indica di "appendere" (aggiungere) il contenuto al file invece di sovrascriverlo.
+   - `/etc/sudoers` è il file di configurazione per il comando `sudo`, dove vengono definite le autorizzazioni per gli utenti.
+
+
+La riga `intruso    ALL=(ALL:ALL) ALL` specifica che:
+
+- intruso: è il nome dell'utente che stai configurando.
+- ALL: indica che l'utente può eseguire il comando da qualsiasi host.
+- (ALL:ALL): indica che l'utente può eseguire comandi come qualsiasi utente e gruppo.
+- ALL: significa che può eseguire qualsiasi comando.
+
+Quindi questa riga consente all'utente `intruso` di eseguire qualsiasi comando con privilegi di superutente senza dover inserire una password, se questa è la configurazione di default. È importante essere molto cauti quando si modificano le autorizzazioni nel file `sudoers`, poiché una configurazione errata può compromettere la sicurezza del sistema.
+///////
+
+3. infine si puo' diventare root facendo 'sudo -i'

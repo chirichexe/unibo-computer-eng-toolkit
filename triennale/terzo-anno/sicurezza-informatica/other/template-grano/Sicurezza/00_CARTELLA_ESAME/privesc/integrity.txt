@@ -1,0 +1,60 @@
+##################################################-1-########################################
+#MODIFICARE LA CARTELLA CORRETTA (EL)
+Il primo passo prevede la configurazione del file di aide (aide.conf) nel seguente modo: 
+##########################################
+# Databases Path
+
+database_in=file:/home/kali/aide/aide.db
+database_out=file:/home/kali/aide/aide.db.new
+database_new=file:/home/kali/aide/aide.db.new
+
+# Set your own AIDE rule
+
+SecLabRule=p+n+u+g+s+m+c+xattrs+md5+sha512
+
+# Direc/files to monitor with rules
+
+#/etc SecLabRule
+#/bin SecLabRule
+#/usr/bin SecLabRule
+
+# Dir to ignore
+#/home/kali SecLabRule
+!/root
+
+##########################################
+
+Nella cartella /home:
+mkdir aide
+cd aide
+
+Successivamente si configura aide con il comando: 
+sudo aide -c  aide.conf -i
+
+Ottenendo come output: 
+#INSERIRE 
+
+Si copia il database di aide crendone uno nuovo per il confronto 
+sudo cp aide.db{.new,} 
+
+##################################################-2-########################################
+Come da indicazioni si modificano i permessi dell'eseguibile 
+sudo chmod +x ./NOME_ESEGUIBILE
+
+Si lancia il comando
+sudo ./NOME_ESEGUIBILE
+
+##################################################-3-########################################
+si usa il seguente comando per il confronto dopo le modifiche:
+sudo aide -c aide.conf -C
+
+#INSERIRE
+
+##################################################-4-########################################
+#DOCUMENTARE STRATEGIA ADOTTATA PER PRIVILAGE ESCALATION 
+
+#Consigli:
+    -getfacl (per vedere le ACL dei file modificati (Utile file di dome) )
+    -getcap  (per vedere le capabilities dei file modificati (Utile file di dome))
+    -diff /etc/passwd /etc/passwd- (per vedere aggiunte/rimozioni da /Nome/File)
+    -vedere soluzioni precedente fornite da dome

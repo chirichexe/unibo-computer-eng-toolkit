@@ -1,0 +1,10 @@
+table ip filter_s2 {
+    chain INPUT {
+        type filter hook input priority filter; policy drop;
+        ip saddr 10.1.1.1 ip daddr 10.3.3.1 tcp dport 22 accept
+    }
+    chain OUTPUT {
+        type filter hook output priority filter; policy drop;
+        ip daddr 10.1.1.1 ip saddr 10.3.3.1 tcp sport 22 ct state established accept
+    }
+}

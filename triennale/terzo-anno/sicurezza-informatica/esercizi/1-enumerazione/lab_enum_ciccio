@@ -1,0 +1,33 @@
+Le "Google Dorks" o "Comandi di Google" servono ad affinare i risultati di ricerca, sono anche detti operatori di ricerca e permettono di trovare risultati precisi, corrispondenti al motivo per cui ci si rivolge a Google.
+È sufficiente all'interno della query inserire qualche keyword particolare o simbolo in più pe rtrovare risultati precisi.
+Questo è un modo illegittimo per fare "ENUMERAZIONE": fase di attacco (penetration test) in cui un attaccante raccoglie informazioni dettagliate su un sistema target.
+esempio 1: "inurl:."domain"/"dorks" "
+esempio 2: site:ulisse.unibo.it filetype:PDF intext:password (serve a cercare pdf con scritto password")
+---------------
+DNS ENUMERATION: si intende il processo di individuazione di tutti i server DNS e dei record corrispondenti per un determinato target.
+
+"nslookup" è un comando utile per ottenere informazioni dal sever DNS. È uno strumento di amministrazione di rete per interrogare il DNS per ottenere la mappatura del nome del dominio o dell'indirizzo IP o qualsiasi altro record DNS specifico.
+---------------
+SUBDOMAIN ENUMERATION: enumerazione dei sottodomini che permette di ampliare enormemente la superficie d'attacco durante una campagna di offensive security. È buona pratica mappare tutti i subdomain disponibili per un dominio e risolverli provando a capirne il servizio che c'è dietro.
+STRATEGIA:
+- PASSIVA: si fanno query a dataset di DNS noti, che forniscono dati 
+- ATTIVA
+---------------
+NMAP: software open-source per Network Discovery e Security Auditing.
+Include un potente motore di port scan, con test di vulnerabilità e logiche di discovery incluse di default.
+
+Scoprire l'ip della macchina vulnerabile sulla rete host-only
+<< nmap --help >>
+
+Fare uno scan sulla rete (restituisce tutti gli IP delle macchine vulnerabili)
+<< nmap -sn 192.168.56.0/24 >>
+
+Scan delle porte e servizi disponibili
+<< nmap -A $IP >>
+
+Modalità invasiva con salvataggio edll'output su più formati
+<< nmap -sC -sV -oA output_porte.txt $IP >>
+
+Una volta individuati gli host che espongono servizi autenticati, l'enumerazione potrebbe proseguire tentando di rilevare gli account validi o indovinare o scoprire le credenziali di accesso (brute forcing provando nomi e password)
+---------------
+Hydra: è uno strumento di cracking per password usato per effettuare attacchi di forza bruta o attacchi dizionario contro vari servizi di rete. Serve a trovare le credenziali di un servizio online, testando molte combinazioni rapidamente. È spesso usato nei test di penetrazione.

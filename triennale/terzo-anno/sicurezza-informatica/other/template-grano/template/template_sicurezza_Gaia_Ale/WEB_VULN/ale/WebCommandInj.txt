@@ -1,0 +1,60 @@
+# Web Command Injection #
+
+#------------------
+-se un parametro è utilizzato in un comando potrebbe essere vulnerabile
+-passaggio di un parametro tramite GET ?/var=
+-solitamente negli esami ?/domain=
+-solitamente sono applicati dei filtri da dover passare
+#------------------
+
+1) il primo passo è riuscire a concatenare comandi
+
+#problema########################################
+# http://localhost:8000/?domain=; ls
+#
+# Abbiamo filtrato il carattere ';'.. try harder!
+#################################################
+
+concatenazione di comandi:
+	;	sequenza di comandi
+	&& 	esegue il secondo comando se il primo ha successo 
+	||	esegue il comando se il primo fallisce 
+	|	output del primo in input al secondo 
+	()	subshell
+	&	background
+
+2) come secondo passo dobbiamo tipicamente riuscire a leggere un file
+   anche in questo caso dobbiamo passare i filtri
+
+comandi apertura file UNIX:   
+	cat file
+	more file
+	less file 
+		--> occhio! è interattivo 
+		    con comportamento dinamico non funziona sempre
+	head file
+	tail file 
+		(tail -n +0 > funziona come cat)
+		NOTA il + sostituisce uno spazio nell'URL-encoding 
+		(su burp è presente un url encoder, 
+		posso scrivere li il comando e poi iniettarlo)
+	nl file
+	sed '' file
+	
+3) i filtri possono bloccare o sostituire alcune stringhe
+
+BLOCCA, uso di metacaratteri:
+	/etc/passw\d
+	/etc/passw[d]
+	/etc/passw? 
+		--> cambio con singolo carattere
+		
+SOSTITUISCE, uso sostituzioni calcolate:
+"passwd" è sostituito con ""
+	
+	1) doppio (non funziona se global):
+	passwdpasswd --> passwd
+	
+	2) spezzo:
+	pass passwd wd --> passpasswdwd --> passwd
+

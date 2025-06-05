@@ -1,0 +1,9 @@
+alert tls any any -> any any (
+    msg: "Traffico per netflix bloccato";
+    tls.sni;  # Forma corretta per Suricata 4.1+
+    content: "netflix.com";
+    flow:to_server,no_stream;
+    sid: 1000500;
+    priority: 5;  # Priorità più appropriata
+    rev: 1;
+)

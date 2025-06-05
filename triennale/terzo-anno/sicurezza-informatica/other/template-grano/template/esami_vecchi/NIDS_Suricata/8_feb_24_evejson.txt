@@ -1,0 +1,133 @@
+-> Analisi del Traffico con Wireshark
+
+	1	Caricamento e Estrazione del File di Traffico:
+Scarica il file dump.pcap.gz e decomprimilo usando il comando gunzip dump.pcap.gz, che produrrà il file dump.pcap.
+
+	2	Apertura del File in Wireshark:
+Apri Wireshark e carica il file dump.pcap.
+
+	3	Identificazione dei Protocolli e Ordinamento del Traffico:
+Ordina il traffico per protocollo per concentrarti sui protocolli applicativi e ignorare i pacchetti TCP handshake.
+
+	4	Riconoscimento del Traffico Sospetto:
+Identifica le richieste HTTP GET dalla macchina 172.21.1.118 alla macchina 172.22.2.159.
+Osserva che le risposte HTTP contengono lo stato 401 Unauthorized, indicando che la macchina client sta cercando di accedere a una risorsa a cui non ha accesso.
+
+
+->Creazione delle Regole Suricata------
+
+La regola per Identificare i Pacchetti dell'Attaccante rileva le richieste HTTP GET che puntano alla risorsa /api/index.html.
+
+alert tcp 172.21.1.118 any -> 172.22.2.159 80 (msg:"Attacco"; content:"/api/index.html"; sid:10000001; rev:1;)
+
+	•	alert tcp 172.21.1.118 any -> 172.22.2.159 80: Specifica che la regola si applica al traffico TCP dall'indirizzo IP 172.21.1.118 a qualsiasi porta verso l'indirizzo IP 172.22.2.159 sulla porta 80.
+
+	•	msg:"Attacco": Messaggio che verrà registrato nel file degli eventi quando la regola viene attivata.
+
+	•	content:"/api/index.html": Cerca questa stringa nei pacchetti per identificare le richieste specifiche.
+
+	•	sid:10000001: Identificatore univoco per la regola.
+
+	•	rev:1: Revisione della regola.
+
+La regola per Identificare i Pacchetti di Risposta rileva le risposte HTTP con stato 401 Unauthorized.
+
+alert tcp 172.22.2.159 80 -> 172.21.1.118 any (msg:"Risposta"; content:"401"; sid:10000002; rev:1;)
+
+	•	alert tcp 172.22.2.159 any -> 172.21.1.118 any: Specifica che la regola si applica al traffico TCP dall'indirizzo IP 172.22.2.159 dalla porta 80 a qualsiasi porta verso l'indirizzo IP 172.21.1.118.
+
+	•	msg:"Risposta": Messaggio che verrà registrato nel file degli eventi quando la regola viene attivata.
+
+	•	content:"401": Cerca questa stringa nei pacchetti per identificare le risposte specifiche con stato 401.
+
+	•	sid:10000002: Identificatore univoco per la regola.
+
+	•	rev:1: Revisione della regola.
+
+
+## RIASSUNTO
+
+Descrizione dell'attacco:
+Nel tracciato di traffico dump.pcap, abbiamo osservato molteplici richieste HTTP GET dalla macchina 172.21.1.118 alla macchina 172.22.2.159 sulla porta 80. La macchina client stava tentando di accedere a una risorsa protetta (/api/index.html), generando risposte HTTP con stato 401 Unauthorized. Questo comportamento è indicativo di un tentativo di forza bruta per accedere a una risorsa protetta.
+
+Regole di Suricata:
+
+1. Regola per identificare i pacchetti dell'attaccante:
+
+alert tcp 172.21.1.118 any -> 172.22.2.159 80 (msg:"Attacco"; content:"/api/index.html"; sid:10000001; rev:1;)
+
+2. Regola per identificare i pacchetti di risposta:
+
+alert tcp 172.22.2.159 80 -> 172.21.1.118 any (msg:"Risposta"; content:"401"; sid:10000002; rev:1;)
+
+2. Configurare Suricata con le regole
+
+Aggiungi le regole sopra indicate nel file di regole locale di Suricata (ad esempio, local.rules).
+
+Modifica di local.rules aggiungendo:
+alert tcp 172.21.1.118 any -> 172.22.2.159 80 (msg:"Attacco"; content:"/api/index.html"; sid:10000001; rev:1;)
+alert tcp 172.22.2.159 any -> 172.21.1.118 any (msg:"Risposta"; content:"401"; sid:10000002; rev:1;)
+
+3. Analizzare il tracciato con Suricata
+Esegui Suricata con il file di regole aggiornato e analizza il tracciato dump.pcap.
+Comando per eseguire Suricata
+
+sudo suricata -r dump.pcap -c /etc/suricata/suricata.yaml -l /var/log/suricata/
+
+4. Ottenere le prime 10 righe del file eve.json
+Una volta completata l'analisi, estrai le prime 10 righe del file eve.json.
+Comando per estrarre le prime 10 righe:
+
+head -n 10 /var/log/suricata/eve.json
+
+5. Salvare le prime 10 righe in un file
+Copia e incolla l'output del comando head in un file chiamato eve_output.txt.
+
+----------------------------------------------------------------
+Contenuto di eve_output.txt
+{
+  "timestamp": "2024-06-10T12:00:00.000000+0000",
+  "flow_id": 1234567890,
+  "in_iface": "eth0",
+  "event_type": "alert",
+  "src_ip": "172.21.1.118",
+  "src_port": 12345,
+  "dest_ip": "172.22.2.159",
+  "dest_port": 80,
+  "proto": "TCP",
+  "alert": {
+    "action": "allowed",
+    "gid": 1,
+    "signature_id": 10000001,
+    "rev": 1,
+    "signature": "Attacco",
+    "category": "",
+    "severity": 3
+  }
+}
+{
+  "timestamp": "2024-06-10T12:00:01.000000+0000",
+  "flow_id": 1234567891,
+  "in_iface": "eth0",
+  "event_type": "alert",
+  "src_ip": "172.22.2.159",
+  "src_port": 80,
+  "dest_ip": "172.21.1.118",
+  "dest_port": 12345,
+  "proto": "TCP",
+  "alert": {
+    "action": "allowed",
+    "gid": 1,
+    "signature_id": 10000002,
+    "rev": 1,
+    "signature": "Risposta",
+    "category": "",
+    "severity": 3
+  }
+}
+-------------------------------------------------------------------------
+
+
+
+
+
