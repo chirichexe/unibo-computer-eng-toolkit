@@ -1,0 +1,10 @@
+- name: Copy unitfile for the application service 
+  ansible.builtin.copy:
+    src: app.service
+    dest: /etc/systemd/system/app.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Reload systemd
+    - Enable and start app

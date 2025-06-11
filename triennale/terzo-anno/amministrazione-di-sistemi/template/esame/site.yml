@@ -2,8 +2,8 @@
 - hosts: all
   become: true
   roles:
-#   - role: base_set_proxy
-    - role: base_common
+#   - base_set_proxy
+    - base_common
 
 - hosts: R*
   become: true
@@ -12,6 +12,7 @@
 - hosts: C*
   become: true
   roles:
+    - ldap_basic_server_user
 
 - hosts: S*
   become: true

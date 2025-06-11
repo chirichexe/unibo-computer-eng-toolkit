@@ -1,0 +1,10 @@
+---
+- name: Copy scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /home/vagrant/
+    owner: vagrant
+    group: vagrant
+    mode: "0700"
+  loop:
+    - insert-users.sh

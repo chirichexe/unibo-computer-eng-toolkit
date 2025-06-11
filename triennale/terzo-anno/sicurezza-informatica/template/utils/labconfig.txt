@@ -1,0 +1,14 @@
+# SETUP LAB SICUREZZA ======================================
+
+1. Crea la vm con un nome
+2. Type: Linux, Subtype: Other Linux
+3. Hardware: Base memory: 8gb, Processors: 2
+4. Hard Disk: use an existing ... > ~/large/kali-lab da 80gb
+
+5. Settings > network > Adapter2 > host only Adapter
+6. Settings > shared folders > aggiungi dal desktop
+7. Settings > display > video memory al massimo
+
+8. Fai uno snapshot
+9. Accendi la macchina > input > devices > shared clipboard > tutte le direzioni
+10. Esegui lo script ./setup_lab.sh [NUM_LAB]

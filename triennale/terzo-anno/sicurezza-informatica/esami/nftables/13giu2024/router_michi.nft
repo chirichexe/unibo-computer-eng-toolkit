@@ -1,0 +1,41 @@
+table nat {
+        chain POSTROUTING {
+                type nat hook postrouting priority 100 \;
+                ip saddr 172.20.0.0/20 ip daddr 1.1.1.14 snat to 1.1.1.1
+		ip saddr 172.20.0.0/20 iif eth1 oif eth3 snat to 137.204.1.15
+        }
+}
+
+table ip filter {
+	chain INPUT {
+		type filter hook input priority 0; policy drop;
+		#4
+		iif eth1 ip saddr 172.20.0.0/20 udp dport 53 accept;
+		
+		iif "lo" accept;
+	}
+	
+	chain OUTPUT {
+		type filter hook output priority 0; policy drop;
+		#4
+		oif eth1 ip daddr 172.20.0.0/20 udp sport 53 ct state established accept;
+		
+		oif "lo" accept;
+	}
+
+	chain FORWARD {
+        	type filter hook forward priority 0; policy drop;
+		
+		#1
+        	iif eth1 oif eth2 ip saddr 172.20.0.0/20 ip daddr 1.1.1.14 tcp dport 993 accept;
+        	iif eth2 ip oif eth1 saddr 1.1.1.14 ip daddr 172.20.0.0/20 tcp sport 993 ct state established accept;
+        	
+        	#2
+        	iif eth3 oif eth2 ip daddr 1.1.1.14 tcp dport 25 accept;
+        	iif eth2 oif eth3 ip saddr 1.1.1.14 tcp sport 25 ct state established accept;
+        	
+        	#3
+        	iif eth1 oif eth3 ip saddr 172.20.0.0/20 tcp dport 443 accept;
+        	iif eth3 oif eth1 ip daddr 137.204.1.15 tcp sport 443 ct state established accept;
+        }
+}

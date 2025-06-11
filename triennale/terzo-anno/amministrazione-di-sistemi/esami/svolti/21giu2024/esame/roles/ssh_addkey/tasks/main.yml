@@ -1,0 +1,17 @@
+---
+- name: Copy public key to agent
+  copy:
+    src: ./id_rsa.pub
+    dest: /tmp/id_rsa.pub
+    mode: '0644'
+
+- name: Read public key file from agent
+  slurp:
+    src: /tmp/id_rsa.pub
+  register: pubkey_content
+
+- name: Add public key to authorized_keys on agent
+  authorized_key:
+    user: vagrant
+    key: "{{ pubkey_content.content | b64decode }}"
+    state: present

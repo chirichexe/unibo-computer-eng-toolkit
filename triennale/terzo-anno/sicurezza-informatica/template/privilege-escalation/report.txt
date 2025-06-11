@@ -1,0 +1,28 @@
+# Nome: Davide Chirichella
+# Matricola: 0001071414
+# Esercizio: privilege escalation GG MM AAAA
+
+# ==============================================================================
+
+1. Imposto su /etc/aide/aide.conf la direttiva per indicare tutte le cartelle potenzialmente modificabili. Esempio:
+
+/bin  f  Full
+/usr/bin  f  Full
+/etc/    f Full
+
+2. Noto, anche mediante i comandi "getcap" e "getfacl", che il binario fornito fa questo:
+
+- aggiunge un utente di nome spy
+- aggiunge un acl al comando tee
+
+3. Utilizzo di hydra per attaccare mediante wordlist l'utente aggiunto e fare il login
+
+sudo systemctl start ssh  
+hydra -l spy -P /usr/share/wordlists/rockyou.txt ssh://127.0.0.1
+
+# ==============================================================================
+
+
+
+
+

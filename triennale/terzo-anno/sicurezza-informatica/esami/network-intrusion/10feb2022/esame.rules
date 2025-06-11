@@ -1,0 +1,1 @@
+alert tcp 192.168.56.1 41852 -> 192.168.56.8 23 (msg:"Flag detected"; flow:from_client; flowbits:set,logged_in; content:"sec:sec"; sid: 100005; rev:1;)

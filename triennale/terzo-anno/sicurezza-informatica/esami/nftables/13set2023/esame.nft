@@ -1,0 +1,118 @@
+# Client ===============================================================================================
+
+table ip client_filter {
+
+    # 1) Accesso da parte dei clienti della rete privata 192.168.0.0/24 alle porte 43 e 1233 di internet
+
+    chain INPUT {
+        type filter hook input priority 0; policy drop; # di default, li blocca
+
+		# 1 (da chiedere al prof se va bene toglierlo)
+		iif eth1 udp sport 53 ct state established accept
+		iif eth1 udp sport 1233 ct state established accept
+
+		iif "lo" accept
+	}
+
+    #Regole per "mandare indietro" pacchetti
+    chain OUTPUT {
+        type filter hook output priority 0; policy drop;
+
+		# 1 
+		# non serve mettere established
+		oif eth1 udp dport 53 accept
+		oif eth1 udp dport 1233 accept
+
+		oif "lo" accept
+    }
+}
+
+# Server ===============================================================================================
+
+table ip server_filter {
+
+    # 1) il servizio SMTP (porta 25 tcp ) del Server collocato sulla rete privata 
+	# 172.16.0.0/20 deve essere raggiungibile da qualsiasi host di Internet
+
+	# 2) il servizio LDAP (porta 389 tcp) del Router deve essere raggiungibile dal Server
+
+    chain INPUT {
+        type filter hook input priority 0; policy drop; # di default, li blocca
+
+		# 1 
+		iif eth1 tcp sport 25 ct state established accept
+
+		# 2
+		iif eth1 tcp ip saddr 172.16.15.254 tcp sport 389 ct state established accept 
+
+		iif "lo" accept
+    }
+
+    #Regole per "mandare indietro" pacchetti
+    chain OUTPUT {
+        type filter hook output priority 0; policy drop;
+
+		# 1
+		oif eth1 ip daddr 172.16.0.0/20 tcp dport 25
+
+		# 2
+		oif eth1 ip daddr 172.16.15.254 tcp dport 389 
+
+		oif "lo" accept
+    }
+}
+
+# Router ===============================================================================================
+
+# il servizio LDAP (porta 389 tcp) del Router deve essere raggiungibile dal Server
+
+table ip router_filter {
+
+	table nat {
+
+		# qui serviva anche il prerouting
+
+		# permette di tradurre un ip privato in uno pubblico
+		chain POSTROUTING {
+			type nat hook prerouting priority dstnat
+			ip saddr 
+			# se arriva il pacchetto e deve arrivare al server, da client cambio in 1.1.1.1
+			# che è l'ip che il router espone verso la rete pubblica del server
+			# se i client vogliono comunicare verso internet devono cambiare l'indirizzo 
+			# sorgente
+
+ 			ip saddr 172.20.0.0/20 ip daddr 1.1.1.14 snat to 1.1.1.1
+			ip saddr 172.20.0.0/20 iif eth1 oif eth3 snat to 137.204.1.15
+        
+		}
+	}
+
+    chain INPUT {
+        type filter hook input priority 0; policy drop; # di default, li blocca
+
+        # 1
+        iif eth2 ip saddr 172.16.0.0/20 ct state established accept
+
+        iif "lo" accept
+    }
+
+    chain FORWARD{
+	
+    }
+    
+    chain OUTPUT {
+        type filter hook output priority 0; policy drop;
+
+		# 1
+		oif eth2 ip daddr 1 tcp sport 993 ct state established accept
+
+		oif "lo" accept
+    }
+    
+
+}
+
+# rete pubblica" significa che l'ip del server può essere 
+# il router deve permettere ai client di uscire dalla rete
+# privata.
+

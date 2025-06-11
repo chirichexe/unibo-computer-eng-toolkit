@@ -1,0 +1,37 @@
+table ip client_filter {
+
+    # 1) Accesso da parte dei clienti alla porta TCP 993
+    # 2) Accesso da parte dei clienti alla porta 443 sul web
+    # 3) Accesso da parte dei clienti alla porta udp 53 del router
+
+    chain INPUT {
+        type filter hook input priority 0; policy drop; # di default, li blocca
+
+	# 1
+	iif eth1 ip saddr 172.20.15.254 tcp sport 993 ct state established accept
+
+	# 2
+        iif eth1 tcp dport 443 ct state established accept
+
+	# 3
+	iif eth1 ip saddr 172.20.15.254 udp dport 53 ct state established accept
+
+	iif "lo" accept
+     }
+
+    #Regole per "mandare indietro" pacchetti
+    chain OUTPUT {
+        type filter hook output priority 0; policy drop;
+
+	# 1
+	oif eth1 ip daddr 1.1.1.14 tcp sport 993 ct state established accept
+
+	# 2
+	oif eth1 tcp sport 443 ct state established accept
+
+	# 3
+	oif eth1 ip daddr 172.20.15.254 udp dport 53 ct state established accept
+
+	oif "lo" accept
+    }
+}

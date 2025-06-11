@@ -1,0 +1,60 @@
+# Vagrantfile per l'esame "Amministrazione di Sistemi T"
+# Nome: Davide Chirichella
+# Matricola: 00010714141
+
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "debian/bookworm64"
+  config.vm.provider "virtualbox" do |vb|
+    vb.linked_clone = true
+  end
+
+    config.vm.define "client" do |machine|
+    # hostname
+    machine.vm.hostname = "client"
+
+    # configurazione rete
+    machine.vm.network "private_network", virtualbox__intnet: "NET1", auto_config: false, ip: "10.1.1.1"
+
+    # altre configurazioni
+    machine.vm.synced_folder ".", "/vagrant", disabled: true
+    machine.vm.provision "ansible" do |ansible|
+      ansible.playbook = "site.yml"
+    end
+  end
+  
+  config.vm.define "router" do |machine|
+    # hostname
+    machine.vm.hostname = "router"
+    
+    # configurazione rete
+    machine.vm.network "private_network", virtualbox__intnet: "NET1", auto_config: false, ip: "10.1.1.254"
+    machine.vm.network "private_network", virtualbox__intnet: "NET2", auto_config: false, ip: "10.2.2.254"
+    
+    # altre configurazioni
+    machine.vm.synced_folder ".", "/vagrant", disabled: true
+    machine.vm.provision "ansible" do |ansible|
+      ansible.playbook = "site.yml"
+    end
+  end
+
+  config.vm.define "server" do |machine|
+
+    # hostname
+    machine.vm.hostname = "server"
+      
+    # configurazione rete
+    machine.vm.network "private_network", virtualbox__intnet: "NET2", auto_config: false, ip: "10.2.2.1"
+
+    # altre configurazioni
+    machine.vm.synced_folder ".", "/vagrant", disabled: true
+    machine.vm.provision "ansible" do |ansible|
+      ansible.playbook = "site.yml"
+    end
+  end
+
+
+end

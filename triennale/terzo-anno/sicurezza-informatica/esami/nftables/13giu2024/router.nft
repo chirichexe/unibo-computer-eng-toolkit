@@ -1,0 +1,67 @@
+# 1) Accesso da parte dei client alla porta TCP 993 del server
+# 2) Accesso da parte di qualsiasi host su internet alla porta TCP 25 del server
+# 3) Navigazione sicura dei client sul web (internet, porta TCP 443)
+# 4) Accesso da parte dei client alla porta UDP 53 del router
+
+table ip router_filter {
+
+
+
+    
+    chain INPUT {
+        type filter hook input priority 0; policy drop; # di default, li blocca
+
+        # 1 
+        # interfaccia di input: eth1
+        # sorgente ip: 1.1.1.1, quello dell'interfaccia di rete dal router
+        iif eth1 ip saddr 1.1.1.1 tcp dport 993, established accept
+
+
+        # 2
+        iif eth1 tcp dport 25 accept
+
+        iif "lo" accept
+    }
+
+    chain FORWARD{
+	
+    }
+    
+    chain OUTPUT {
+        type filter hook output priority 0; policy drop;
+
+	# 1
+	oif eth1 ip daddr 1.1.1.1 tcp sport 993 ct state established accept
+
+	# 2
+	oif eth1 tcp sport 25 ct state established accept
+
+	oif "lo" accept
+    }
+    
+
+}
+
+# rete pubblica" significa che l'ip del server può essere 
+# il router deve permettere ai client di uscire dalla rete
+# privata.
+
+table nat {
+
+    chain PREROUTING {
+	type nat hook prerouting priority dstnat
+        # un ip privato non può andare in una rete pubblica
+	# se arrivano pacchetti dai client destinati al server, allora cambia
+    }
+
+    # permette di tradurre un ip privato in uno pubblico
+    chain POSTROUTING {
+        type nat hook prerouting priority dstnat
+	ip saddr 
+	# se arriva il pacchetto e deve arrivare al server, da client cambio in 1.1.1.1
+	# che è l'ip che il router espone verso la rete pubblica del server
+	# se i client vogliono comunicare verso internet devono cambiare l'indirizzo 
+	# sorgente
+
+    }
+}

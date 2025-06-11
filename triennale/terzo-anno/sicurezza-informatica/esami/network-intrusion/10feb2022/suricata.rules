@@ -1,0 +1,53 @@
+# Scrivere una regola suricata in modalità alert per TUTTO il traffico icmp SOLTANTO IN ENTRATA sulla rete 192.168.X.X
+# ( Se pensate sia necessario cambiare la configurazione di suricata è bene specificarlo inserendo le righe
+da modificare )
+
+# Per permettere di monitorare solo la rete 192.168.X.X devo cambiare sul suricata.yaml HOME_NET: "[192.168.0.0/16]"
+
+
+alert icmp any any -> $HOME_NET any (
+    msg:"Ping Detected";
+    itype:8;                         # Tipo ICMP (8 = Echo Request)
+    sid:1000002;
+    rev:1;
+)
+
+# Scrivere una (o più) regola suricata in modalità alert per qualsiasi richiesta a evilcorp.com. 
+# Nota bene NON è possibile utilizzare il protocollo http o la porta 80 per creare questa regola.
+
+alert dns any any -> any any (
+	msg: "Request to ecorp detected"
+    dns_query;
+    content: "evilcorp.com"
+	sid: 10000003;
+	rev: 1
+)
+
+alert ip any any -> any any (
+	msg: "Request to ecorp detected"
+	sid: 10000004;
+	rev: 1
+)
+
+# È stato rilasciato un file pcap esame_10_febbraio_2023.pcapng
+# Il file rappresenta il tracciato di traffico di diversi tentativi di autenticazione su di un noto protocollo. Compito dello studente è identificare:
+# -- Protocollo del traffico
+# >> TELNET (lo vedo dalla scritta "protocol")
+
+# -- I 2 Indirizzi Ip in gioco (considerate che ovviamente il traffico è in due direzioni)
+# >> 192.168.56.1 <--> "".8 
+
+# -- La/Le porte del protocollo in gioco
+# >> Le vedo nelle info, quando alla negoziazione fanno [PORTA_CLIENT] -> [PORTA_SERVER],
+# >> in questi caso sono 41852 e 23
+
+# -- Catturare la flag 
+
+alert tcp 192.168.56.1 41852 -> 192.168.56.8 23 (
+	msg: "telnet request"
+    flow:from_client; 
+    flowbits:set,logged_in; 
+    content:"sec:sec"
+	sid: 10000004;
+	rev: 1
+)

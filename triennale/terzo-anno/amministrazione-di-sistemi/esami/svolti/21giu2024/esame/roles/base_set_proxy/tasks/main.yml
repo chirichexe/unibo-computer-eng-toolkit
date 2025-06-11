@@ -1,0 +1,24 @@
+---
+- name: Configurazione /etc/apt/apt.conf.d/proxy.conf
+  become: true
+  ansible.builtin.lineinfile:
+    path: '/etc/apt/apt.conf.d/proxy.conf'
+    create: true
+    owner: root
+    group: root
+    mode: '0644'
+    state: present
+    line: "{{ item }}"
+  loop:
+    - 'Acquire::http::Proxy "{{ proxy_url }}/";'
+    - 'Acquire::https::Proxy "{{ proxy_url }}/";'
+
+- name: Configurazione ~/.bashrc
+  become: true
+  ansible.builtin.lineinfile:
+    path: '/home/vagrant/.bashrc'
+    state: present
+    line: "{{ item }}"
+  loop:
+    - 'export HTTP_PROXY="{{ proxy_url }}"'
+    - 'export HTTPS_PROXY="{{ proxy_url }}"'

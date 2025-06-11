@@ -1,5 +1,0 @@
-<action> <protocol> any any -> any any (
-	msg: "<msg>"
-	sid: 1000500;
-	priority: 1
-)

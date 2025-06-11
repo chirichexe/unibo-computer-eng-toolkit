@@ -1,0 +1,33 @@
+dn: uid=dave,ou=People,dc=labammsis
+objectClass: top
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: inetOrgPerson
+cn: Davide
+sn: Berardi
+givenName: Davide
+uid: dave
+uidNumber: 10000
+gidNumber: 10000
+homeDirectory: /home/dave
+loginShell: /bin/bash
+gecos: Davide "Dave" Berardi
+mail: davide.berardi@unibo.it
+userPassword: {CRYPT}x
+
+dn: uid=rocco,ou=People,dc=labammsis
+objectClass: top
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: inetOrgPerson
+cn: Rocco
+sn: Famularo
+givenName: Rocco
+uid: rocco
+uidNumber: 10001
+gidNumber: 10001
+homeDirectory: /home/rocco
+loginShell: /bin/bash
+gecos: Rocco "Rocchin" Famularo
+mail: rocco.famularo@unibo.it
+userPassword: {CRYPT}x

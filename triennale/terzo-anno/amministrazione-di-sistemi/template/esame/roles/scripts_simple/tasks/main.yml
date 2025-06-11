@@ -5,7 +5,14 @@
     dest: /home/vagrant/
     owner: root
     group: root
+    
+    # permessi notevoli:
+    # 0600: il proprietario può leggere e scrivere, gli altri non possono fare nulla
+    # 0644: il proprietario può leggere e scrivere, gli altri possono solo leggere
+    # 0755: il proprietario può leggere, scrivere ed eseguire, gli altri possono leggere ed eseguire
+    # 0777: tutti possono leggere, scrivere ed eseguire
+    # 0750: il proprietario può leggere, scrivere ed eseguire, il gruppo può leggere ed eseguire, gli altri non possono fare nulla
+
     mode: "0755"
   loop:
-    - create-dump.sh
-    - delete-dump.sh
+    - script.sh

@@ -1,0 +1,43 @@
+- name: "Remove slapd if present"
+  become: true
+  ansible.builtin.apt:
+    name: slapd
+    state: absent
+    purge: true
+
+- name: Install debconf
+  become: true
+  ansible.builtin.apt:
+    name:
+      - debconf
+      - debconf-utils
+    state: present
+    update_cache: true
+
+- name: Install some ansible python dependencies
+  become: true
+  ansible.builtin.apt:
+    name: python3-ldap
+    update_cache: true
+
+- name: Istall ldap-utils
+  become: true
+  ansible.builtin.apt:
+    name: ldap-utils
+    update_cache: true
+
+- name: Slapd package configuration
+  become: true
+  ansible.builtin.debconf:
+    name: slapd
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "{{ item.vtype }}"
+  loop: "{{ debconf }}"
+
+- name: "Ldap installation"
+  become: true
+  ansible.builtin.apt:
+    name: slapd
+    state: present
+    update_cache: true

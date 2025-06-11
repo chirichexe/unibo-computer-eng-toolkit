@@ -1,0 +1,29 @@
+---
+- hosts: all
+  become: true
+  roles:
+#   - role: base_set_proxy
+    - role: base_common
+
+- hosts: router
+  become: true
+  roles:
+    - net_ipforward
+    - net_static_router
+    - ldap_server_setup
+    - ldap_server_multi_users_setup
+    - log_rsyslog_receiver
+
+- hosts: client
+  become: true
+  roles:
+    - net_static_client_forward
+    - ldap_login_setup
+    - ssh_keygen
+
+- hosts: server
+  become: true
+  roles:
+    - net_static_server_forward
+    - ldap_login_setup
+    - ssh_addkey

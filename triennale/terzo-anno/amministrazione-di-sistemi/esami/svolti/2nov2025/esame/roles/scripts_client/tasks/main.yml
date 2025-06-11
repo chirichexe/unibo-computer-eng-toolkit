@@ -1,0 +1,10 @@
+---
+- name: Copy scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /usr/local/bin/
+    owner: demo
+    group: demo
+    mode: "0770"
+  loop:
+    - do.sh

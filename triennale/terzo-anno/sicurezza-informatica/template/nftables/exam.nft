@@ -1,0 +1,138 @@
+# Client ===============================================================================================
+
+table ip filter {
+
+    chain INPUT {
+        type filter hook input priority 0; policy drop;
+        
+        # CASO: accesso da parte dei client alla porta TCP 993 del server
+        # Permette richieste alla porta 993 del server 
+        iif eth1 ip daddr 1.1.1.14 tcp dport 993 accept
+
+        # CASO: accesso da parte dei client alla porta TCP 443 di internet
+        # Permette richieste alla porta 443 verso internet
+        iif eth1 tcp dport 443 accept
+
+		iif "lo" accept
+	}
+
+    chain OUTPUT {
+        type filter hook output priority 0; policy drop;
+
+        # CASO: accesso da parte dei client alla porta TCP 993 del server
+        
+
+        # CASO: accesso da parte dei client alla porta TCP 443 di internet
+
+
+		oif "lo" accept
+    }
+}
+
+# Server ===============================================================================================
+
+table ip filter {
+
+    chain INPUT {
+        type filter hook input priority 0; policy drop;
+        # CASO: accesso da parte dei client alla porta TCP 993 del server
+        # Permette richieste che arrivano da 1.1.1.1 (interfaccia esposta dal router) alla porta 993 del server
+        iif eth1 saddr ip 1.1.1.1 tcp dport 993 accept
+        
+        # CASO: accesso da parte di qualsiasi host su internet alla porta TCP 25 del server
+        iif eth1 saddr tcp dport 25 accept        
+
+		iif "lo" accept
+    }
+
+    chain OUTPUT {
+        type filter hook output priority 0; policy drop;
+        
+        # CASO: accesso da parte dei client alla porta TCP 993 del server
+        oif eth1 daddr ip 1.1.1.1 tcp sport 993 ct state established accept
+
+        # CASO:  accesso da parte di qualsiasi host su internet alla porta TCP 25 del server
+        oif eth1 tcp sport 25 ct state established accept        
+
+		oif "lo" accept
+    }
+}
+
+# Router ===============================================================================================
+
+table ip filter {
+
+    chain INPUT {
+        type filter hook input priority 0; policy drop;
+    
+        # CASO: accesso da parte dei client alla porta UDP 53 del router
+        # Permette richieste alla porta 53 UDP in ingresso su eth1 da 172.20.0.0/20.
+        
+        iif eth1 saddr 172.20.0.0/20 udp dport 53 accept
+    
+        iif "lo" accept
+    }
+
+    chain FORWARD {
+	    type filter hook forward priority 0; policy drop;
+	    
+        # IMAP (porta 993) tra eth1 (client) e eth2 (server)
+        iif eth1 oif eth2 ip saddr 172.20.0.0/20 ip daddr 1.1.1.14      tcp dport 993 accept;
+        iif eth2 oif eth1 ip saddr 1.1.1.14      ip daddr 172.20.0.0/20 tcp sport 993 ct state established accept;
+        
+        # SMTP (porta 25) tra eth3 (internet) e eth2 (server)
+        iif eth3 oif eth1 ip daddr 1.1.1.14      tcp dport 25 accept;
+        iif eth1 oif eth3 ip saddr 1.1.1.14 ip daddr tcp sport 25 ct state established accept;
+        
+        # HTTPS (porta 443) tra eth1 (client) e eth3 (internet)
+        iif eth1 oif eth3 ip saddr 172.20.0.0/20 tcp dport 443 accept;
+        iif eth3 oif eth1 ip saddr 137.204.1.15  tcp sport 443 ct state established accept;
+            
+        oif "lo" accept 
+    }
+    
+    chain OUTPUT {
+        type filter hook input priority 0; policy drop;
+        
+        # CASO: accesso da parte dei client alla porta UDP 53 del router        
+		# Permette le risposte DNS (porta sorgente 53) dirette a 172.20.0.0/20, solo se la connessione 
+		# è established (cioè in risposta a una richiesta).
+				
+        iif eth1 daddr 172.20.0.0/20 udp sport 53 ct state established accept
+		
+		oif eth2 ip daddr 1 tcp sport 993 ct state established accept
+
+		oif "lo" accept
+    }
+
+}
+# Router (NAT) ==========================================================================================
+
+table nat {
+
+    chain PREROUTING {
+        type nat hook prerouting priority dstnat;
+        #2
+        iif eth3 oif eth2 ip daddr 130.136.5.15 tcp dport 25 dnat to 172.16.0.1
+    }
+    
+	# Permette di tradurre un ip privato in uno pubblico
+	# si applica Source NAT (SNAT), che modifica l'indirizzo IP sorgente.
+	
+	chain POSTROUTING {
+		type nat hook prerouting priority dstnat
+		ip saddr
+		
+		# CASO: Client nella rete privata 172.20.0.0/20, server nella rete pubblica 1.1.1.0/28, internet a 137.204.1.15
+		# Se il traffico parte da 172.20.0.0/20 verso 1.1.1.14, cambia l'IP sorgente in 1.1.1.1.
+		# (ip che il router espone verso la rete pubblica del server)
+
+        ip saddr 127.20.0.0/20 ip daddr 1.1.1.14 snat to 1.1.1.1
+        
+        # Se il pacchetto parte da 127.20.0.0/20 entra da eth1 ed esce da eth3, cambia l'IP sorgente in 137.204.1.15.
+		# (ip che il router espone per l'interfaccia verso internet)
+
+        ip saddr 172.20.0.0/20 iif eth1 oif eth3 snat to 137.204.1.15
+    
+	}
+}

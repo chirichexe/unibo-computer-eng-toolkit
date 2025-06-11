@@ -1,0 +1,16 @@
+dn: uid=dave,ou=People,dc=labammsis
+objectClass: top
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: inetOrgPerson
+cn: Davide
+sn: Berardi
+givenName: Davide
+uid: dave
+uidNumber: 10000
+gidNumber: 10000
+homeDirectory: /home/dave
+loginShell: /bin/bash
+gecos: Davide "Dave" Berardi
+mail: davide.berardi@unibo.it
+userPassword: {CRYPT}x

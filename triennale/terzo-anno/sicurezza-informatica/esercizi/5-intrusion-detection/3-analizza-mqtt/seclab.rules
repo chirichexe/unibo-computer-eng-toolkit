@@ -1,16 +1,16 @@
-alert icmp any any -> any any (msg:"Ping detected"; itype:8; sid:1000477; rev:1;)
+#alert icmp any any -> any any (msg:"Ping detected"; itype:8; sid:1000477; rev:1;)#
 
-alert tls any any -> any any (msg:"SURICATA TRAFFIC-ID: youtube"; tls_sni; content:"youtube.com"; isdataat:!1,relative; flow:to_server,established; flowbits: set,traffic/id/bing; flowbits:set,traffic/label/search; noalert; sid:300000000; rev:1;)
+#alert tls any any -> any any (msg:"SURICATA TRAFFIC-ID: youtube"; tls_sni; content:"youtube.com"; isdataat:!1,relative; flow:to_server,established; flowbits: set,traffic/id/bing; flowbits:set,traffic/label/search; noalert; sid:300000000; rev:1;)
 
-alert tls any any -> any any (msg:"SURICATA TRAFFIC-ID: facebook"; tls_sni; content:"facebook.com"; isdataat:!1,relative; flow:to_server,established; flowbits: set,traffic/id/facebook; flowbits:set,traffic/label/social-network; sid:300000001; rev:1;)
+#alert tls any any -> any any (msg:"SURICATA TRAFFIC-ID: facebook"; tls_sni; content:"facebook.com"; isdataat:!1,relative; flow:to_server,established; flowbits: set,traffic/id/facebook; flowbits:set,traffic/label/social-network; sid:300000001; rev:1;)
 
-alert http any any -> any any (msg:"Volex – Possible CVE-2014-6271 bash Vulnerability Requested (header)"; flow:established,to_server; content:"() {"; http_header; threshold:type limit, track by_src, count 1, seconds 120; sid:2014092401;
+#alert http any any -> any any (msg:"Volex – Possible CVE-2014-6271 bash Vulnerability Requested (header)"; flow:established,to_server; content:"() {"; http_header; threshold:type limit, track by_src, count 1, seconds 120; sid:2014092401;
 
 # blocca netflix
-alert tls any any -> any any (msg:"SURICATA TRAFFIC-ID: netflix1"; tls_sni; content:"netflix.com"; sid:1000010; rev:1;)
-alert tls any any -> any any (msg:"SURICATA TRAFFIC-ID: netflix2"; tls_sni; content:"nflximg.net"; sid:1000011; rev:1;)
-alert tls any any -> any any (msg:"SURICATA TRAFFIC-ID: netflix3"; tls_sni; content:"nflximg.com"; sid:1000012; rev1; )
+#alert tls any any -> any any (msg:"SURICATA TRAFFIC-ID: netflix1"; tls_sni; content:"netflix.com"; sid:1000010; rev:1;)
+#alert tls any any -> any any (msg:"SURICATA TRAFFIC-ID: netflix2"; tls_sni; content:"nflximg.net"; sid:1000011; rev:1;)
+#alert tls any any -> any any (msg:"SURICATA TRAFFIC-ID: netflix3"; tls_sni; content:"nflximg.com"; sid:1000012; rev1; )
 
 # scopre la flag
 #alert tcp any any -> any any (msg:"SURICATA DETECTED: flag"; content: "flag"; nocase; sid: 1000013; rev:1; )
-alert tcp any any -> any 1883 (msg:"MQTT FLAG DETECTED"; content:"flag"; nocase; sid:1000100; rev:1;)
+alert tcp any any -> any 1883 (msg:"MQTT FLAG DETECTED"; content:"flag"; nocase; sid:1000108; rev:1;)

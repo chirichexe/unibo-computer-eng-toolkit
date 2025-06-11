@@ -1,0 +1,33 @@
+---
+- name: Install debconf and debconf-utils
+  ansible.builtin.apt:
+    name:
+      - debconf
+      - debconf-utils
+    update_cache: true
+
+- name: Setup debconf for libnss-ldapd
+  ansible.builtin.debconf:
+    name: libnss-ldapd
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "{{ item.vtype }}"
+  loop: "{{ libnss_ldapd }}"
+
+- name: Setup debconf for nslcd
+  ansible.builtin.debconf:
+    name: nslcd
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "{{ item.vtype }}"
+  loop: "{{ nslcd }}"
+
+- name: Install ldap-utils, libpam-ldap and libnss-ldap
+  ansible.builtin.apt:
+    name:
+      - ldap-utils
+      - nslcd
+      - libpam-ldapd
+      - libnss-ldapd
+    update_cache: true
+  notify: Restart nscd

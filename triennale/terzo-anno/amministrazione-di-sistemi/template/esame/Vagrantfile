@@ -31,7 +31,7 @@ Vagrant.configure("2") do |config|
       machine.vm.hostname = "C#{i}"
 
       # configurazione rete
-      machine.vm.network "private_network", virtualbox__intnet: "NET1", auto_config: false
+      machine.vm.network "private_network", virtualbox__intnet: "NET1", auto_config: false, ip: "10.1.1.#{10 + i}", mac: MAC_ADRESSES["C#{i}"]
       # machine.vm.network "private_network", ip: "10.1.1.#{10 + i}", virtualbox__intnet: "NET1"
       # machine.vm.base_mac = MAC_ADRESSES["C#{i}"]
 

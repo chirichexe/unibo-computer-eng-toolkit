@@ -1,0 +1,17 @@
+---
+- name: Ensure non-free and contrib are enabled
+  ansible.builtin.apt_repository:
+    repo: deb https://deb.debian.org/debian bookworm main contrib non-free
+    state: present
+
+- name: Install SNMP and Mibs
+  ansible.builtin.apt:
+    name: [ snmp, snmp-mibs-downloader ]
+    update_cache: true
+
+- name: Configure MIBS
+  ansible.builtin.lineinfile:
+    path: /etc/snmp/snmp.conf
+    regexp: '^mibs'
+    state: absent
+

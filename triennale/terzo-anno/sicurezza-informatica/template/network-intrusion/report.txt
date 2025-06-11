@@ -1,0 +1,13 @@
+# Nome: Davide Chirichella
+# Matricola: 0001071414
+# Esercizio: network intrusion GG MM AAAA
+
+# ==============================================================================
+
+1. Noto dal file pcapng fornito che
+
+2. Scrivo una regola per
+
+4. Dai logs noto che
+
+# ==============================================================================

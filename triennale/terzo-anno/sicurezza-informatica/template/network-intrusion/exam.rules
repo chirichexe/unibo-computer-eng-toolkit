@@ -1,0 +1,79 @@
+# Esempi =================================================================
+# CASO: monitorare solo la rete 192.168.X.X 
+# SOLUZIONE: devo cambiare sul suricata.yaml HOME_NET: "[192.168.0.0/16]
+
+alert icmp any any -> $HOME_NET any (
+    msg:"Ping Detected";
+    itype:8;
+    sid:1000002;
+    rev:1;
+)
+
+# CASO: alert per qualsiasi richiesta a evilcorp.com senza usare il protocollo http o la porta 80.
+
+alert dns any any -> any any (
+	msg: "Request to ecorp detected"
+    dns_query;
+    content: "evilcorp.com"
+	sid: 10000003;
+	rev: 1
+)
+
+alert ip any any -> any any (
+	msg: "Request to ecorp detected"
+	sid: 10000004;
+	rev: 1
+)
+
+# CASO: Trovare il payload simile a una certa regular expression
+
+alert tcp 172.22.2.0/24 any -> 172.23.3.0/24 80 ( 
+    msg: "Payload bruteforce detected"; 
+    sid: 10000555 ;
+    content: "AAAABBBB";
+    pcre: "/^A+B{4}$/"; # inizia con un numero casuale di A e finisce con esattamente 4 B
+    priority: 2; 
+    rev: 1;
+)
+
+
+# Esempi notevoli ========================================================
+
+alert tcp any any -> $HOME_NET any (
+    msg: "Suspicious TCP traffic detected";
+    content: "malicious_payload";
+    flow: to_server,established;
+    sid: 1000500;
+    rev: 1;
+    priority: 1;
+    classtype: trojan-activity;
+)
+
+alert udp any any -> $HOME_NET 53 (
+    msg: "Suspicious DNS query detected";
+    content: "malicious_domain";
+    nocase;
+    sid: 1000501;
+    rev: 1;
+    priority: 2;
+    classtype: dns-query;
+)
+
+alert tcp any any -> $HOME_NET 443 (
+    msg: "Suspicious HTTPS traffic detected";
+    flow: to_server,established;
+    content: "malicious_https_payload";
+    sid: 1000502;
+    rev: 1;
+    priority: 2;
+    classtype: trojan-activity;
+)
+
+alert icmp any any -> $HOME_NET any (
+    msg: "ICMP Ping detected";
+    itype: 8;
+    sid: 1000503;
+    rev: 1;
+    priority: 3;
+    classtype: icmp-event;
+)
