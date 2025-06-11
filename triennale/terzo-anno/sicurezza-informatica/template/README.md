@@ -1,4 +1,4 @@
-# Librerie per il corso Amministrazione Di Sistemi T
+# Librerie per il corso Sicurezza Informatica T
 ## Autore: Davide Chirichella (https://github.com/chirichexe)
 ## Anno accademico 2024-2025
 
