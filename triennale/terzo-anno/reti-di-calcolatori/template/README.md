@@ -29,6 +29,8 @@ Ogni directory ha anche un file di snippets per c e java, ovvero "pezzi di codic
 
 Essi sono delimitati da un commento che termina con "SNIPPET" e separati in "variabili" e "business logic". Le variabili vanno opportunamente spostate in cima al codice. 
 
+All'esame il prof mi ha sconsigliato di scrivere cicli infiniti, dovrebbero essercene in alcuni snippet.
+
 Non mi assumo nesssuna responsabilità per eventuali bocciature :)
 
 Buono studio!
