@@ -1,0 +1,21 @@
+[Unit]
+Description=MyApp Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/count.sh
+Restart=on-failure
+User=root
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+
+# ===========================================================
+# Per controllare i log
+# sudo journalctl -u count.service -f
+# sudo systemctl status count.service
+
+   

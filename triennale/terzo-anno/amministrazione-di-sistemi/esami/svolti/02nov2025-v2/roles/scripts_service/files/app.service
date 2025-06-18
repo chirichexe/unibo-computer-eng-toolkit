@@ -1,0 +1,70 @@
+# ===========================================================
+# Per controllare i log
+# sudo journalctl -u nome-servizio.service -f
+# sudo systemctl status nome-servizio.service
+# ===========================================================
+
+# esegue un'app al boot e in caso di arresto la riavvia subito
+# per altre opzioni: man 5 systemd.service
+
+[Unit]
+Description=MyApp Service
+After=network.target
+
+[Service]
+Type=simple / oneshot
+ExecStart=/home/vagrant/script.sh
+Restart=on-failure / always
+User=root
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+
+# ===========================================================
+# ALTRI ESEMPI ==============================================
+
+# deve funzionare in modalità oneshot
+# all'avvio lancia uno script che aggiunge a rsyslog il canale  local1.=info  /var/log/sd.log
+# all'arresto lo rimuove
+
+[Unit]
+Description=enable logging on channel1.info
+Requires= rsyslog.service
+DefaultDependencies=no
+
+[Service]
+PIDFile=/tmp/sd.pid
+Type=oneshot
+ExecStart=/home/las/logchannel.sh start
+ExecStop=/home/las/logchannel.sh stop
+RemainAfterExit=true
+TimeoutStartSec=5min
+
+[Install]
+WantedBy=multi-user.target
+
+# =============================================================
+
+# deve funzionare in modalità simple, 
+# lancia uno script che senza sosta, ogni 10 secondi,
+# logga un messaggio etichettato local1.info contenente (su di un'unica riga) 
+# la quantità di RAM libera e la tripla username/pid/comando del processo che sta consumando più CPU
+
+[Unit]
+Description=Log RAM usage and heaviest process PID
+Requires=mylog.service
+DefaultDependencies=no
+
+[Service]
+PIDFile=/tmp/mymon.pid
+Type=simple
+ExecStart=/home/las/ramlog.sh
+TimeoutStartSec=5min
+
+[Install]
+WantedBy=multi-user.target
+
+
+   

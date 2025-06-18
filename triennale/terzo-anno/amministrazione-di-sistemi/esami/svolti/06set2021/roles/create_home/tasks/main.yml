@@ -1,0 +1,8 @@
+---
+- name: Ensure /home/las directory exists
+  ansible.builtin.file:
+    path: /home/las
+    state: directory
+    owner: las
+    group: las
+    mode: '0700'

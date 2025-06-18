@@ -1,6 +1,0 @@
-Aprire crontab:
-crontab -e
-
-Inserire in fondo alla riga:
-*/2 6-22 * * 1-6 /percorso/assoluto/del/tuo_script.sh
-(avvia dal lunedì al sabato ogni due minuti dalle ore 6 alle ore 22)

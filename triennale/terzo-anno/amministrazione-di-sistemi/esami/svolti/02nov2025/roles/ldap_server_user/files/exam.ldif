@@ -1,0 +1,16 @@
+dn: uid=exam,ou=People,dc=labammsis
+objectClass: top
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: inetOrgPerson
+givenName: Davide
+cn: Davide
+sn: Berardi
+mail: davide.berardi@unibo.it
+uid: exam
+uidNumber: 10000
+gidNumber: 10000
+homeDirectory: /home/exam
+loginShell: /bin/bash
+gecos:Davide "exam" Berardi
+userPassword: {crypt}x

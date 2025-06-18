@@ -1,0 +1,57 @@
+---
+- name: Configura networking
+  copy:
+    src: eth1
+    dest: /etc/network/interfaces.d/eth1
+    owner: root
+    group: root
+    mode: 0644
+    validate: /usr/sbin/ifup --no-act -i %s eth1
+  notify: Restart networking
+
+- name: Installa pacchetti agent snmp
+  apt:
+    update_cache: yes
+    name: snmpd
+    state: latest
+
+- name: Configura snmpd
+  copy:
+    src: snmpd.conf
+    dest: /etc/snmp/snmpd.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart snmpd
+
+- name: Installa rsyslog
+  apt:
+    update_cache: yes
+    name: rsyslog
+    state: latest
+
+- name: Configura rsyslog
+  copy:
+    src: rsyslog.local.conf
+    dest: /etc/rsyslog.d/local.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart rsyslog
+
+- name: Installa watchdog.sh
+  copy:
+    src: watchdog.sh
+    dest: /usr/bin/watchdog.sh
+    owner: root
+    group: root
+    mode: 0744
+
+- name: Installa Systemd Unit per Watchdog
+  ansible.builtin.copy:
+    owner: root
+    group: root
+    mode: '0644'
+    src: 'watchdog.service'
+    dest: '/etc/systemd/system/watchdog.service'
+  notify: Start watchdog

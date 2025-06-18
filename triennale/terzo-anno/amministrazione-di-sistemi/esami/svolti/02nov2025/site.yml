@@ -1,0 +1,51 @@
+---
+- hosts: all
+  become: true
+  roles:
+#   - base_set_proxy
+    - base_common
+
+- hosts: R
+  become: true
+  roles:
+    - net_static_router
+    - net_ipforward
+    - net_dhcp_server
+    
+    - ldap_server_user
+
+    - log_router
+
+    - snmp_controller
+
+    - scripts_router
+
+    - service_configuration
+
+- hosts: C*
+  become: true
+  roles:
+    - net_dhcp_client
+
+    - log_client
+
+    - ldap_login
+
+    - create_home
+
+    - scripts_client
+    
+  #  - ssh_keygen
+
+- hosts: S*
+  become: true
+  roles:
+    - net_dhcp_client
+    
+    - ldap_login
+    
+    - snmp_agent
+
+    - create_home
+    
+   # - ssh_addkey

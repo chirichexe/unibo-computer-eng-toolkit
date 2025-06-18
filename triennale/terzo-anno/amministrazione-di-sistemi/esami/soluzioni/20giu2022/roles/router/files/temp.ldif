@@ -1,0 +1,30 @@
+dn: ou=People,dc=labammsis
+objectClass: organizationalunit
+ou: People
+description: system users
+
+dn: ou=Groups,dc=labammsis
+objectClass: organizationalunit
+ou: Groups
+description: system groups
+
+dn: cn=temp,ou=Groups,dc=labammsis
+objectClass: top
+objectClass: posixGroup
+cn: temp
+gidNumber: 20000
+
+dn: uid=temp,ou=People,dc=labammsis
+objectClass: top
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: inetOrgPerson
+givenName: temp
+cn: temp
+sn: temp
+uid: temp
+uidNumber: 20000
+gidNumber: 20000
+homeDirectory: /home/temp
+loginShell: /bin/bash
+userPassword: {crypt}x

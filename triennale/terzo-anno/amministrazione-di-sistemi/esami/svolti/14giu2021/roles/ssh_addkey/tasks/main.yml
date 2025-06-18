@@ -1,0 +1,23 @@
+---
+- name: Ensure .ssh directory exists for "{{ user }}" on remote
+  ansible.builtin.file:
+    path: /home/"{{ user }}"/.ssh
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ group }}"
+    mode: '0700'
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['destination'] }}"
+
+- name: Read public key from source host
+  slurp:
+    src: /home/"{{ user }}"/.ssh/id_rsa.pub
+  register: pubkey_content
+
+- name: Install public key in authorized_keys on remote
+  authorized_key:
+    user: "{{ user }}"
+    key: "{{ pubkey_content['content'] | b64decode }}"
+    state: present
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['destination'] }}"

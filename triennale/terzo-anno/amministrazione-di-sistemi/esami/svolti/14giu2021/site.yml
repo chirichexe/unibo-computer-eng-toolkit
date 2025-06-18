@@ -1,0 +1,58 @@
+---
+- hosts: all
+  become: true
+  roles:
+#   - base_set_proxy
+    - base_common
+
+- hosts: R
+  become: true
+  roles:
+    # configurazioni di rete
+    - net_static_router
+    - net_ipforward
+    - net_dhcp_server
+
+    # configurazioni rsyslog
+    - log_rsyslog
+
+    # configurazioni LDAP
+    # qui diceva che il server LDAP è all'indirizzo
+    # 10.20.20.20, ma non è contemplato nella rete.
+    # per semplicità di test, l'ho messo sul router
+    - ldap_server
+
+    # configurazioni SNMP 
+    - snmp_agent
+
+
+- hosts: C*
+  become: true
+  roles:
+    # configurazioni di rete
+    - net_dhcp_client
+
+    # configurazioni LDAP
+    - ldap_login
+
+    # configurazioni SNMP 
+    - snmp_agent
+
+
+- hosts: S*
+  become: true
+  roles:
+    # configurazioni di rete
+    - net_dhcp_client
+
+    # configurazioni LDAP
+    - ldap_login
+
+    # configurazioni SNMP 
+    - snmp_manager
+
+    # upload e setup degli script
+    # andrebbero differenziati
+    # ma mi annoio
+    - scripts_servers
+    - scripts_server1

@@ -1,0 +1,15 @@
+---
+- name: Install tcpdump
+  ansible.builtin.apt:
+    name: tcpdump
+    state: present
+
+- name: Copy scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /home/
+    owner: root
+    group: root
+    mode: "0755"
+  loop:
+    - count.sh

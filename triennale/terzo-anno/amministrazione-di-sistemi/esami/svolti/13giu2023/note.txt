@@ -1,0 +1,13 @@
+#########################################################
+Nome: Davide Chirichella
+Matricola: 0001071414
+Esame di Amministrazione di Sistemi T
+#########################################################
+
+1. Per impostare la password dell'utente "pre" a "pre", basterà accedere 
+tramite ssh ad un host e fare
+
+IP=172.16.0.1
+ldappasswd -x -D "cn=admin,dc=labammsis" -w "gennaio.marzo" -H ldap://$IP/ -S "uid=pre,ou=People,dc=labammsis" -s "pre"
+
+#########################################################

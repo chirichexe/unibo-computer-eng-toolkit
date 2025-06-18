@@ -1,0 +1,13 @@
+dn: uid=las,ou=People,dc=labammsis
+objectClass: top
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: inetOrgPerson
+cn: las
+sn: las
+uid: las
+uidNumber: 10000
+gidNumber: 10000
+homeDirectory: /home/las
+loginShell: /bin/bash
+userPassword: {crypt}x

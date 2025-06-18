@@ -1,0 +1,7 @@
+---
+- name: Ensure routing is allowed
+  ansible.builtin.lineinfile:
+    path: /etc/sysctl.conf
+    state: present
+    line: 'net.ipv4.ip_forward=1'
+  notify: Reload sysctl

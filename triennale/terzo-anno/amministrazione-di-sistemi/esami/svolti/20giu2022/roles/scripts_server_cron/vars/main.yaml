@@ -1,0 +1,4 @@
+---
+script_path: "/usr/bin/monitor.sh"
+
+cron_user: vagrant

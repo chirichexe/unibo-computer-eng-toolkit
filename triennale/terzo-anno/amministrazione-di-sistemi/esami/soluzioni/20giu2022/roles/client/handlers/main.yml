@@ -1,0 +1,22 @@
+---
+- name: Restart networking
+  service:
+    name: networking
+    state: restarted
+
+- name: Restart snmpd
+  service:
+    name: snmpd
+    state: restarted
+
+- name: Restart rsyslog
+  service:
+    name: rsyslog
+    state: restarted
+
+- name: Start watchdog
+  ansible.builtin.systemd:
+    name: watchdog
+    state: started
+    enabled: true
+    daemon_reload: true

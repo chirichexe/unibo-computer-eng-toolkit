@@ -1,0 +1,8 @@
+---
+- name: Ensure /home/exam directory exists
+  ansible.builtin.file:
+    path: /home/exam
+    state: directory
+    owner: exam
+    group: demo
+    mode: '0700'

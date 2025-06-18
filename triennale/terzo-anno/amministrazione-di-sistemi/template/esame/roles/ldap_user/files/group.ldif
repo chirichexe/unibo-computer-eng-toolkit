@@ -1,0 +1,5 @@
+dn: cn=dave,ou=Groups,dc=labammsis
+objectClass: top
+objectClass: posixGroup
+cn: dave
+gidNumber: 10000

@@ -1,0 +1,23 @@
+#########################################################
+Nome: Davide Chirichella
+Matricola: 0001071414
+Esame di Amministrazione di Sistemi T
+#########################################################
+
+Per impostare la password dell'utente temp a "guest"
+va fatto manualmente sul router medante il comando 
+
+sudo ldappasswd -x -H ldapi:/// -D "cn=admin,dc=labammsis" -w "gennaio.marzo" -s "guest" "uid=temp,ou=People,dc=labammsis"
+
+Su SNMP, per ottenere il carico medio da remoto, eseguire la query SNMP con il comando:
+snmpget -v2c -c public $IP 1.3.6.1.4.1.2021.10.1.3.1
+dove $IP è l'indirizzo IP del dispositivo SNMP.
+
+Le chiavi vanno generate manualmente. Sul client il comando è
+ssh-keygen -b 2048 -t rsa
+
+e poi copiare la chiave pubblica (file .pub in ~/.ssh) ottenuta 
+nella home directory dell'utente temp sul server, aggiungendola a ~temp/.ssh/authorized_keys.
+
+Per eseguire lo script /bin/ask.sh via ssh il comando è:
+ssh temp@10.200.1.1 /bin/ask.sh

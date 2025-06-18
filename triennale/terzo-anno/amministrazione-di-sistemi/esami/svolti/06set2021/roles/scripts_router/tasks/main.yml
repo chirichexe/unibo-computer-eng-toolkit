@@ -1,0 +1,21 @@
+---
+- name: Copy scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /root/
+    owner: root
+    group: root
+    mode: "700"
+  loop:
+    - "pool.sh"
+
+- name: Setup cron
+  ansible.builtin.cron:
+    name: "pool"
+    minute: "*/3"
+    hour: "10-20" 
+    day: "*"      
+    month: "*"    
+    weekday: "*"  
+    user: "root"
+    job: "/root/pool.sh"

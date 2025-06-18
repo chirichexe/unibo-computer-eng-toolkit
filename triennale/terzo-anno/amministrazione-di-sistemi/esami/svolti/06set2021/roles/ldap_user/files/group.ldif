@@ -1,0 +1,5 @@
+dn: cn=las,ou=Groups,dc=labammsis
+objectClass: top
+objectClass: posixGroup
+cn: las
+gidNumber: 10000

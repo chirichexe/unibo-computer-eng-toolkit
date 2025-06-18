@@ -1,0 +1,92 @@
+Amministrazione di Sistemi 6 CFU - Parte 2 - Pratica [20230613]
+Contesto dell'esercizio
+Si immagini un'infrastruttura in cui Workstation gestite da un sistema Manager sono a disposizione dell'utenza.
+
+Tutti questi sistemi sono, ai fini dell'esercizio, macchine virtuali collegate con eth1 alla stessa "internal lan" di VirtualBox, sulla subnet 172.16.0.0/22 .
+
+Per semplicità, si svolgano i test attivando due workstation, ma gli script devono essere progettati in modo da funzionare anche per un numero arbitrario di workstation funzionanti.
+
+Di seguito sono dettagliate le attività da svolgere.
+
+
+
+Modalità di consegna
+QUESTA ATTIVITÀ È DIVERSA A SECONDA CHE ABBIATE FREQUENTATO NEL 2021 O NEL 2022
+
+SE AVETE FREQUENTATO NEL 2021
+
+Create sulla VM "Manager" una cartella esame_20230613 e in quella le sottocartelle Workstation e Manager.
+
+Collocate in tali cartelle tutti gli script e i file di configurazione modificati sulla corrispondente VM
+
+Aggiungete nella cartella esame_20230613
+
+uno script di massima semplicità deploy.sh che copi tali file nelle VM/cartelle corrette per i test
+
+un file note.txt che descriva, se necessario, le operazioni di configurazione svolte manualmente che non prevedono la modifica diretta di file (incluse le operazioni di creazione delle VM con Virtualbox).
+
+SE AVETE FREQUENTATO NEL 2022
+
+Create sulla macchina Linux host una cartella esame_20230613 e all'interno di quella il Vagrantfile e una gerarchia standard di cartelle e file Ansible per generare le VM, configurarle, e trasferirvi i file necessari.
+
+PER TUTTI - MODALITÀ DI CONSEGNA 
+
+Per consegnare, create un archivio con nome MATRICOLA_20230613.tar.gz , in cui MATRICOLA sia il vostro numero su 10 cifre, e il tipo di file sia coerente con l'estensione, e inseritevi la cartella esame_20230613 (e ovviamente tutto ciò che contiene).
+
+Solo questo archivio deve essere consegnato via EOL. La struttura dell'archivio e la correttezza dei nomi saranno valutate.
+
+
+
+
+
+
+# Configurazione generale
+Configurare i sistemi perché il Manager abbia indirizzo statico 172.16.0.1  ed eroghi via DHCP alle Workstation indirizzi nel range sinteticamente descrivibile come 172.16.2.0/23
+
+(NOTA PER GLI STUDENTI 2021 - è ammesso, a vostra discrezione, configurare l'interfaccia host-only se volete far comunicare VM e host)
+
+I soli sistemi Workstation devono essere configurati per il login centralizzato via LDAP. Il directory server è in esecuzione sul Manager.
+Si inserisca nella directory LDAP un utente pre con password pre che abbia come shell /bin/helper.sh
+
+Sul Manager, i messaggi ricevuti su local1.notice devono essere scritti sul file /var/log/homes.log
+
+I sistemi devono essere predisposti via Ansible perché root del Manager possa collegarsi via ssh come root su tutte le workstation.
+
+---------CONTINUA DA QUI---------
+
+Lo script /bin/createhomes.sh sul Manager deve essere avviato al boot con l’identità di root, in modo da essere automaticamente riavviato in caso di terminazione per qualsiasi causa
+
+
+
+Script di gestione utenti e home
+
+Lo script /bin/helper.sh  dovrà essere disponibile su tutte le Workstation, e deve operare come segue:
+
+Chiede interattivamente uno username, d'ora in poi indicato come USERNAME, e controlla se USERNAME esiste su LDAP
+
+CASO A - USERNAME non esiste su LDAP
+
+lo script verifica se USERNAME è composto solo da lettere minuscole, e di lunghezza compresa tra 4 e 8 caratteri; se questi requisiti non sono verificati, termina visualizzando un errore, altrimenti prosegue
+genera una password casuale di 8 caratteri alfanumerici e la visualizza
+Inserisce nella directory LDAP l’utente e un gruppo omonimo da usare come suo gruppo principale. La shell dell’utente deve essere impostata a /bin/bash, e la home a /home/USERNAME
+l'esecuzione procede come da CASO B
+
+CASO B - USERNAME esiste su LDAP
+
+lo script verifica se esiste la home dell'utente USERNAME.
+se non esiste, invia al Manager via syslog, con etichetta local1.notice, la stringa _NEW_USERNAME_IP_ essendo  IP l’indirizzo della workstation su eth1.
+lo script controlla ogni 2 secondi se la home è stata creata; se dopo 30 secondi non è ancora comparsa, termina visualizzando un errore, altrimenti prosegue eseguendo il comando /usr/bin/su - USERNAME
+
+Lo script /bin/backup.sh  dovrà essere disponibile su tutte le Workstation, e deve operare come segue:
+
+invia al Manager via syslog, con etichetta local1.notice, la stringa _EXIT_USERNAME_IP_ essendo USERNAME l'utente che lo esegue e IP l’indirizzo della workstation su eth1.
+
+Lo script /bin/createhomes.sh deve essere collocato sul Manager e osserva senza interruazione il file /var/log/homes.log. Per ogni nuova riga:
+
+ricava dal messaggio il "tipo" (NEW o EXIT), l'indirizzo IP e l'utente USERNAME
+se il tipo è NEW
+si collega via ssh come root all'IP e crea la home directory di USERNAME sistemando le ownership e concedendo permessi completi solo a USERNAME stesso.
+crea nella home un file .bash_logout contenente il comando /bin/backup.sh
+se sul Manager esiste il file /backups/USERNAME.tgz, ne estrae il contenuto nella home di USERNAME sulla workstation IP
+se il tipo è EXIT,
+crea (o sostituisce) sul Manager il file /backups/USERNAME.tgz inserendovi il contenuto della home di USERNAME sulla workstation IP

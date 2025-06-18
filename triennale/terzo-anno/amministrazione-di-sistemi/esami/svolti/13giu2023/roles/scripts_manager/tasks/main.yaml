@@ -1,0 +1,21 @@
+---
+- name: Copy files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /bin/
+    owner: root
+    group: root
+    mode: "0744"
+  loop:
+    - "createhomes.sh"
+    
+- name: Copy Unitfile for the service 
+  ansible.builtin.copy:
+    src: '{{ service }}.service'
+    dest: '/etc/systemd/system/{{ service }}.service'
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Reload systemd
+    - Enable and start service

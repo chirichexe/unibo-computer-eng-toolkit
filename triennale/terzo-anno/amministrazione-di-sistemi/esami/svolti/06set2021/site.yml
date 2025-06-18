@@ -1,0 +1,73 @@
+---
+- hosts: all
+  become: true
+  roles:
+#   - base_set_proxy
+    - base_common
+
+- hosts: R*
+  become: true
+  roles:
+    # rete
+    - net_static_router
+    - net_ipforward
+    - net_dhcp_server
+  
+    # LDAP
+    - ldap_login
+
+    # SNMP
+    - snmp_manager
+
+    # scripts
+    - scripts_router
+  
+
+- hosts: C*
+  become: true
+  roles:
+    # rete
+    - net_dhcp_client
+
+    # LDAP
+    - ldap_login
+
+    # HOME
+    - create_home
+
+    # SNMP
+    - snmp_manager
+
+    # scripts
+    - scripts_client
+
+- hosts: S[1-9]*
+  become: true
+  roles:
+    # rete
+    - net_dhcp_client
+  
+    # LDAP
+    - ldap_login
+
+    # SNMP
+    - snmp_agent
+
+    # scripts
+    - scripts_server
+
+    # HOME
+    - create_home
+
+    # service
+    - service_configuration
+    - log_rsyslog_receiver
+
+- hosts: SM
+  become: true
+  roles:
+    # rete
+    - net_dhcp_client
+    
+    # LDAP
+    - ldap_user

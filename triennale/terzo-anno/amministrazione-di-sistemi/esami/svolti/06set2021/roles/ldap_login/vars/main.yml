@@ -1,0 +1,17 @@
+---
+ldapserver: 10.200.2.1
+libnss_ldapd:
+  - question: libnss-ldapd/clean_nsswitch
+    value: true
+    vtype: boolean
+  - question: libnss-ldapd/nsswitch
+    value: passwd, group, shadow
+    vtype: string
+
+nslcd:
+  - question: nslcd/ldap-uris
+    value: "ldap://{{ ldapserver }}/"
+    vtype: string
+  - question: nslcd/ldap-base
+    value: dc=labammsis
+    vtype: string

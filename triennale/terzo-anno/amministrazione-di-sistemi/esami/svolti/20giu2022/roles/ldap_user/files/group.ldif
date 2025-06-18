@@ -1,0 +1,5 @@
+dn: cn=temp,ou=Groups,dc=labammsis
+objectClass: top
+objectClass: posixGroup
+cn: temp
+gidNumber: 10000

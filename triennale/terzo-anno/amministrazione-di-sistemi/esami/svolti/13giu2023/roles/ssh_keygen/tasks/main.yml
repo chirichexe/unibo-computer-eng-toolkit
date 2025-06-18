@@ -1,0 +1,41 @@
+- name: Crea la home directory dell'utente {{ ssh_user }} se non esiste
+  file:
+    path: /home/{{ ssh_user }}
+    state: directory
+    owner: "{{ ssh_user }}"
+    group: "{{ ssh_user }}"
+    mode: '0755' # Permessi: lettura, scrittura, esecuzione per il proprietario; lettura ed esecuzione per gruppo e altri. 
+                 #Necessari per permettere l'accesso alla home da parte del sistema e dell'utente.
+
+- name: Crea la cartella .ssh per l'utente {{ ssh_user }} se non esiste
+  file:
+    path: /home/{{ ssh_user }}/.ssh
+    state: directory
+    owner: "{{ ssh_user }}"
+    group: "{{ ssh_user }}"
+    mode: '0700' # # Permessi: solo il proprietario può leggere, scrivere ed eseguire. Sicurezza standard per directory .ssh.
+
+- name: Copia la chiave privata per l'utente {{ ssh_user }}
+  copy:
+    src: id_rsa
+    dest: /home/{{ ssh_user }}/.ssh/id_rsa
+    mode: '0600'  # # Permessi: solo il proprietario può leggere e scrivere. Obbligatorio per chiavi private SSH.
+    owner: "{{ ssh_user }}"
+    group: "{{ ssh_user }}"
+
+- name: Crea la cartella .ssh per root se non esiste
+  file:
+    path: /root/.ssh
+    state: directory
+    owner: root
+    group: root
+    mode: '0700' # Permessi: solo root può accedere. Richiesto per la sicurezza della configurazione SSH.
+
+
+- name: Copia la chiave privata per l'utente root
+  copy:
+    src: id_rsa
+    dest: /root/.ssh/id_rsa
+    mode: '0600'  # Permessi: solo root può leggere e scrivere. Standard di sicurezza per chiavi private.
+    owner: root
+    group: root

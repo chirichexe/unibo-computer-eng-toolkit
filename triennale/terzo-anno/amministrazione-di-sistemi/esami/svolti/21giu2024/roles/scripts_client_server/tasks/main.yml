@@ -1,0 +1,21 @@
+---
+- name: Copy scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /bin/
+    owner: root
+    group: root
+    mode: "700"
+  loop:
+    - create-home.sh
+
+- name: Cron configuration
+  ansible.builtin.cron:
+    name: "create-home"
+    minute: "*/2"  # Esegui ogni 2 minuti
+    hour: "6-22"   # Dalle 6 alle 22
+    day: "*"        # Ogni giorno del mese
+    month: "*"      # Ogni mese
+    weekday: "1-6"  # Dal lunedì (1) al sabato (6)
+    user: "root"
+    job: "/bin/create-home.sh"

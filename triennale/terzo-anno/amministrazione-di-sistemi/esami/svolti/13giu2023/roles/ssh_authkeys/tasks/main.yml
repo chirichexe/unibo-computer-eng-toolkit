@@ -1,0 +1,21 @@
+- name: Crea la home directory dell'utente {{ ssh_user }} se non esiste
+  file:
+    path: /home/{{ ssh_user }}
+    state: directory
+    mode: '0755'
+    owner: "{{ ssh_user }}"
+    group: "{{ ssh_user }}"
+
+- name: Assicura che la directory .ssh esista per l'utente {{ ssh_user }}
+  file:
+    path: /home/{{ ssh_user }}/.ssh
+    state: directory
+    mode: '0700'
+    owner: "{{ ssh_user }}"
+    group: "{{ ssh_user }}"
+
+- name: Copia la chiave pubblica nel file authorized_keys di {{ ssh_user }}
+  authorized_key:
+    user: "{{ ssh_user }}"
+    state: present
+    key: "{{ lookup('file', 'id_rsa.pub') }}"

@@ -1,0 +1,25 @@
+---
+- name: Install snmpd
+  ansible.builtin.apt:
+    name: snmpd
+    state: present
+
+- name: Configure snmpd
+  ansible.builtin.copy:
+    src: snmpd.conf
+    dest: /etc/snmp/snmpd.conf
+  notify: Restart snmpd
+
+#  Enable tcpdump and rm via sudo for Debian-snmp user 
+- name: Enable privileged tcpdump
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    state: present
+    line: 'Debian-snmp ALL=(root) NOPASSWD: /usr/bin/tcpdump, /usr/bin/rm'
+
+# Enable execution of two custom scripts via sudo
+- name: Enable privileged scripts
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    state: present
+    line: 'Debian-snmp ALL=(ALL) NOPASSWD: /home/vagrant/create-dump.sh, /home/vagrant/delete-dump.sh'

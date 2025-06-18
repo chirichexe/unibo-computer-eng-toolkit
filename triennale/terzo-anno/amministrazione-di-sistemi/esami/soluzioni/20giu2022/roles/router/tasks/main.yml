@@ -1,0 +1,66 @@
+---
+- name: Configura networking
+  copy:
+    src: eth1_2
+    dest: /etc/network/interfaces.d/eth1_2
+    owner: root
+    group: root
+    mode: 0644
+    validate: /usr/sbin/ifup --no-act -i %s eth1 eth2
+  notify: Restart networking
+
+- name: Attiva forwarding
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: Installa dnsmasq
+  apt:
+    update_cache: yes
+    name: dnsmasq
+    state: latest
+
+- name: Configura dnsmasq
+  copy:
+    src: dnsmasq.conf
+    dest: /etc/dnsmasq.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart dnsmasq
+
+- name: Install slapd debconf 
+  apt:
+    update_cache: yes
+    name: [ 'debconf', 'debconf-utils']
+    state: latest
+
+- name: Configura slapd
+  copy:
+    src: debconf-slapd.conf
+    dest: /root/debconf-slapd.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Run debconf
+  ansible.builtin.shell:
+    cmd: cat /root/debconf-slapd.conf | debconf-set-selections
+
+- name: Install Slapd
+  apt:
+    update_cache: yes
+    name: [ 'slapd', 'ldap-utils' ]
+    state: latest
+
+- name: Move user temp on LDAP server
+  copy:
+    src: temp.ldif
+    dest: /root/temp.ldif
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Add user temp on LDAP

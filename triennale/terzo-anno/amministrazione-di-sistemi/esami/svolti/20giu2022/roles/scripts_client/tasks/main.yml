@@ -1,0 +1,11 @@
+---
+- name: Copy scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /usr/bin/
+    owner: root
+    group: root
+
+    mode: "0750"
+  loop:
+    - watchdog.sh

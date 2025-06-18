@@ -1,0 +1,20 @@
+# ===========================================================
+# Per controllare i log
+# sudo journalctl -u nome-servizio.service -f
+# sudo systemctl status nome-servizio.service
+# ===========================================================
+
+[Unit]
+Description=Create Home service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/bin/createhomes.sh
+Restart=always
+User=root
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

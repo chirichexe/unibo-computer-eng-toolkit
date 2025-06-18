@@ -1,0 +1,5 @@
+dn: cn=demo,ou=Groups,dc=labammsis
+objectClass: top
+objectClass: posixGroup
+cn: demo
+gidNumber: 10000

@@ -1,0 +1,51 @@
+---
+- name: Configura networking
+  copy:
+    src: eth1
+    dest: /etc/network/interfaces.d/eth1
+    owner: root
+    group: root
+    mode: 0644
+    validate: /usr/sbin/ifup --no-act -i %s eth1
+  notify: Restart networking
+
+- name: Enable Contrib Non-Free
+  ansible.builtin.replace:
+    path: /etc/apt/sources.list
+    regexp: 'main$'
+    replace: 'main contrib non-free'
+
+- name: Installa snmp snmp-mibs-downloader
+  ansible.builtin.apt:
+    name: [ snmp, snmp-mibs-downloader ]
+    update_cache: true
+
+- name: Enable MIBS
+  ansible.builtin.replace:
+    path: /etc/snmp/snmp.conf
+    regexp: '^mibs :'
+    replace: '# mibs :'
+
+#- name: Installa ask.sh
+#  copy:
+#    src: ask.sh
+#    dest: /bin/ask.sh
+#    owner: temp
+#    group: root
+#    mode: 0500
+
+- name: Installa monitor.sh
+  copy:
+    src: monitor.sh
+    dest: /usr/bin/monitor.sh
+    owner: root
+    group: root
+    mode: 0744
+
+- name: Configura scheduling monitor.sh
+  cron:
+    name: monitor.sh
+    job: /usr/bin/monitor.sh
+    hour: '8-18'
+    minute: '*'
+    weekday: '1-5'

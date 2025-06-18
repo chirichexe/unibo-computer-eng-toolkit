@@ -1,0 +1,11 @@
+[Unit]
+Description=Run watchdog.sh this script kill all the processes of the user with most active processes
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/watchdog.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

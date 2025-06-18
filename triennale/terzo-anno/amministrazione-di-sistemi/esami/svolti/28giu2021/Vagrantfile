@@ -1,0 +1,84 @@
+# Vagrantfile per l'esame "Amministrazione di Sistemi T"
+# Nome: Davide Chirichella
+# Matricola: 00010714141
+
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# numero di macchine virtuali
+NUM_CLIENTS = 1
+NUM_SERVERS = 1
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "debian/bookworm64"
+  config.vm.provider "virtualbox" do |vb|
+    vb.linked_clone = true
+  end
+
+  (1..NUM_CLIENTS).each do |i|
+    config.vm.define "C#{i}" do |machine|
+
+      # hostname
+      machine.vm.hostname = "C#{i}"
+
+      # configurazione rete
+      machine.vm.network "private_network", virtualbox__intnet: "NET1", auto_config: false
+
+      # altre configurazioni
+      machine.vm.synced_folder ".", "/vagrant", disabled: true
+      machine.vm.provision "ansible" do |ansible|
+        ansible.playbook = "site.yml"
+      end
+    end
+  end
+  
+  config.vm.define "R1" do |machine|
+    # hostname
+    machine.vm.hostname = "R1"
+    
+    # configurazione rete
+    machine.vm.network "private_network", virtualbox__intnet: "NET1", auto_config: false
+    machine.vm.network "private_network", virtualbox__intnet: "NET3", auto_config: false
+    
+    # altre configurazioni
+    machine.vm.synced_folder ".", "/vagrant", disabled: true
+    machine.vm.provision "ansible" do |ansible|
+      ansible.playbook = "site.yml"
+    end
+  end
+
+  config.vm.define "R2" do |machine|
+    # hostname
+    machine.vm.hostname = "R2"
+    
+    # configurazione rete
+    machine.vm.network "private_network", virtualbox__intnet: "NET3", auto_config: false
+    machine.vm.network "private_network", virtualbox__intnet: "NET2", auto_config: false
+    
+    # altre configurazioni
+    machine.vm.synced_folder ".", "/vagrant", disabled: true
+    machine.vm.provision "ansible" do |ansible|
+      ansible.playbook = "site.yml"
+    end
+  end
+
+  (1..NUM_SERVERS).each do |i|
+    config.vm.define "S#{i}" do |machine|
+
+      # hostname
+      machine.vm.hostname = "S#{i}"
+      
+      # configurazione rete
+      machine.vm.network "private_network", virtualbox__intnet: "NET2", auto_config: false
+
+      # altre configurazioni
+      machine.vm.synced_folder ".", "/vagrant", disabled: true
+      machine.vm.provision "ansible" do |ansible|
+        ansible.playbook = "site.yml"
+      end
+    end
+  end
+
+
+end

@@ -1,0 +1,41 @@
+---
+- hosts: all
+  become: true
+  roles:
+#   - base_set_proxy
+    - base_common
+
+- hosts: Manager
+  become: true
+  roles:
+    # configurazioni di rete
+    - net_static_manager
+    - net_ipforward
+    - net_dhcp_server
+
+    # configurazioni rsyslog
+    - log_rsyslog
+
+    # configurazioni LDAP
+    - ldap_user
+
+    # upload e setup degli script
+    - scripts_manager
+    
+    # ssh
+    - ssh_keygen  
+
+- hosts: WS*
+  become: true
+  roles:
+    # configurazioni di rete
+    - net_dhcp_client
+
+    # configurazioni LDAP
+    - ldap_login
+
+    # upload e setup degli script
+    - scripts_workstations
+
+    # ssh
+    - ssh_authkeys

@@ -1,0 +1,23 @@
+#########################################################
+Nome: Davide Chirichella
+Matricola: 0001071414
+Esame di Amministrazione di Sistemi T
+#########################################################
+
+1. Per impostare la password dell'utente "las" a "las", basterà accedere 
+tramite ssh ad un host e fare
+
+IP=10.200.2.1
+PASSWORD=las
+ldappasswd -x -D "cn=admin,dc=labammsis" -w "gennaio.marzo" -H ldap://$IP/ -S "uid=las,ou=People,dc=labammsis" -s "$PASSWORD"
+
+2. Per impostare le chiavi ssh per far connettere i Client ai server:
+
+Sul Client:
+ssh-keygen -t rsa -b 4096 -f /home/las/.ssh/id_rsa
+cat /home/las/.ssh/id_rsa.pub # da copiare in authorized_keys
+
+Sul Server:
+
+echo "chiave..." >> /home/UTENTE_DESTINATARIO/authorized_keys
+

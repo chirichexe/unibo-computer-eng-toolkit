@@ -708,7 +708,7 @@ $RP=$(ldapsearch -x -h 10.1.1.254 -b "name=$1,dc=labammsis, " -s base | grep ^ro
 
 ##################-ESEMPIO DI OUTPUT CON LDAPSEARCH-################
 
-ldapsearch -x -h 10.1.1.254 -b "cn=admin,dc=labammsis" -s base
+dapsearch -x -h 10.1.1.254 -b "cn=admin,dc=labammsis" -s base
 
 #Output:
 
@@ -1223,6 +1223,8 @@ extend ipt /usr/bin/sudo /sbin/iptables -vnL
 
 # Successivamente eseguire snmpget e snmpwalk
 
+# Formato query SNMP:
+NET-SNMP-EXTEND-MIB::nsExtendOutputFull."COMANDO" = STRING: RISULTATO
 
 ########################################################################
 #snmpget esame

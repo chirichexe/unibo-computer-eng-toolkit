@@ -1,0 +1,36 @@
+---
+- hosts: all
+  become: true
+  roles:
+#   - role: base_set_proxy
+    - role: base_common
+
+- hosts: R*
+  become: true
+  roles:
+    - net_static_router
+    - net_ipforward
+    - net_dhcp_server
+    - ldap_basic_server_user
+    - snmp_agent
+    - scripts_router
+
+
+- hosts: C*
+  become: true
+  roles:
+    - net_dhcp_client 
+    - ldap_basic_login
+    - log_rsyslog_receiver
+    - snmp_controller
+    - scripts_client_server
+
+- hosts: S*
+  become: true
+  roles:
+    - net_dhcp_client 
+    - ldap_basic_login
+    - log_rsyslog_receiver
+    - snmp_controller
+    - scripts_client_server
+

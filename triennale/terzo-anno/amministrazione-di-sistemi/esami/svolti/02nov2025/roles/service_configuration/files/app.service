@@ -1,0 +1,12 @@
+[Unit]
+Description=Dispatch.sh eseguito
+After=network.target
+
+[Service]
+ExecStart=/bin/dispatch.sh 
+Restart=always
+RestartSec=6
+User=root
+
+[Install]
+WantedBy=multi-user.target

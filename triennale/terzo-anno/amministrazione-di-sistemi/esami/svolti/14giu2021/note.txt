@@ -1,0 +1,17 @@
+#########################################################
+Nome: Davide Chirichella
+Matricola: 0001071414
+Esame di Amministrazione di Sistemi T
+#########################################################
+
+Per impostare le chiavi ssh per far connettere i Server al Router:
+
+Sul Server:
+ssh-keygen -t rsa -b 4096 -f /home/USER/.ssh/id_rsa
+cat /home/USER/.ssh/id_rsa.pub # da copiare in authorized_keys
+
+Sul Router:
+
+echo "chiave..." >> /home/UTENTE_DESTINATARIO/.ssh/authorized_keys
+
+#########################################################

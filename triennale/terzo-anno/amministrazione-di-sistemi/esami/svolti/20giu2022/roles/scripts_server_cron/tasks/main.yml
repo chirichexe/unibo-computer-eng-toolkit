@@ -1,0 +1,23 @@
+---
+- name: Copy scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /usr/bin/
+    owner: vagrant
+    group: vagrant
+
+    mode: "700"
+  loop:
+    - monitor.sh
+
+
+- name: cron 
+  ansible.builtin.cron:
+    name: "cron"
+    minute: "*/1"
+    hour: "8-18"   # Dalle 8 alle 18
+    day: "*"        # Ogni giorno del mese
+    month: "*"      # Ogni mese
+    weekday: "6-7"  # Dal lunedì (1) al sabato (6)
+    user: "{{ cron_user }}"
+    job: "/usr/bin/monitor.sh"

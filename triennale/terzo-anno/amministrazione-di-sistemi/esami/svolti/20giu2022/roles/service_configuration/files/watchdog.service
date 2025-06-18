@@ -1,0 +1,15 @@
+[Unit]
+Description=watchdog Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/watchdog.sh
+Restart=always
+User=root
+WorkingDirectory=/usr/bin
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

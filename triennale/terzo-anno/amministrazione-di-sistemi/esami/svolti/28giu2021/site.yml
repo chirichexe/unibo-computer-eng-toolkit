@@ -1,0 +1,55 @@
+---
+- hosts: all
+  become: true
+  roles:
+#   - base_set_proxy
+    - base_common
+
+- hosts: R1
+  become: true
+  roles:
+    # configurazioni di rete
+    - net_static_router1
+    - net_ipforward
+    - net_dhcp_router1
+
+    # configurazioni rsyslog
+    - log_rsyslog
+
+    # configurazioni SNMP 
+    - snmp_manager
+
+    # upload e setup degli script
+    - scripts_router1
+
+- hosts: R2
+  become: true
+  roles:
+    # configurazioni di rete
+    - net_static_router2
+    - net_ipforward
+    - net_dhcp_router2
+    
+    # upload e setup degli script
+    - scripts_router2
+
+- hosts: C*
+  become: true
+  roles:
+    # configurazioni di rete
+    - net_dhcp_client_server
+
+    # configurazioni rsyslog
+    - log_rsyslog
+
+    # configurazioni SNMP 
+    - snmp_agent
+
+- hosts: S*
+  become: true
+  roles:
+    # configurazioni di rete
+    - net_dhcp_client_server
+
+    # configurazioni rsyslog
+    - log_rsyslog

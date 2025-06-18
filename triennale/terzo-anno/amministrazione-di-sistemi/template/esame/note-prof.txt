@@ -31,7 +31,6 @@ Per configurare Server1 per eseguire failback.sh a ogni minuto dispari, e Server
 /etc/crontab [Server2]
 0-58/2 * * * * ~/failback.sh
 
-
 ##########################################################################################################################################################
 
 Per la parte di LDAP è necessario installare manualmente libnss-ldap e libpam-ldap su client e server. Installandoli con apt è possibile configurarli interattivamente. Sarebbe possibile la configurazione con Ansible tramite il modulo debconf.

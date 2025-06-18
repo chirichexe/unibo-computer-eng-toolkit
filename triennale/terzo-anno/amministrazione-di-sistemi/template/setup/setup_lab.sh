@@ -1,34 +1,20 @@
 #!/bin/bash
 
-# Script per configurare il proxy su VM dei laboratori
+STUDENT_ID="$(whoami)"
 
-read -p "Inserisci il numero del laboratorio (es. 3 per LAB3): " LAB_NUM
+mkdir -p ~/large/"VirtualBox VMs"
 
-# Calcola la parte dell'indirizzo IP in base al laboratorio
-if ! [[ "$LAB_NUM" =~ ^[0-9]$ ]]; then
-  echo "Numero del laboratorio non valido. Inserire una sola cifra (es. 3)."
-  exit 1
-fi
+vboxmanage setproperty machinefolder "/home/LABS/$STUDENT_ID/large/VirtualBox VMs"
 
-IP_SUFFIX="12${LAB_NUM}"
-PROXY_URL="http://192.168.${IP_SUFFIX}.249:8080"
+mkdir -p ~/large/.vagrant.d
 
-echo "Configurazione del proxy a ${PROXY_URL}"
+ln -s ~/large/.vagrant.d ~/.vagrant.d
 
-# Scrive il file di configurazione APT
-APT_CONF_FILE="/etc/apt/apt.conf.d/proxy.conf"
-echo "Acquire::http::Proxy \"${PROXY_URL}/\";" | sudo tee $APT_CONF_FILE > /dev/null
-echo "Acquire::https::Proxy \"${PROXY_URL}/\";" | sudo tee -a $APT_CONF_FILE > /dev/null
-echo "File $APT_CONF_FILE aggiornato."
+mkdir -p ~/large/.vagrant.d/boxes
+mkdir -p ~/large/.vagrant.d/boxes/debian-VAGRANTSLASH-bookworm64
+mkdir -p ~/large/.vagrant.d/boxes/debian-VAGRANTSLASH-bookworm64/12.20231211.1
+mkdir -p ~/large/.vagrant.d/boxes/debian-VAGRANTSLASH-bookworm64/12.20231211.1/virtualbox 
 
-# Aggiunge le variabili d'ambiente al file .bashrc dell'utente
-BASHRC="$HOME/.bashrc"
-{
-  echo ""
-  echo "# Proxy per laboratorio"
-  echo "export HTTP_PROXY=\"${PROXY_URL}\""
-  echo "export HTTPS_PROXY=\"${PROXY_URL}\""
-} >> "$BASHRC"
+ln -s /opt/vagrant/boxes/debian-VAGRANTSLASH-bookworm64/metadata_url ~/large/.vagrant.d/boxes/debian-VAGRANTSLASH-bookworm64/metadata_url
 
-echo "Variabili d'ambiente aggiunte a $BASHRC."
-echo "Per applicarle subito, esegui: source ~/.bashrc"
+ln -s /opt/vagrant/boxes/debian-VAGRANTSLASH-bookworm64/12.20231211.1/virtualbox/* ~/large/.vagrant.d/boxes/debian-VAGRANTSLASH-bookworm64/12.20231211.1/virtualbox/

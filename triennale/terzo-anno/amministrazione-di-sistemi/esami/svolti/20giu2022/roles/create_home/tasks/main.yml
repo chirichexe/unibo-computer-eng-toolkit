@@ -1,0 +1,8 @@
+---
+- name: Ensure /home/temp directory exists
+  ansible.builtin.file:
+    path: /home/temp
+    state: directory
+    owner: temp
+    group: temp
+    mode: '0700'
