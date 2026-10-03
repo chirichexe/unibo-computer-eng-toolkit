@@ -1,0 +1,26 @@
+Si implementi in React un'applicazione web lato client che simula la sfida dei calci di rigore
+di una partita di calcio. L'applicazione dovrà eseguire interamente sul browser senza
+interagire con alcun server remoto.
+
+
+Sezione Gioco È composta da due matrici rettangolari di dimensione 2x3, di colore
+grigio, disposte una di fianco all'altra, che rappresentano le due porte verso cui il
+giocatore (utente) e il calcolatore tirano i rispettivi calci di rigore. Il giocatore effettua
+un tiro cliccando u una qualunque casella della porta di sinistra, in cui è
+posizionato un portiere invisibile. Prima di ogni tiro, una procedura randomica sceglierà
+2 caselle che rappresenteranno gli spazi che il portiere andrà ad occupare per fronteggiare
+il tiro. Al click su una casella, le caselle occupate dal portiere si coloreranno di giallo e
+sulla casella cliccata apparirà una "O' oppure una "X" a seconda che il tiro risulterà
+vincente o parato. Dopo 3 secondi dal tiro dell'utente, lutente non potrà interagire
+con la porta di sinistra e sarà avviata una procedura automatica che simula un tiro
+casuale da parte del calcolatore sulla porta di destra. Anche qui sarà presente un portiere
+invisibile che occuperà 2 caselle a caso all'atto del tiro, e l'esito del tiro sarà rappresentato
+con le stesse modalità grafiche della porta di sinistra. Dopo 3 secondi dal tiro del
+calcolatore, la porta di destra sarà inibita al tiro il giocatore potrà nuovamente tirare
+verso la porta di sinistra. La sfida si gioca al meglio dei 5 tiri per parte. Alla fine della
+sfida, vincerà chi avrà fatto più tiri vincenti. In caso di parità, la vittoria sarà
+assegnata a sorte. L'esito sarà comunicato tramite un messaggio di alert.
+Sezione Punteggio. La sezione visualizza una tabella con 1o score
+aggiornato dei punteggi. Alla fine di un turno, dovrà essere aggiunta una riga di testo che contiene
+tre informazioni: L'esito del tiro dell'utente, lo score attuale e L'esito del tiro del
+calcolatore. Una possibile riga sarà, ad esempio: <Parato>;<2-3>;<Vincente>
