@@ -1,0 +1,10 @@
+Si realizzi in React un'applicazione Web lato elient per la realizzazione di un grafico a barre per la visualizzazione della distribuzione dei lanci di un dado. L'applicazione dovrà eseguire
+interamente sul browser senza interagire con alcun server remoto.
+
+Nella parte alta, l'utente può configurare il numero di lanci da effettuare (al più 15) attraverso un campo di input e un bottone di conferma.
+
+Al di sotto della sezione di configurazione, è presente una sezione per effettuare i lanci, composta rispettivamente da un bottone per invocare il lancio di un dado e un campo di testo a sola lettura in cui viene visualizzato, di volta in volta, l'esito del lancio.
+
+Al di sotto di questi componenti, è presente una sezione contenente un grafico a barre che visualizza il numero delle occorrenze degli esiti dei lanci. Il grafico è composto da 6 barre orizzontali, una per ogni possibile esito. Ciascuna barra viene realizzata graficamente mediante una riga di caselle di testo contigue, inizialmente tutte di colore grigio. Inoltre, ad ogni barra dovrà essere associato uno specifico colore (ad es., giallo per la prima barra, rosso per la seconda, etc.). A conclusione di ogni lancio, nella barra relativa al valore estratto del dado si dovrà illuminare una nuova casella, ovvero, la casella più a sinistra di colore grigio dovrà assumere il colore deciso per quella barra.
+
+Infine, in una nuova sezione posta al di sotto del grafico dovrà essere riportata la distribuzione statistica dei lanci aggiornata in tempo reale. Ad esempio Valore 1 25%; Valore 2 12%; etc.

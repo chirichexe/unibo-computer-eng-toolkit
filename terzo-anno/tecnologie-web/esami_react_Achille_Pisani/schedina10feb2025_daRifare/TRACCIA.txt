@@ -1,0 +1,27 @@
+Si realizzi in React un'applicazione Web lato client per il gioco delle scommesse sportive su
+partite di calcio. L'applicazione dovrà eseguire interamente sul browser senza interagire con
+alcun server remoto.
+
+
+Al giocatore viene presentata una schedina composta da un certo numero di righe. Ogni riga
+riporta un evento sportivo e, a fianco, una sezione scommessa. Ogni evento sportivo è
+caratterizzato da un nome evento, contenente i nomi delle squadre che si sfidano (ad es.,
+"Fiorentina-Inter") e dalle tre quote associate ai tre possibili risultati (ad es, "1 -> 2.0", "X ->
+2.5", "2 -> 1.5"). A destra dell'evento, è presente una sezione scommessa composta da un
+menu a tendina, tramite cui selezionare il risultato su cui si intende puntare, e un campo di testo
+in cui indicare la somma (in euro) da puntare.
+
+
+Effettuate le puntate sugli eventi di interesse, tramite un bottone posto sotto la schedina il
+giocatore avvierà la procedura di svolgimento degli eventi, che produrrà risultati casuali (1, X
+2) su tutti gli eventi. Sulla schedina, si illumineranno quindi di verde gli eventi per cui la
+previsione del giocatore si è avverata, mentre gli eventi con previsione errata appariranno in
+O
+
+
+giallo. Rimarranno inalterati gli eventi su cui il giocatore non ha scommesso. In una sezione
+risultati posta al di sotto della schedina sarà visualizzata la lista degli eventi con previsione
+corretta e il totale della vincita ottenuta. Per ogni evento indovinato, la vincita è calcolata
+moltiplicando la quota associata al risultato per la somma puntata dal giocatore
+Si faccia in modo di inizializzare la schedina con nformazioni prelevate da un oggetto
+JSON.
