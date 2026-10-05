@@ -3,7 +3,7 @@
  * Numero prova d'esame: SOSTITUISCI
  *
  * Fondamenti di Informatica T-1 - A.A. 2022-2023
- * Template non ufficiale (unibo-computer-eng-toolkit): sostituisci i tuoi dati
+ * Template non ufficiale: sostituisci i tuoi dati
  * e verifica che il contenuto sia ancora valido per il tuo anno accademico.
  */
 
