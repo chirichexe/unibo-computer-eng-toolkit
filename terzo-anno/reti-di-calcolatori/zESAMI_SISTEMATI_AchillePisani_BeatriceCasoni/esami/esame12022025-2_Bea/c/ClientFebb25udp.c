@@ -1,4 +1,4 @@
-//CHIRICHELLA DAVIDE 0001071414
+//NOME COGNOME 0000000000
 
 #include <dirent.h>
 #include <fcntl.h>

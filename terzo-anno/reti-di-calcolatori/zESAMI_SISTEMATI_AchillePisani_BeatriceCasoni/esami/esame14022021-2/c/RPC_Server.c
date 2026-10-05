@@ -1,6 +1,6 @@
 /*
-/// Author: Davide Chirichella
-/// id: 0001071414
+/// Author: Nome Cognome
+/// id: 0000000000
 */
 
 #include "RPC_xFile.h"

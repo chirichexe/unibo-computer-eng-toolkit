@@ -1,5 +1,4 @@
 # Librerie per il corso Fondamenti Di Informatica T-1
-## Autore: Davide Chirichella (https://github.com/chirichexe)
 ## Anno accademico 2022-2023
 
 La struttura delle libreria è la seguente:

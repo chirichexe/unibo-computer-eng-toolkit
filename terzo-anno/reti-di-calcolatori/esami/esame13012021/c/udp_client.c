@@ -1,6 +1,6 @@
 /*
-/// Author: Davide Chirichella
-/// Matricola: 0001071414
+/// Author: Nome Cognome
+/// Matricola: 0000000000
 */
 
 #include <dirent.h>

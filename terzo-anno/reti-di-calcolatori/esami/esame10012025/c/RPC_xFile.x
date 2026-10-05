@@ -1,4 +1,4 @@
-/* CHIRICHELLA DAVIDE 0001071414 */
+/* NOME COGNOME 0000000000 */
 
 const MAX_NAME_SIZE = 30;
 const MAX_LIST_SIZE = 5; /* Massimo di elementi che possono essere restituiti */

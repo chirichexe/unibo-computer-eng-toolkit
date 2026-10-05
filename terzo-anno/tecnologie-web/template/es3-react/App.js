@@ -96,7 +96,7 @@ class App extends Component {
 
         return (
             <div>
-                <h1>Esame Davide Chirichella</h1>
+                <h1>Esame Nome Cognome</h1>
                 <Sezione1
                     name={this.state.sectionNames[0]}
 

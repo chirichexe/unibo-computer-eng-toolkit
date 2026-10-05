@@ -32,8 +32,8 @@ void inizializza() {
 
     // Valori inizializati per i test
     strcpy(t[0].matricola, "00012345");
-    strcpy(t[0].nome, "Davide");
-    strcpy(t[0].cognome, "Chirichella");
+    strcpy(t[0].nome, "Mario");
+    strcpy(t[0].cognome, "Rossi");
     t[0].voto = 28;
 
     strcpy(t[1].matricola, "00012346");

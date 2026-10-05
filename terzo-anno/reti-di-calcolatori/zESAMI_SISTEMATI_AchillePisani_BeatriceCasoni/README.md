@@ -1,7 +1,7 @@
 # 🧠 Prove d’Esame di **Reti di Calcolatori**
 
 ### Basate sulle librerie di  
-**[Chirichella Davide](https://github.com/chirichexe)**  
+**[unibo-computer-eng-toolkit](../template)**  
 
 ### Sistemate e integrate da  
 **Achille Pisani** & **Beatrice Casoni**
@@ -10,7 +10,7 @@
 
 ## 📘 Descrizione
 
-Questo repository raccoglie e organizza varie **prove d’esame di Reti di Calcolatori**, basate sui **template e sulle soluzioni** sviluppate da **Chirichella Davide** nelle sue librerie.  
+Questo repository raccoglie e organizza varie **prove d’esame di Reti di Calcolatori**, basate sui **template e sulle soluzioni** presenti nelle librerie di questa repository.  
 
 Alcune di queste soluzioni erano **incomplete o non funzionanti**, perciò le abbiamo:
 - **corrette** e **adattate**,  
@@ -26,7 +26,6 @@ Nonostante il lavoro di revisione, **non garantiamo che tutte le soluzioni siano
 
 - 📁 **`esami/`** → contiene le prove svolte e sistemate.  
 - 📁 **`tracce/`** → include i testi originali delle prove passate.  
-- 📄 **`tracce/0TUTTE_LE_PROVE.pdf`** → raccoglie *tutti* i testi delle prove in un unico file leggibile.
 
 ---
 
@@ -40,9 +39,9 @@ Nonostante il lavoro di revisione, **non garantiamo che tutte le soluzioni siano
 
 ## 📚 Riferimento originale
 
-Tutti i template utilizzati e molti degli esami derivano dalla repository di Chirichella Davide:  
+Tutti i template utilizzati e molti degli esami derivano dai template di questa repository:  
 
-👉 [Vedi repository](https://github.com/chirichexe/unibo-computer-eng-toolkit/tree/main/terzo-anno/reti-di-calcolatori)
+👉 [Vedi repository](../template)
 
 Questo progetto **non vuole sostituire** le librerie originali, ma **offrire un’integrazione e un supporto aggiuntivo**.  
 Il materiale qui contenuto **non è garantito al 100% corretto o funzionante**.
@@ -53,7 +52,6 @@ Il materiale qui contenuto **non è garantito al 100% corretto o funzionante**.
 
 - **Achille Pisani**  
 - **Beatrice Casoni**  
-- **Davide Chirichella**  
 
 ---
 

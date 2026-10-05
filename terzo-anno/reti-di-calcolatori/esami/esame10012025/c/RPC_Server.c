@@ -1,4 +1,4 @@
-//CHIRICHELLA DAVIDE 0001071414
+//NOME COGNOME 0000000000
 
 #include "RPC_xFile.h"
 #include <dirent.h>
@@ -33,11 +33,11 @@ void inizializza() {
     }
 
     // Valori inizializati per i test
-    strcpy(t[0][0].matricola, "0001071414");
+    strcpy(t[0][0].matricola, "0000000000");
     strcpy(t[0][1].matricola, "0001071413");
 
 
-    strcpy(t[1][0].matricola, "0001071414");
+    strcpy(t[1][0].matricola, "0000000000");
     strcpy(t[1][2].matricola, "0001071418");
 
     strcpy(t[2][1].matricola, "0001071412");

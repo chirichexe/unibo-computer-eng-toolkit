@@ -131,7 +131,7 @@ void wait_child() {
 }
 
 int controlloArgomenti(int argc, char *argv[]) {
-    printf("---Davide Chirichella: System call---\n---0001071414---\n\n");
+    printf("---Nome Cognome: System call---\n---0000000000---\n\n");
     //Controllo argomenti
     if (argc != 4) {
         printf("L'interfaccia deve essere del tipo ./esame Fin N Fout\n");

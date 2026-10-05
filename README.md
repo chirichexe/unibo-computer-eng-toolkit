@@ -1,23 +1,27 @@
-# Unibo - Computer engineering toolit
+# Unibo - Computer Engineering Toolkit
 
-Sono Davide Chirichella, studente di [Ingegneria Informatica](corsi.unibo.it/laurea/IngegneriaInformatica) all'Università di Bologna (unibo), immatricolato nel 2022.
+A collection of templates and libraries used for the programming exams of the [Computer Engineering](https://corsi.unibo.it/laurea/IngegneriaInformatica) bachelor's degree at the University of Bologna (Unibo), many of them developed together with [Filippo Giulietti](https://github.com/FiloGiulietts).
+Feel free to contribute!
 
-Qui sono raccolte le librerie che ho utilizzato per tutti gli esami di programmazione del mio percorso, molte anche in collaborazione con [Filippo Giulietti](https://github.com/FiloGiulietts).
-Sentiti libero di contribuire!
+> **Note:** this README is the only English file in the repository. **All the internal folders (code comments, READMEs, exam texts) are written in Italian.**
 
-#  Struttura
+# Structure
 
-Per ogni corso c'è una cartella chiamata `template` o `lib` che contiene 
+```
+primo-anno/      first year  (fondamenti-1, fondamenti-2)
+secondo-anno/    second year (sistemi-operativi, sistemi-informativi)
+terzo-anno/      third year  (reti-di-calcolatori, tecnologie-web)
+```
 
-1. Un `README.md` con la descrizione della struttura del template o della libreria specifica 
-2. Eventuali `Utilities` sia per gli esercizi, sia per configurare l'ambiente in laboratorio
+Each course has a folder called `template` or `lib` that contains:
 
-**Warning**: questa non è una raccolta completa e alcune informazioni potrebbero variare.
-La struttura dei corsi, i docenti o le modalità d’esame potrebbero essere cambiati nel tempo.
+1. A `README.md` describing the structure of the template or library
+2. Optional utilities, both for the exercises and for setting up the lab environment
 
-**Disclaimer**: Questo materiale è stato raccolto solo a scopo informativo / di supporto e non viene mantenuto attivamente.
-In particolare, in caso di aggiornamenti agli IDE o agli strumenti utilizzati, verifica sempre ciò che esegui.
+Some courses also include an `esami` folder with solved past exams. Exam projects do not ship their `.jar` dependencies: copy them from the corresponding `template` folder.
 
-# Buy me a coffee! ☕️
+**Warning**: this is not a complete collection and some information may be outdated.
+Course structure, teachers or exam rules may have changed over time.
 
-Se hai trovato utili le mie librerie e ti va di supportarmi: https://www.paypal.me/DavideChirichella
+**Disclaimer**: this material is provided for informational / support purposes only and is not actively maintained.
+In particular, after updates to the IDEs or tools in use, always double-check what you run.

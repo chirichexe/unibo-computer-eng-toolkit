@@ -1,6 +1,6 @@
 /*
-/// Author: Davide Chirichella
-/// Matricola: 0001071414
+/// Author: Nome Cognome
+/// Matricola: 0000000000
 */
 
 #include "esame.h"
@@ -44,7 +44,7 @@ void inizializza() {
 
     // Inizializziamo qualche valore per i test
     strcpy(t[0].matricola, "00012345");
-    strcpy(t[0].nome, "Davide");
+    strcpy(t[0].nome, "Mario");
     strcpy(t[0].cognome, "Pluto");
     t[0].voto = 28;
 
@@ -55,7 +55,7 @@ void inizializza() {
 
     strcpy(t[2].matricola, "00010714");
     strcpy(t[2].nome, "aa");
-    strcpy(t[2].cognome, "Chirichella");
+    strcpy(t[2].cognome, "Rossi");
            t[2].voto = -1;
 
     inizializzato = 1;
