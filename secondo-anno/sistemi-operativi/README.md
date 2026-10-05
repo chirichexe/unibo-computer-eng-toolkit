@@ -1,4 +1,5 @@
 # Librerie per il corso Sistemi Operativi T
+## Autore: Davide Chirichella (https://github.com/chirichexe)
 ## Anno accademico 2023-2024
 
 La struttura delle libreria è la seguente:

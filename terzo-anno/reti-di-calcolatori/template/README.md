@@ -1,4 +1,5 @@
 # Librerie per il corso Reti di Calcolatori T
+## Autore: Davide Chirichella (https://github.com/chirichexe)
 ## Anno accademico 2024-2025
 
 La struttura delle libreriè è la seguente:

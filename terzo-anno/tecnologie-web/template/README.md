@@ -1,4 +1,5 @@
 # Librerie per il corso Tecnologie Web T
+## Autore: Davide Chirichella (https://github.com/chirichexe)
 ## Anno accademico 2024-2025
 
 La struttura della libreria è la seguente:

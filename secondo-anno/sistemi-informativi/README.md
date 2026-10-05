@@ -1,5 +1,5 @@
 # Librerie per il corso Sistemi Informativi T
-## Autore: Filippo Giulietti (https://github.com/FiloGiulietts)
+## Autori: Davide Chirichella (https://github.com/chirichexe) e Filippo Giulietti (https://github.com/FiloGiulietts)
 ## Anno accademico 2023-2024
 
 Raccoglie una serie di librerie SQL utili per l'esame di Sistemi Informativi, tenuto dal professor Paolo Ciaccia presso l'Università di Bologna. 

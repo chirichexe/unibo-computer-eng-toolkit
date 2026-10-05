@@ -1,3 +1,11 @@
+<%--
+  Nome Cognome - Matricola 0000000000
+
+  Tecnologie Web T - A.A. 2024-2025
+  Template non ufficiale (unibo-computer-eng-toolkit): sostituisci i tuoi dati
+  e verifica che il contenuto sia ancora valido per il tuo anno accademico.
+--%>
+
 <%@page import="java.util.Map.Entry"%>
 <%@page import="java.util.Optional"%>
 <%@page import="java.util.HashMap"%>

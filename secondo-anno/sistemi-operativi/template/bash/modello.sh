@@ -1,4 +1,9 @@
 #!/bin/bash
+# Nome Cognome - Matricola 0000000000
+#
+# Sistemi Operativi T - A.A. 2023-2024
+# Template non ufficiale (unibo-computer-eng-toolkit): sostituisci i tuoi dati
+# e verifica che il contenuto sia ancora valido per il tuo anno accademico.
 
 #REDIREZIONE I/O----------------------------------------------------------------------
 
